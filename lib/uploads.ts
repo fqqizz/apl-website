@@ -3,12 +3,39 @@
  * Handle file uploads to player-uploads and franchise-uploads buckets
  */
 
+import imageCompression from "browser-image-compression";
 import { supabase } from "./supabase";
 import type { UploadResult } from "./database.types";
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const ALLOWED_PDF_TYPES = ["application/pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+async function compressImageFile(file: File): Promise<File> {
+  try {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      return file;
+    }
+
+    const options = {
+      maxSizeMB: 1.8,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      fileType: file.type,
+      initialQuality: 0.8,
+    };
+
+    if (file.size <= 900_000) {
+      return file;
+    }
+
+    const compressed = await imageCompression(file, options);
+    return compressed instanceof File ? compressed : file;
+  } catch (error) {
+    console.error("Image compression failed, uploading original file:", error);
+    return file;
+  }
+}
 
 /**
  * Generate unique filename with timestamp
@@ -62,12 +89,13 @@ export async function uploadPlayerPhoto(file: File): Promise<UploadResult> {
       return { success: false, error: validation.error };
     }
 
+    const uploadFile = await compressImageFile(file);
     const fileName = generateFileName(file.name);
     const filePath = `photos/${fileName}`;
 
     const { data, error } = await supabase.storage
       .from("player-uploads")
-      .upload(filePath, file, {
+      .upload(filePath, uploadFile, {
         cacheControl: "3600",
         upsert: false,
       });
@@ -101,12 +129,15 @@ export async function uploadPlayerID(file: File): Promise<UploadResult> {
       return { success: false, error: validation.error };
     }
 
+    const uploadFile = ALLOWED_IMAGE_TYPES.includes(file.type)
+      ? await compressImageFile(file)
+      : file;
     const fileName = generateFileName(file.name);
     const filePath = `ids/${fileName}`;
 
     const { data, error } = await supabase.storage
       .from("player-uploads")
-      .upload(filePath, file, {
+      .upload(filePath, uploadFile, {
         cacheControl: "3600",
         upsert: false,
       });
@@ -139,12 +170,13 @@ export async function uploadFranchiseLogo(file: File): Promise<UploadResult> {
       return { success: false, error: validation.error };
     }
 
+    const uploadFile = await compressImageFile(file);
     const fileName = generateFileName(file.name);
     const filePath = `logos/${fileName}`;
 
     const { data, error } = await supabase.storage
       .from("franchise-uploads")
-      .upload(filePath, file, {
+      .upload(filePath, uploadFile, {
         cacheControl: "3600",
         upsert: false,
       });

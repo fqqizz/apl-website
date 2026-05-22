@@ -46,6 +46,8 @@ function PaymentCallbackContent() {
         setOrderStatus(statusValue);
 
         if (statusValue === "PAID") {
+          setMessage("Payment verified. Finalizing registration and generating your Player ID...");
+
           // Ensure we haven't already saved this order
           try {
             const existing = await getPlayerByOrderId(orderId);

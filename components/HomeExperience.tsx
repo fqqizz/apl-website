@@ -554,11 +554,11 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
 
   const handleCashfreePayment = async () => {
     setIsLoading(true);
-    setUploadProgress("Preparing files for upload...");
+    setUploadProgress("Compressing and uploading files...");
     setError(null);
 
     try {
-      // Step 1: Upload files to Supabase Storage
+      // Step 1: Upload files to Supabase Storage in parallel
       const photoFile = formData.photo as File;
       const idFile = formData.idUpload as File;
 
@@ -568,18 +568,14 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         return;
       }
 
-      setUploadProgress("Uploading photo...");
-      const photoResult = await uploadPlayerPhoto(photoFile);
-      if (!photoResult.success) {
-        setError(photoResult.error || "Failed to upload photo");
-        setIsLoading(false);
-        return;
-      }
+      const [photoResult, idResult] = await Promise.all([
+        uploadPlayerPhoto(photoFile),
+        uploadPlayerID(idFile),
+      ]);
 
-      setUploadProgress("Uploading ID...");
-      const idResult = await uploadPlayerID(idFile);
-      if (!idResult.success) {
-        setError(idResult.error || "Failed to upload ID");
+      if (!photoResult.success || !idResult.success) {
+        const errorMessage = photoResult.error || idResult.error || "Failed to upload files";
+        setError(errorMessage);
         setIsLoading(false);
         return;
       }
@@ -695,6 +691,11 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
                     <p className="text-sm text-red-700">{error}</p>
                   </div>
                 )}
+                {uploadProgress && (
+                  <div className="mt-6 rounded-3xl border border-ink/10 bg-slate-50 px-4 py-3 text-sm text-ink/70">
+                    {uploadProgress}
+                  </div>
+                )}
                 <div className="mt-6 grid gap-3">
                   <button
                     onClick={handleCashfreePayment}
@@ -752,6 +753,7 @@ function FranchiseSection() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitMessage, setSubmitMessage] = useState<string>("");
   const required = ["ownerName", "phone", "email", "teamArea"];
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -762,6 +764,7 @@ function FranchiseSection() {
     if (Object.keys(nextErrors).length !== 0) return;
 
     setIsSubmitting(true);
+    setSubmitMessage("Connecting to Apex...");
 
     try {
       const data = new FormData(event.currentTarget);
@@ -769,10 +772,12 @@ function FranchiseSection() {
 
       let logoUrl: string | null = null;
       if (logoFile && logoFile.name) {
+        setSubmitMessage("Compressing and uploading logo...");
         const upload = await uploadFranchiseLogo(logoFile);
         if (!upload.success) {
           setSubmitError(upload.error || "Failed to upload logo");
           setIsSubmitting(false);
+          setSubmitMessage("");
           return;
         }
         logoUrl = upload.url || null;
@@ -793,10 +798,12 @@ function FranchiseSection() {
         approval_status: "pending",
       };
 
+      setSubmitMessage("Finalizing application...");
       const result = await insertFranchise(insertPayload as any);
       if (!result.success) {
         setSubmitError(result.error || "Failed to save franchise application");
         setIsSubmitting(false);
+        setSubmitMessage("");
         return;
       }
 
@@ -806,6 +813,7 @@ function FranchiseSection() {
       setSubmitError("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
+      setSubmitMessage("");
     }
   };
 
@@ -850,6 +858,14 @@ function FranchiseSection() {
                 <button disabled={isSubmitting} className="rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2 disabled:opacity-60 disabled:cursor-not-allowed">
                   {isSubmitting ? "Submitting..." : "Submit Franchise Application"}
                 </button>
+                {submitMessage && (
+                  <div className="md:col-span-2 mt-3 rounded-3xl border border-ink/10 bg-slate-50 px-4 py-3 text-sm text-ink/70">
+                    {submitMessage}
+                    {isSubmitting && (
+                      <p className="mt-2 text-xs text-ink/50">Tip: Curate your franchise details carefully while we complete the submission.</p>
+                    )}
+                  </div>
+                )}
                 {submitError && (
                   <div className="md:col-span-2 mt-3 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
                     {submitError}
