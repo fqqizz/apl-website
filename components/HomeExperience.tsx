@@ -6,6 +6,7 @@ import { AnimatePresence, motion, type Transition, useScroll, useTransform } fro
 import gsap from "gsap";
 import Lenis from "@studio-freight/lenis";
 import { load } from "@cashfreepayments/cashfree-js";
+import { supabase } from "../lib/supabase";
 import {
   ArrowUpRight,
   Check,
@@ -426,7 +427,7 @@ function Field({
   );
 }
 
-function UploadField({ label, name, required = false, error }: { label: string; name: string; required?: boolean; error?: string }) {
+function UploadField({ label, name, accept, required = false, error }: { label: string; name: string; accept?: string; required?: boolean; error?: string }) {
   return (
     <label className={`upload-field ${error ? "border-apex/60" : ""}`}>
       <span>
@@ -434,7 +435,7 @@ function UploadField({ label, name, required = false, error }: { label: string; 
         {error && <span className="mt-1 block text-xs font-normal normal-case tracking-normal text-apex">{error}</span>}
       </span>
       <Upload size={17} />
-      <input name={name} type="file" className="hidden" />
+      <input name={name} type="file" accept={accept} className="hidden" />
     </label>
   );
 }
@@ -468,17 +469,79 @@ function RegistrationSection() {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const required = ["fullName", "age", "position", "foot", "phone", "email", "area", "photo", "idUpload", "termsAcceptance"];
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextErrors = validateForm(event.currentTarget, required);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length === 0) {
-      // Store form data before payment
       const data = new FormData(event.currentTarget);
+      const photoFile = data.get("photo");
+      const idFile = data.get("idUpload");
+
+      if (!supabase) {
+        setErrors({
+          ...nextErrors,
+          photo: "Supabase is not configured.",
+          idUpload: "Supabase is not configured."
+        });
+        return;
+      }
+
+      let photoUrl = "";
+      let idUrl = "";
+
+      if (photoFile instanceof File && photoFile.name) {
+        const photoName = `${Date.now()}-${photoFile.name}`;
+        const { error: photoUploadError } = await supabase.storage.from("player-uploads").upload(photoName, photoFile);
+        if (photoUploadError) {
+          setErrors({ ...nextErrors, photo: photoUploadError.message });
+          return;
+        }
+        const photoUrlData = supabase.storage.from("player-uploads").getPublicUrl(photoName);
+        if (!photoUrlData?.data?.publicUrl) {
+          setErrors({ ...nextErrors, photo: "Unable to retrieve photo URL." });
+          return;
+        }
+        photoUrl = photoUrlData.data.publicUrl;
+      }
+
+      if (idFile instanceof File && idFile.name) {
+        const idName = `${Date.now()}-${idFile.name}`;
+        const { error: idUploadError } = await supabase.storage.from("player-uploads").upload(idName, idFile);
+        if (idUploadError) {
+          setErrors({ ...nextErrors, idUpload: idUploadError.message });
+          return;
+        }
+        const idUrlData = supabase.storage.from("player-uploads").getPublicUrl(idName);
+        if (!idUrlData?.data?.publicUrl) {
+          setErrors({ ...nextErrors, idUpload: "Unable to retrieve ID URL." });
+          return;
+        }
+        idUrl = idUrlData.data.publicUrl;
+      }
+
       const formDataObj: Record<string, any> = {};
       data.forEach((value, key) => {
         formDataObj[key] = value;
       });
+
+      const playerStorage = {
+        fullName: String(formDataObj.fullName || ""),
+        age: String(formDataObj.age || ""),
+        position: String(formDataObj.position || ""),
+        foot: String(formDataObj.foot || ""),
+        phone: String(formDataObj.phone || ""),
+        email: String(formDataObj.email || ""),
+        instagram: String(formDataObj.instagram || ""),
+        district: String(formDataObj.area || ""),
+        photoUrl,
+        idUrl,
+      };
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("aplPlayerRegistration", JSON.stringify(playerStorage));
+      }
+
       setFormData(formDataObj);
       setPaymentState("checkout");
     }
@@ -507,8 +570,8 @@ function RegistrationSection() {
             <Field label="Email" name="email" type="email" required error={errors.email} />
             <Field label="Instagram" name="instagram" />
             <Field label="Area/District" name="area" required error={errors.area} />
-            <UploadField label="Upload Photo" name="photo" required error={errors.photo} />
-            <UploadField label="Upload ID" name="idUpload" required error={errors.idUpload} />
+            <UploadField label="Upload Photo" name="photo" accept="image/*" required error={errors.photo} />
+            <UploadField label="Upload ID" name="idUpload" accept="image/*,.pdf" required error={errors.idUpload} />
             <label className={`md:col-span-2 flex gap-3 ${errors.termsAcceptance ? "text-apex" : ""}`}>
               <input type="checkbox" name="termsAcceptance" className="mt-1 h-5 w-5 shrink-0" />
               <div>
@@ -693,13 +756,78 @@ function Confirmation({ title, message, onClose }: { title: string; message: str
 function FranchiseSection() {
   const [errors, setErrors] = useState<ErrorMap>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const required = ["ownerName", "phone", "email", "teamArea"];
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitError(null);
     const nextErrors = validateForm(event.currentTarget, required);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) setSubmitted(true);
+
+    if (Object.keys(nextErrors).length === 0) {
+      setIsSubmitting(true);
+      try {
+        const data = new FormData(event.currentTarget);
+        let logoUrl = "";
+        const logoFile = data.get("logo");
+
+        if (logoFile instanceof File && logoFile.name) {
+          if (!supabase) {
+            setSubmitError("Supabase is not configured.");
+            return;
+          }
+
+          const logoName = `${Date.now()}-${logoFile.name}`;
+          const { error: logoUploadError } = await supabase.storage.from("franchise-uploads").upload(logoName, logoFile);
+          if (logoUploadError) {
+            setSubmitError(logoUploadError.message);
+            return;
+          }
+
+          const logoUrlData = supabase.storage.from("franchise-uploads").getPublicUrl(logoName);
+          if (!logoUrlData?.data?.publicUrl) {
+            setSubmitError("Unable to retrieve logo URL.");
+            return;
+          }
+
+          logoUrl = logoUrlData.data.publicUrl;
+        }
+
+        const franchiseData = {
+          owner_name: String(data.get("ownerName") || ""),
+          phone: String(data.get("phone") || ""),
+          email: String(data.get("email") || ""),
+          area: String(data.get("teamArea") || ""),
+          team_name: String(data.get("teamName") || ""),
+          team_colors: String(data.get("teamColors") || ""),
+          squad_estimate: String(data.get("squadEstimate") || ""),
+          manager_name: String(data.get("managerName") || ""),
+          instagram: String(data.get("instagram") || ""),
+          experience: String(data.get("experience") || ""),
+          logo_url: logoUrl,
+          status: "PENDING",
+        };
+
+        if (!supabase) {
+          setSubmitError("Supabase is not configured.");
+        } else {
+          const { error } = await supabase.from("franchises").insert([franchiseData]);
+
+          if (error) {
+            setSubmitError(error.message);
+          } else {
+            setSubmitted(true);
+            event.currentTarget.reset();
+          }
+        }
+      } catch (error: any) {
+        setSubmitError(error?.message || "Unable to submit franchise application.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
   };
 
   return (
@@ -738,10 +866,19 @@ function FranchiseSection() {
                 <Field label="Instagram" name="instagram" />
                 <Field label="Previous Experience" name="experience" />
                 <div className="md:col-span-2">
-                  <UploadField label="Logo Upload" name="logo" />
+                  <UploadField label="Logo Upload" name="logo" accept="image/*" />
                 </div>
-                <button className="rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2">
-                  Submit Franchise Application
+                {submitError && (
+                  <div className="md:col-span-2 rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+                    {submitError}
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex disabled:opacity-60 disabled:cursor-not-allowed md:col-span-2"
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Franchise Application"}
                 </button>
               </motion.form>
             )}

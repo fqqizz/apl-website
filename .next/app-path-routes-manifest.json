@@ -1,9 +1,10 @@
 {
   "/_not-found/page": "/_not-found",
+  "/api/payments/verify/route": "/api/payments/verify",
   "/api/payments/create/route": "/api/payments/create",
   "/api/payments/webhook/route": "/api/payments/webhook",
-  "/payment-callback/page": "/payment-callback",
   "/page": "/",
+  "/terms-and-conditions/page": "/terms-and-conditions",
   "/privacy-policy/page": "/privacy-policy",
-  "/terms-and-conditions/page": "/terms-and-conditions"
+  "/payment-callback/page": "/payment-callback"
 }

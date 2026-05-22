@@ -12,6 +12,7 @@
   "dependencies": {
     "@cashfreepayments/cashfree-js": "^1.0.7",
     "@studio-freight/lenis": "^1.0.42",
+    "@supabase/supabase-js": "^2.106.1",
     "@vercel/analytics": "^2.0.1",
     "cashfree-pg": "^6.0.4",
     "framer-motion": "^12.23.24",
