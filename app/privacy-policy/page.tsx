@@ -25,7 +25,11 @@ export default function PrivacyPolicy() {
         },
         {
           title: "Contact",
-          body: "For privacy questions, corrections, or removal requests, contact getinfo.faaiz@gmail.com."
+          body: "For privacy questions, corrections, or removal requests, contact contact@apexpremiereleague.in."
+        },
+        {
+          title: "Fees and Refund Policy",
+          body: "Registration fees and franchise fees paid to APEX PREMIER LEAGUE are non-refundable once processing, verification, administrative work, or league operations have commenced. No refunds will be issued for any reason including cancellation, withdrawal, or non-participation. All payments are final and binding."
         }
       ]}
     />

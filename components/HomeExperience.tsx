@@ -442,6 +442,13 @@ function validateForm(form: HTMLFormElement, required: string[]) {
   const data = new FormData(form);
   const nextErrors: ErrorMap = {};
   required.forEach((name) => {
+    if (name === "termsAcceptance") {
+      const checkbox = form.querySelector(`input[name="${name}"]`) as HTMLInputElement;
+      if (!checkbox?.checked) {
+        nextErrors[name] = "Required";
+      }
+      return;
+    }
     const value = data.get(name);
     if (value instanceof File) {
       if (!value.name) nextErrors[name] = "Required";
@@ -457,7 +464,7 @@ function validateForm(form: HTMLFormElement, required: string[]) {
 function RegistrationSection() {
   const [errors, setErrors] = useState<ErrorMap>({});
   const [paymentState, setPaymentState] = useState<PaymentState>("idle");
-  const required = ["fullName", "age", "position", "foot", "phone", "email", "area", "photo", "idUpload"];
+  const required = ["fullName", "age", "position", "foot", "phone", "email", "area", "photo", "idUpload", "termsAcceptance"];
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -491,6 +498,30 @@ function RegistrationSection() {
             <Field label="Area/District" name="area" required error={errors.area} />
             <UploadField label="Upload Photo" name="photo" required error={errors.photo} />
             <UploadField label="Upload ID" name="idUpload" required error={errors.idUpload} />
+            <label className={`md:col-span-2 flex gap-3 ${errors.termsAcceptance ? "text-apex" : ""}`}>
+              <input type="checkbox" name="termsAcceptance" className="mt-1 h-5 w-5 shrink-0" />
+              <div>
+                <span className="text-sm font-medium">
+                  I have read and accepted the{" "}
+                  <Link href="/terms-and-conditions" className="font-semibold text-apex hover:underline">
+                    terms and conditions
+                  </Link>
+                  {" "}and{" "}
+                  <Link href="/privacy-policy" className="font-semibold text-apex hover:underline">
+                    privacy policy
+                  </Link>
+                  {" "}of APEX PREMIER LEAGUE{" "}
+                  <span className="text-apex">*</span>
+                </span>
+                <AnimatePresence>
+                  {errors.termsAcceptance && (
+                    <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} className="mt-1 text-xs text-apex">
+                      {errors.termsAcceptance}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+            </label>
             <button className="md:col-span-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex">
               Continue To Payment
             </button>
@@ -786,9 +817,9 @@ function ContactSection() {
         <AnimatedBlock>
           <SectionLabel>Contact</SectionLabel>
           <h2 className="display mt-6 text-[clamp(3.2rem,7vw,6.8rem)]">Speak with APL.</h2>
-          <a href="mailto:getinfo.faaiz@gmail.com" className="mt-8 inline-flex items-center gap-2 text-lg font-medium text-apex">
+          <a href="mailto:contact@apexpremiereleague.in" className="mt-8 inline-flex items-center gap-2 text-lg font-medium text-apex">
             <Mail size={18} />
-            getinfo.faaiz@gmail.com
+            contact@apexpremiereleague.in
           </a>
         </AnimatedBlock>
         <AnimatedBlock delay={0.08}>
@@ -866,7 +897,7 @@ function Footer() {
           <a href="#media">Media</a>
           <a href="/apl-rulebook.pdf" download>Rulebook</a>
           <a href="https://www.instagram.com/apexpremiereleague/" target="_blank" rel="noreferrer">Instagram</a>
-          <a href="mailto:getinfo.faaiz@gmail.com">Email</a>
+          <a href="mailto:contact@apexpremiereleague.in">Email</a>
           <Link href="/privacy-policy">Privacy Policy</Link>
           <Link href="/terms-and-conditions">Terms & Conditions</Link>
         </div>

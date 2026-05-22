@@ -29,7 +29,7 @@ export default function TermsAndConditions() {
         },
         {
           title: "Refund Policy",
-          body: "Registration fees may be non-refundable once processing, verification, trials, media operations, or administrative work has begun. Any exception is at the discretion of APL."
+          body: "All registration fees and franchise fees are strictly non-refundable. Once payment has been processed and any administrative, verification, or league operations have commenced, no refunds will be issued under any circumstances including cancellation, withdrawal, non-participation, or ineligibility. Players and franchise owners acknowledge that all payments are final and binding at the time of submission."
         },
         {
           title: "Suspension Rules",
