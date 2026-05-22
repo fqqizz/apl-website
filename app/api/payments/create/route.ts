@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, phone, name } = body;
-    const amount = "249";
+    const amount = 249;
 
     // Validate required fields
     if (!email || !phone || !name) {
