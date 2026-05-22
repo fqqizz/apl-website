@@ -563,10 +563,18 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         }),
       });
 
-      const paymentData = await response.json();
+      const responseText = await response.text();
+      let paymentData: any;
+
+      try {
+        paymentData = JSON.parse(responseText);
+      } catch (parseError) {
+        paymentData = { error: responseText };
+      }
 
       if (!response.ok) {
-        throw new Error(paymentData.error || "Failed to create payment");
+        console.error("Create payment API error", response.status, responseText, paymentData);
+        throw new Error(paymentData.error || responseText || "Failed to create payment");
       }
 
       // Load Cashfree script dynamically
@@ -589,9 +597,20 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         setIsLoading(false);
       };
       document.body.appendChild(script);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Payment failed";
-      setError(errorMessage);
+      } catch (err: any) {
+      console.error("FULL PAYMENT ERROR:", err);
+
+      if (err?.response?.text) {
+        try {
+          const text = await err.response.text();
+          console.log("RESPONSE TEXT:", text);
+        } catch (nestedError) {
+          console.error("Failed to read error response text:", nestedError);
+        }
+      }
+
+      const errorMessage = err instanceof Error ? err.message : JSON.stringify(err);
+      setError(errorMessage || "Payment failed");
       setIsLoading(false);
     }
   };

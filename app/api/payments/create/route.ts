@@ -25,6 +25,14 @@ export async function POST(request: NextRequest) {
     const cashfreeAppId = process.env.NEXT_PUBLIC_CASHFREE_APP_ID || process.env.CASHFREE_APP_ID || "";
     const cashfreeSecret = process.env.CASHFREE_SECRET_KEY || process.env.CASHFREE_APP_SECRET || process.env.CASHFREE_SECRET || "";
 
+    console.log("Cashfree backend env status", {
+      NEXT_PUBLIC_CASHFREE_APP_ID: !!process.env.NEXT_PUBLIC_CASHFREE_APP_ID,
+      CASHFREE_SECRET_KEY: !!process.env.CASHFREE_SECRET_KEY,
+      NEXT_PUBLIC_CASHFREE_ENVIRONMENT: process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT,
+      NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+      cashfreeHost,
+    });
+
     if (!cashfreeAppId || !cashfreeSecret) {
       console.error("Missing Cashfree credentials", { cashfreeAppId: !!cashfreeAppId, cashfreeSecret: !!cashfreeSecret });
       return NextResponse.json(
@@ -76,14 +84,21 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    const responseData = await cashfreeResponse.json();
+    const responseText = await cashfreeResponse.text();
+    let responseData: any;
+
+    try {
+      responseData = JSON.parse(responseText);
+    } catch (parseError) {
+      responseData = { error: responseText };
+    }
 
     if (!cashfreeResponse.ok) {
-      console.error("Cashfree Error:", responseData);
-      return NextResponse.json(
-        { error: responseData.message || "Failed to create payment order" },
-        { status: cashfreeResponse.status }
-      );
+      console.error("Cashfree Error response:", cashfreeResponse.status, responseText, responseData);
+      return new Response(responseText, {
+        status: cashfreeResponse.status,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     return NextResponse.json({
