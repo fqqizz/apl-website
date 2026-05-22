@@ -31,16 +31,16 @@ export async function POST(request: NextRequest) {
         customer_name: name,
       },
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/payment-callback`,
-        notify_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/payments/webhook`,
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://apexpremiereleague.in"}/payment-callback`,
+        notify_url: `${process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://apexpremiereleague.in"}/api/payments/webhook`,
       },
       settlements: {
         beneficiary_name: "Apex Premier League",
       },
     };
 
-    // Create request signature for Cashfree
-    const signatureString = `${orderId}${amount}INR${process.env.CASHFREE_APP_SECRET}`;
+    // Create request signature for Cashfree (not currently sent, kept for reference)
+    const signatureString = `${orderId}${amount}INR${process.env.CASHFREE_SECRET_KEY}`;
     const signature = crypto
       .createHash("sha256")
       .update(signatureString)
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
           "x-api-version": "2023-08-01",
           "x-client-id": process.env.NEXT_PUBLIC_CASHFREE_APP_ID || "",
-          "x-client-secret": process.env.CASHFREE_APP_SECRET || "",
+          "x-client-secret": process.env.CASHFREE_SECRET_KEY || "",
         },
         body: JSON.stringify(cashfreePayload),
       }
