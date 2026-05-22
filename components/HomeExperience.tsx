@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, type Transition, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import Lenis from "@studio-freight/lenis";
+import { load } from "@cashfreepayments/cashfree-js";
 import {
   ArrowUpRight,
   Check,
@@ -563,54 +564,33 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         }),
       });
 
-      const responseText = await response.text();
-      let paymentData: any;
-
-      try {
-        paymentData = JSON.parse(responseText);
-      } catch (parseError) {
-        paymentData = { error: responseText };
-      }
+      const paymentData = await response.json();
 
       if (!response.ok) {
-        console.error("Create payment API error", response.status, responseText, paymentData);
-        throw new Error(paymentData.error || responseText || "Failed to create payment");
-      }
-
-      // Load Cashfree script dynamically
-      const script = document.createElement("script");
-      script.src = "https://sdk.cashfree.com/js/core/2.0.9/cashfree.prod.js";
-      script.onload = () => {
-        // @ts-ignore - Cashfree is loaded from script
-        const cf = window.Cashfree;
-        cf.setPublicKey(process.env.NEXT_PUBLIC_CASHFREE_APP_ID);
-
-        // Redirect to payment
-        if (paymentData.redirectUrl) {
-          window.location.href = paymentData.redirectUrl;
-        } else {
-          throw new Error("No redirect URL received");
-        }
-      };
-      script.onerror = () => {
+        console.error("Create payment API error", response.status, paymentData);
         setError("Failed to load payment gateway");
         setIsLoading(false);
-      };
-      document.body.appendChild(script);
-      } catch (err: any) {
-      console.error("FULL PAYMENT ERROR:", err);
-
-      if (err?.response?.text) {
-        try {
-          const text = await err.response.text();
-          console.log("RESPONSE TEXT:", text);
-        } catch (nestedError) {
-          console.error("Failed to read error response text:", nestedError);
-        }
+        return;
       }
 
-      const errorMessage = err instanceof Error ? err.message : JSON.stringify(err);
-      setError(errorMessage || "Payment failed");
+      if (!paymentData.paymentSessionId) {
+        console.error("Missing payment session ID", paymentData);
+        setError("Failed to load payment gateway");
+        setIsLoading(false);
+        return;
+      }
+
+      const cashfree = await load({
+        mode: process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT === "TEST" ? "sandbox" : "production",
+      });
+
+      await cashfree.checkout({
+        paymentSessionId: paymentData.paymentSessionId,
+        redirectTarget: "_self",
+      });
+      } catch (err: any) {
+      console.error("FULL PAYMENT ERROR:", err);
+      setError("Failed to load payment gateway");
       setIsLoading(false);
     }
   };
