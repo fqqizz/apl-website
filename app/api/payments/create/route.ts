@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://apexpremiereleague.in";
     const cashfreeEnvironment = (process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT || process.env.CASHFREE_ENVIRONMENT || "PRODUCTION").toUpperCase();
-    const cashfreeHost = cashfreeEnvironment === "TEST" || cashfreeEnvironment === "SANDBOX" ? "sandbox" : "api";
+    const isSandbox = cashfreeEnvironment === "TEST" || cashfreeEnvironment === "SANDBOX";
+    const cashfreeHost = isSandbox ? "sandbox" : "api";
     const cashfreeAppId = process.env.NEXT_PUBLIC_CASHFREE_APP_ID || process.env.CASHFREE_APP_ID || "";
     const cashfreeSecret = process.env.CASHFREE_SECRET_KEY || process.env.CASHFREE_APP_SECRET || process.env.CASHFREE_SECRET || "";
 
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
         customer_name: name,
       },
       order_meta: {
-        return_url: `${baseUrl}/payment-callback`,
+        return_url: `${baseUrl}/payment-callback?order_id={order_id}`,
         notify_url: `${baseUrl}/api/payments/webhook`,
       },
       settlements: {
@@ -101,10 +102,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    console.log("Cashfree create order response", responseData);
+
     return NextResponse.json({
       orderId,
+      ...responseData,
       paymentSessionId: responseData.payment_session_id || responseData.order_id,
-      redirectUrl: responseData.redirect_url,
     });
   } catch (error) {
     console.error("Payment creation error:", error);

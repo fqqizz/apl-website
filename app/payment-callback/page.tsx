@@ -1,23 +1,63 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
+type PaymentResult = {
+  order_status?: string;
+  message?: string;
+  error?: string;
+};
+
 function PaymentCallbackContent() {
-  const [status, setStatus] = useState<"loading" | "success" | "failed">("loading");
+  const [status, setStatus] = useState<"loading" | "success" | "cancelled" | "error">("loading");
+  const [message, setMessage] = useState<string | null>(null);
+  const [orderStatus, setOrderStatus] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const paymentStatus = searchParams.get("order_status");
+    const orderId = searchParams.get("order_id");
 
-    if (paymentStatus === "PAID") {
-      setStatus("success");
-    } else if (paymentStatus === "FAILED" || paymentStatus === "CANCELLED") {
-      setStatus("failed");
+    if (!orderId) {
+      setStatus("error");
+      setMessage("Missing order ID. Please return to the registration form and try again.");
+      return;
     }
+
+    const verifyPayment = async () => {
+      try {
+        const response = await fetch(`/api/payments/verify?order_id=${encodeURIComponent(orderId)}`);
+        const data: PaymentResult = await response.json();
+
+        if (!response.ok) {
+          console.error("Payment verify failed", response.status, data);
+          setStatus("error");
+          setMessage("Unable to verify payment. Please return to the registration form and try again.");
+          return;
+        }
+
+        const statusValue = data.order_status?.toUpperCase() || "";
+        setOrderStatus(statusValue);
+
+        if (statusValue === "PAID") {
+          setStatus("success");
+        } else {
+          setStatus("cancelled");
+          setMessage(
+            "Your payment was cancelled or not completed. Please return to the registration form to try again."
+          );
+        }
+      } catch (error) {
+        console.error("Payment verify exception", error);
+        setStatus("error");
+        setMessage("Unable to verify payment. Please try again later.");
+      }
+    };
+
+    verifyPayment();
   }, [searchParams]);
 
   return (
@@ -25,7 +65,7 @@ function PaymentCallbackContent() {
       {status === "loading" && (
         <div className="text-center">
           <div className="animate-spin inline-block w-12 h-12 border-4 border-apex/20 border-t-apex rounded-full"></div>
-          <p className="mt-6 text-lg text-ink/58">Processing your payment...</p>
+          <p className="mt-6 text-lg text-ink/58">Verifying your payment...</p>
         </div>
       )}
 
@@ -36,27 +76,44 @@ function PaymentCallbackContent() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="mt-6 text-3xl font-bold">Payment Successful!</h1>
-          <p className="mt-3 text-ink/58">Your registration has been submitted successfully.</p>
-          <p className="mt-2 text-sm text-ink/48">You will receive an email once your registration is reviewed by the APL Committee.</p>
+          <h1 className="mt-6 text-3xl font-bold">Registration Successful</h1>
+          <p className="mt-4 text-ink/58">Your application has been submitted successfully.</p>
+          <p className="mt-2 text-sm text-ink/48">
+            You will receive an email once your registration has been reviewed and approved by the APL Committee.
+          </p>
           <Link href="/" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
-            Back to Home
+            Return Home
           </Link>
         </div>
       )}
 
-      {status === "failed" && (
+      {status === "cancelled" && (
         <div className="text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h1 className="mt-6 text-3xl font-bold">Payment Failed</h1>
-          <p className="mt-3 text-ink/58">Your payment could not be processed.</p>
-          <p className="mt-2 text-sm text-ink/48">Please try again or contact support.</p>
-          <Link href="/#players" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
-            Try Again
+          <h1 className="mt-6 text-3xl font-bold">Payment Cancelled</h1>
+          <p className="mt-4 text-ink/58">Your payment was cancelled or incomplete.</p>
+          <p className="mt-2 text-sm text-ink/48">Please try again to complete your registration.</p>
+          <Link href="/" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
+            Back to Registration
+          </Link>
+        </div>
+      )}
+
+      {status === "error" && (
+        <div className="text-center">
+          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h1 className="mt-6 text-3xl font-bold">Unable to Verify Payment</h1>
+          <p className="mt-4 text-ink/58">{message || "We could not verify your payment."}</p>
+          <Link href="/" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
+            Return to Registration
           </Link>
         </div>
       )}
@@ -66,8 +123,8 @@ function PaymentCallbackContent() {
 
 export default function PaymentCallback() {
   return (
-    <main className="min-h-screen bg-paper text-ink flex items-center justify-center px-4">
-      <Suspense fallback={<div className="text-center"><p className="text-ink/58">Loading...</p></div>}>
+    <main className="min-h-screen bg-paper text-ink flex items-center justify-center px-4 py-10">
+      <Suspense fallback={<div className="text-center"><p className="text-ink/58">Loading payment status...</p></div>}>
         <PaymentCallbackContent />
       </Suspense>
     </main>

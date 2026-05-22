@@ -580,8 +580,14 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         return;
       }
 
+      const cashfreeMode = ["TEST", "SANDBOX"].includes(
+        (process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT || "").toUpperCase()
+      )
+        ? "sandbox"
+        : "production";
+
       const cashfree = await load({
-        mode: process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT === "TEST" ? "sandbox" : "production",
+        mode: cashfreeMode,
       });
 
       await cashfree.checkout({
