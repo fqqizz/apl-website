@@ -21,7 +21,7 @@ export default function LegalPage({
       <div className="grain" />
       <header className="fixed left-0 right-0 top-4 z-20 px-4">
         <nav className="mx-auto flex w-full max-w-4xl items-center justify-between rounded-full border border-ink/10 bg-white/78 px-4 py-2.5 shadow-glass backdrop-blur-xl">
-          <Link href="/" aria-label="APEX PREMIER LEAGUE home" className="flex items-center gap-2 rounded-full px-1">
+          <Link href="/" aria-label="APEX PREMIERE LEAGUE home" className="flex items-center gap-2 rounded-full px-1">
             <img src="/apl-logo.png" alt="APL logo" className="h-8 w-auto" />
           </Link>
           <Link href="/" className="rounded-full bg-ink px-4 py-2 text-xs font-semibold text-white">

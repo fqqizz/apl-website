@@ -199,7 +199,7 @@ export default function HomeExperience() {
 
       <header className="fixed left-0 right-0 top-3 z-50 px-3 md:top-5">
         <nav className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-full border border-ink/10 bg-white/70 px-3 py-2 shadow-glass backdrop-blur-2xl">
-          <a href="#home" aria-label="APEX PREMIER LEAGUE home" className="rounded-full px-2 py-1.5">
+          <a href="#home" aria-label="APEX PREMIERE LEAGUE home" className="rounded-full px-2 py-1.5">
             <img src="/apl-logo.png" alt="APL logo" className="h-9 w-auto md:h-10" />
           </a>
           <div className="hidden items-center gap-2 md:flex">
@@ -272,7 +272,7 @@ export default function HomeExperience() {
           className="relative z-10 mx-auto flex min-h-[calc(100vh-9rem)] w-full max-w-6xl flex-col items-center justify-center text-center"
         >
           <div ref={logoRef} className="mb-7 grid place-items-center">
-            <img src="/apl-logo.png" alt="APEX PREMIER LEAGUE logo" className="h-36 w-auto md:h-52" />
+            <img src="/apl-logo.png" alt="APEX PREMIERE LEAGUE logo" className="h-36 w-auto md:h-52" />
           </div>
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
@@ -280,7 +280,7 @@ export default function HomeExperience() {
             transition={transition}
             className="display max-w-5xl text-[clamp(3.2rem,11vw,10rem)]"
           >
-            APEX PREMIER LEAGUE
+            APEX PREMIERE LEAGUE
           </motion.h1>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -340,7 +340,7 @@ function AboutSection() {
         <div className="grid gap-7">
           <AnimatedBlock delay={0.08}>
             <p className="max-w-2xl text-xl font-light leading-9 text-ink/66">
-              APEX PREMIER LEAGUE is a modern football platform designed to give regional talent a more
+              APEX PREMIERE LEAGUE is a modern football platform designed to give regional talent a more
               precise stage: better competition, sharper presentation, stronger media, and a league
               culture that respects the ambition of every player and franchise.
             </p>
@@ -524,7 +524,7 @@ function RegistrationSection() {
                   <Link href="/privacy-policy" className="font-semibold text-apex hover:underline">
                     privacy policy
                   </Link>
-                  {" "}of APEX PREMIER LEAGUE{" "}
+                  {" "}of APEX PREMIERE LEAGUE{" "}
                   <span className="text-apex">*</span>
                 </span>
                 <AnimatePresence>
@@ -872,7 +872,7 @@ function RulesSection() {
           <SectionLabel>Rulebook</SectionLabel>
           <h2 className="display mt-6 text-[clamp(3.2rem,7vw,6.7rem)]">The standard, written clearly.</h2>
           <p className="mt-6 max-w-md text-lg font-light leading-8 text-ink/62">
-            Download the official APEX PREMIER LEAGUE rulebook for registration, conduct, format, and league operating policies.
+            Download the official APEX PREMIERE LEAGUE rulebook for registration, conduct, format, and league operating policies.
           </p>
           <a href="/apl-rulebook.pdf" download className="mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:bg-apex">
             <Download size={17} />
@@ -1042,7 +1042,7 @@ function FaqSection() {
     ["Can franchises earn through APL?", "Yes. Franchises can build local fanbases, attract sponsors, sell merchandise, grow their brand presence, and gain media exposure through the league ecosystem."],
     ["Will matches be livestreamed and promoted?", "Selected matches, highlights, player moments, interviews, and media content will be featured across APL’s official digital platforms and social media channels."],
     ["What happens after my application is approved?", "Approved players and franchises will receive an official confirmation email with the next steps, registration details, league onboarding instructions, and match-related updates."],
-    ["Why was Apex Premier League created?", "APL was created to bring a modern, professional, and premium football platform to regional football while building a stronger football culture, community, and competitive ecosystem."]
+    ["Why was Apex Premiere League created?", "APL was created to bring a modern, professional, and premium football platform to regional football while building a stronger football culture, community, and competitive ecosystem."]
   ];
 
   return (
@@ -1074,7 +1074,7 @@ function Footer() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 md:flex-row md:items-end md:justify-between">
         <div>
           <img src="/apl-logo.png" alt="APL logo" className="h-16 w-auto brightness-0 invert" />
-          <p className="mt-5 max-w-sm text-sm leading-7 text-white/52">APEX PREMIER LEAGUE. Rise Above.</p>
+          <p className="mt-5 max-w-sm text-sm leading-7 text-white/52">APEX PREMIERE LEAGUE. Rise Above.</p>
           <p className="mt-4 text-sm text-white/42">© 2026 APL. All rights reserved.</p>
         </div>
         <div className="flex flex-wrap gap-4 text-sm text-white/64">

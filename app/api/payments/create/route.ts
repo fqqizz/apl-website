@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         notify_url: `${baseUrl}/api/payments/webhook`,
       },
       settlements: {
-        beneficiary_name: "Apex Premier League",
+        beneficiary_name: "Apex Premiere League",
       },
     };
 

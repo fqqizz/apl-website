@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { insertPlayer, getPlayerByOrderId } from "@/lib/database";
+import type { Database } from "@/lib/database.types";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,7 @@ function PaymentCallbackContent() {
   const [status, setStatus] = useState<"loading" | "success" | "cancelled" | "error">("loading");
   const [message, setMessage] = useState<string | null>(null);
   const [orderStatus, setOrderStatus] = useState<string | null>(null);
+  const [playerId, setPlayerId] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -48,6 +50,7 @@ function PaymentCallbackContent() {
           try {
             const existing = await getPlayerByOrderId(orderId);
             if (existing.success && existing.data) {
+              setPlayerId(existing.data.playerId || null);
               setStatus("success");
               // Cleanup any leftover session data
               sessionStorage.removeItem("pendingPlayerRegistration");
@@ -65,9 +68,21 @@ function PaymentCallbackContent() {
             return;
           }
 
-          const parsed = JSON.parse(pending);
+          const parsed = JSON.parse(pending) as {
+            fullName: string;
+            age: number;
+            position: string;
+            preferredFoot?: string;
+            foot?: string;
+            contactNumber: string;
+            email: string;
+            instagram?: string | null;
+            area: string;
+            photoUrl?: string | null;
+            idUrl?: string | null;
+          };
 
-          const insertPayload = {
+          const insertPayload: Omit<Database["public"]["Tables"]["players"]["Insert"], "id"> = {
             full_name: parsed.fullName,
             age: parsed.age,
             position: parsed.position,
@@ -82,7 +97,7 @@ function PaymentCallbackContent() {
             order_id: orderId,
           };
 
-          const insertResult = await insertPlayer(insertPayload as any);
+          const insertResult = await insertPlayer(insertPayload);
           if (!insertResult.success) {
             console.error("Failed to save player after payment:", insertResult.error);
             setStatus("error");
@@ -92,6 +107,7 @@ function PaymentCallbackContent() {
 
           // Success: cleanup and show success UI
           sessionStorage.removeItem("pendingPlayerRegistration");
+          setPlayerId(insertResult.data?.playerId || null);
           setStatus("success");
         } else {
           setStatus("cancelled");
@@ -119,20 +135,52 @@ function PaymentCallbackContent() {
       )}
 
       {status === "success" && (
-        <div className="text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        <div className="rounded-[2rem] border border-ink/10 bg-white/95 p-8 shadow-[0_30px_90px_rgba(17,17,17,0.12)] backdrop-blur-sm">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 text-ink mx-auto">
+            <svg className="h-10 w-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 6L9 17l-5-5" />
             </svg>
           </div>
-          <h1 className="mt-6 text-3xl font-bold">Registration Successful</h1>
-          <p className="mt-4 text-ink/58">Your application has been submitted successfully.</p>
-          <p className="mt-2 text-sm text-ink/48">
-            You will receive an email once your registration has been reviewed and approved by the APL Committee.
+          <h1 className="mt-6 text-center text-3xl font-semibold tracking-tight text-ink">Registration Successful</h1>
+          <p className="mt-3 text-center text-sm leading-6 text-ink/60">
+            Your registration has been successfully submitted.
           </p>
-          <Link href="/" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
-            Return Home
-          </Link>
+
+          {playerId ? (
+            <div className="mt-8 rounded-[1.75rem] border border-slate-200 bg-slate-50 px-6 py-5 text-center">
+              <p className="text-sm uppercase tracking-[0.28em] text-ink/60">Your Player ID</p>
+              <p className="mt-3 text-3xl font-semibold tracking-tight text-ink">{playerId}</p>
+            </div>
+          ) : (
+            <div className="mt-8 rounded-[1.75rem] border border-slate-200 bg-slate-50 px-6 py-5 text-center">
+              <p className="text-sm text-ink/60">Your Player ID will be shared shortly.</p>
+            </div>
+          )}
+
+          <p className="mt-6 text-center text-sm leading-6 text-ink/60">
+            You will receive further updates from the APL Committee after review and verification.
+          </p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <button
+              onClick={() => window.location.assign("/")}
+              className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-900"
+            >
+              Return Home
+            </button>
+            <button
+              onClick={() => {
+                if (window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  window.location.assign("/");
+                }
+              }}
+              className="rounded-full border border-ink/10 bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:border-slate-400"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
 

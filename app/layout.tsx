@@ -3,11 +3,11 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
-  title: "Apex Premier League | Kashmir Football League",
+  title: "Apex Premiere League | Kashmir Football League",
   description:
-    "Apex Premier League (APL) is a premium football league platform from Kashmir focused on football culture, competition, youth talent, and professional league experiences.",
+    "Apex Premiere League (APL) is a premium football league platform from Kashmir focused on football culture, competition, youth talent, and professional league experiences.",
   keywords: [
-    "Apex Premier League",
+    "Apex Premiere League",
     "APL Football",
     "Kashmir Football",
     "Baramulla Football",
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL("https://apexpremiereleague.in"),
   openGraph: {
-    title: "Apex Premier League",
-    description: "Kashmir's Premier Football Competition.",
+    title: "Apex Premiere League",
+    description: "Kashmir's Premiere Football Competition.",
     url: "https://apexpremiereleague.in",
     siteName: "APL",
     images: [

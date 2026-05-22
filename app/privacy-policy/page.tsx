@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
     <LegalPage
       eyebrow="APL Legal"
       title="Privacy Policy"
-      intro="APEX PREMIER LEAGUE respects the personal information submitted by players, franchise owners, managers, partners, and supporters."
+      intro="APEX PREMIERE LEAGUE respects the personal information submitted by players, franchise owners, managers, partners, and supporters."
       sections={[
         {
           title: "Information We Collect",
@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
         },
         {
           title: "Fees and Refund Policy",
-          body: "Registration fees and franchise fees paid to APEX PREMIER LEAGUE are non-refundable once processing, verification, administrative work, or league operations have commenced. No refunds will be issued for any reason including cancellation, withdrawal, or non-participation. All payments are final and binding."
+          body: "Registration fees and franchise fees paid to APEX PREMIERE LEAGUE are non-refundable once processing, verification, administrative work, or league operations have commenced. No refunds will be issued for any reason including cancellation, withdrawal, or non-participation. All payments are final and binding."
         }
       ]}
     />

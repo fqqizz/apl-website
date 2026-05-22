@@ -5,7 +5,7 @@ export default function TermsAndConditions() {
     <LegalPage
       eyebrow="APL Legal"
       title="Terms & Conditions"
-      intro="These terms define the participation standards, administrative authority, registration policies, and conduct expectations for APEX PREMIER LEAGUE."
+      intro="These terms define the participation standards, administrative authority, registration policies, and conduct expectations for APEX PREMIERE LEAGUE."
       sections={[
         {
           title: "Registration Policies",
@@ -29,7 +29,7 @@ export default function TermsAndConditions() {
         },
         {
           title: "Refund Policy",
-          body: "All registration fees and franchise fees are strictly non-refundable. Once payment has been processed and any administrative, verification, or league operations have commenced, no refunds will be issued under any circumstances including cancellation, withdrawal, non-participation, or ineligibility. Players and franchise owners acknowledge that all payments are final and binding at the time of submission. Payments for Apex Premier League are processed and managed under the authorized operations of Farhana Begum."
+          body: "All registration fees and franchise fees are strictly non-refundable. Once payment has been processed and any administrative, verification, or league operations have commenced, no refunds will be issued under any circumstances including cancellation, withdrawal, non-participation, or ineligibility. Players and franchise owners acknowledge that all payments are final and binding at the time of submission. Payments for Apex Premiere League are processed and managed under the authorized operations of Farhana Begum."
         },
         {
           title: "Suspension Rules",

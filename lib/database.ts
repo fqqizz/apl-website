@@ -8,6 +8,41 @@ import type { Database, Player, Franchise, DatabaseResult } from "./database.typ
 
 // Use an untyped alias to avoid strict generic typing issues with supabase-js
 const untyped = supabase as unknown as any;
+const PLAYER_ID_PREFIX = "APL-";
+const MAX_PLAYER_ID_ATTEMPTS = 20;
+
+function createPlayerIdCandidate() {
+  const digits = Math.random() < 0.5 ? 4 : 5;
+  const min = 10 ** (digits - 1);
+  const max = 10 ** digits - 1;
+  const value = Math.floor(Math.random() * (max - min + 1)) + min;
+  return `${PLAYER_ID_PREFIX}${value}`;
+}
+
+async function isPlayerIdTaken(playerId: string): Promise<boolean> {
+  const { data, error } = await untyped
+    .from("players")
+    .select("player_id")
+    .eq("player_id", playerId)
+    .limit(1);
+
+  if (error) {
+    throw error;
+  }
+
+  return Array.isArray(data) ? data.length > 0 : Boolean(data);
+}
+
+async function generateUniquePlayerId(): Promise<string> {
+  for (let attempt = 0; attempt < MAX_PLAYER_ID_ATTEMPTS; attempt += 1) {
+    const candidate = createPlayerIdCandidate();
+    const taken = await isPlayerIdTaken(candidate);
+    if (!taken) {
+      return candidate;
+    }
+  }
+  throw new Error("Unable to generate a unique Player ID. Please try again.");
+}
 
 /**
  * Insert a new player registration into the database
@@ -17,31 +52,43 @@ export async function insertPlayer(
   playerData: Omit<Database["public"]["Tables"]["players"]["Insert"], "id">
 ): Promise<DatabaseResult<Player>> {
   try {
-    const { data, error } = await untyped.from("players").insert([playerData]).select().single();
+    for (let attempt = 0; attempt < MAX_PLAYER_ID_ATTEMPTS; attempt += 1) {
+      const playerId = await generateUniquePlayerId();
+      const insertPayload = { ...playerData, player_id: playerId };
+      const { data, error } = await untyped.from("players").insert([insertPayload]).select().single();
 
-    if (error) {
-      console.error("Insert player error:", error);
-      return { success: false, error: error.message };
+      if (error) {
+        const message = String(error.message || "").toLowerCase();
+        if (message.includes("duplicate") || message.includes("unique") || message.includes("player_id")) {
+          continue;
+        }
+
+        console.error("Insert player error:", error);
+        return { success: false, error: error.message };
+      }
+
+      const player: Player = {
+        id: data.id,
+        fullName: data.full_name,
+        age: data.age,
+        position: data.position,
+        preferredFoot: data.preferred_foot,
+        contactNumber: data.contact_number,
+        email: data.email,
+        instagram: data.instagram || undefined,
+        area: data.area,
+        photoUrl: data.photo_url || undefined,
+        idUrl: data.id_url || undefined,
+        paymentStatus: data.payment_status,
+        orderId: data.order_id || undefined,
+        playerId: data.player_id || undefined,
+        createdAt: data.created_at,
+      };
+
+      return { success: true, data: player };
     }
 
-    const player: Player = {
-      id: data.id,
-      fullName: data.full_name,
-      age: data.age,
-      position: data.position,
-      preferredFoot: data.preferred_foot,
-      contactNumber: data.contact_number,
-      email: data.email,
-      instagram: data.instagram || undefined,
-      area: data.area,
-      photoUrl: data.photo_url || undefined,
-      idUrl: data.id_url || undefined,
-      paymentStatus: data.payment_status,
-      orderId: data.order_id || undefined,
-      createdAt: data.created_at,
-    };
-
-    return { success: true, data: player };
+    return { success: false, error: "Unable to generate a unique Player ID. Please try again." };
   } catch (err: any) {
     console.error("Insert player exception:", err);
     return { success: false, error: "Failed to save player registration" };
@@ -102,6 +149,7 @@ export async function getPlayerByOrderId(orderId: string): Promise<DatabaseResul
       idUrl: data.id_url || undefined,
       paymentStatus: data.payment_status,
       orderId: data.order_id || undefined,
+      playerId: data.player_id || undefined,
       createdAt: data.created_at,
     };
 
@@ -250,6 +298,7 @@ export async function getAllPlayers(): Promise<DatabaseResult<Player[]>> {
       idUrl: row.id_url || undefined,
       paymentStatus: row.payment_status,
       orderId: row.order_id || undefined,
+      playerId: row.player_id || undefined,
       createdAt: row.created_at,
     }));
 
