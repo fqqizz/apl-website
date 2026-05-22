@@ -19,8 +19,11 @@ import {
   Play,
   Send,
   Upload,
-  X
+  X,
+  AlertCircle
 } from "lucide-react";
+import { uploadPlayerPhoto, uploadPlayerID, uploadFranchiseLogo } from "@/lib/uploads";
+import { insertPlayer, insertFranchise } from "@/lib/database";
 
 const navItems = ["Home", "About", "Franchises", "Players", "Media", "Contact"];
 const transition: Transition = { duration: 0.76, ease: [0.22, 1, 0.36, 1] };
@@ -547,13 +550,62 @@ function RegistrationSection() {
 function PaymentModal({ state, setState, formData }: { state: PaymentState; setState: (state: PaymentState) => void; formData: Record<string, any> }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<string>("");
 
   const handleCashfreePayment = async () => {
     setIsLoading(true);
+    setUploadProgress("Preparing files for upload...");
     setError(null);
 
     try {
-      // Call your API to create payment order
+      // Step 1: Upload files to Supabase Storage
+      const photoFile = formData.photo as File;
+      const idFile = formData.idUpload as File;
+
+      if (!photoFile || !idFile) {
+        setError("Files missing from form data");
+        setIsLoading(false);
+        return;
+      }
+
+      setUploadProgress("Uploading photo...");
+      const photoResult = await uploadPlayerPhoto(photoFile);
+      if (!photoResult.success) {
+        setError(photoResult.error || "Failed to upload photo");
+        setIsLoading(false);
+        return;
+      }
+
+      setUploadProgress("Uploading ID...");
+      const idResult = await uploadPlayerID(idFile);
+      if (!idResult.success) {
+        setError(idResult.error || "Failed to upload ID");
+        setIsLoading(false);
+        return;
+      }
+
+      // Step 2: Store uploaded URLs and form data in localStorage for post-payment processing
+      const playerDataForPayment = {
+        fullName: formData.fullName,
+        age: parseInt(formData.age),
+        position: formData.position,
+        preferredFoot: formData.foot,
+        contactNumber: formData.phone,
+        email: formData.email,
+        instagram: formData.instagram || null,
+        area: formData.area,
+        photoUrl: photoResult.url,
+        idUrl: idResult.url,
+      };
+
+      // Store in sessionStorage so we can access after payment callback
+      sessionStorage.setItem(
+        "pendingPlayerRegistration",
+        JSON.stringify(playerDataForPayment)
+      );
+
+      // Step 3: Create payment order with Cashfree
+      setUploadProgress("Initiating payment...");
       const response = await fetch("/api/payments/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -569,6 +621,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       if (!response.ok) {
         console.error("Create payment API error", response.status, paymentData);
         setError("Failed to load payment gateway");
+        sessionStorage.removeItem("pendingPlayerRegistration");
         setIsLoading(false);
         return;
       }
@@ -576,10 +629,12 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       if (!paymentData.paymentSessionId) {
         console.error("Missing payment session ID", paymentData);
         setError("Failed to load payment gateway");
+        sessionStorage.removeItem("pendingPlayerRegistration");
         setIsLoading(false);
         return;
       }
 
+      // Step 4: Launch Cashfree checkout
       const cashfreeMode = ["TEST", "SANDBOX"].includes(
         (process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT || "").toUpperCase()
       )
@@ -590,13 +645,15 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         mode: cashfreeMode,
       });
 
+      setUploadProgress("");
       await cashfree.checkout({
         paymentSessionId: paymentData.paymentSessionId,
         redirectTarget: "_self",
       });
-      } catch (err: any) {
+    } catch (err: any) {
       console.error("FULL PAYMENT ERROR:", err);
-      setError("Failed to load payment gateway");
+      setError("Failed to process payment. Please try again.");
+      setUploadProgress("");
       setIsLoading(false);
     }
   };
@@ -693,13 +750,63 @@ function Confirmation({ title, message, onClose }: { title: string; message: str
 function FranchiseSection() {
   const [errors, setErrors] = useState<ErrorMap>({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const required = ["ownerName", "phone", "email", "teamArea"];
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitError(null);
     const nextErrors = validateForm(event.currentTarget, required);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) setSubmitted(true);
+    if (Object.keys(nextErrors).length !== 0) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const data = new FormData(event.currentTarget);
+      const logoFile = data.get("logo") as File | null;
+
+      let logoUrl: string | null = null;
+      if (logoFile && logoFile.name) {
+        const upload = await uploadFranchiseLogo(logoFile);
+        if (!upload.success) {
+          setSubmitError(upload.error || "Failed to upload logo");
+          setIsSubmitting(false);
+          return;
+        }
+        logoUrl = upload.url || null;
+      }
+
+      const insertPayload = {
+        owner_name: String(data.get("ownerName") || ""),
+        contact_number: String(data.get("phone") || ""),
+        email: String(data.get("email") || ""),
+        team_area: String(data.get("teamArea") || ""),
+        team_name: String(data.get("teamName") || null),
+        team_colors: String(data.get("teamColors") || null),
+        squad_estimate: String(data.get("squadEstimate") || null),
+        manager_name: String(data.get("managerName") || null),
+        instagram: String(data.get("instagram") || null),
+        previous_experience: String(data.get("experience") || null),
+        logo_url: logoUrl,
+        approval_status: "pending",
+      };
+
+      const result = await insertFranchise(insertPayload as any);
+      if (!result.success) {
+        setSubmitError(result.error || "Failed to save franchise application");
+        setIsSubmitting(false);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error("Franchise submit error", err);
+      setSubmitError("An unexpected error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -740,9 +847,14 @@ function FranchiseSection() {
                 <div className="md:col-span-2">
                   <UploadField label="Logo Upload" name="logo" />
                 </div>
-                <button className="rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2">
-                  Submit Franchise Application
+                <button disabled={isSubmitting} className="rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                  {isSubmitting ? "Submitting..." : "Submit Franchise Application"}
                 </button>
+                {submitError && (
+                  <div className="md:col-span-2 mt-3 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+                    {submitError}
+                  </div>
+                )}
               </motion.form>
             )}
           </AnimatePresence>

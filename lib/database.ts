@@ -1,0 +1,305 @@
+/**
+ * Supabase Database Helper Functions
+ * Handle all database operations for players and franchises
+ */
+
+import { supabase } from "./supabase";
+import type {
+  Database,
+  Player,
+  Franchise,
+  DatabaseResult,
+} from "./database.types";
+
+/**
+ * Insert a new player registration into the database
+ * Called after successful payment and file uploads
+ */
+export async function insertPlayer(
+  playerData: Omit<Database["public"]["Tables"]["players"]["Insert"], "id">
+): Promise<DatabaseResult<Player>> {
+  try {
+    const { data, error } = await supabase
+      .from("players")
+      .insert([playerData])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Insert player error:", error);
+      return { success: false, error: error.message };
+    }
+
+    // Transform database row to frontend type
+    const player: Player = {
+      id: data.id,
+      fullName: data.full_name,
+      age: data.age,
+      position: data.position,
+      preferredFoot: data.preferred_foot,
+      contactNumber: data.contact_number,
+      email: data.email,
+      instagram: data.instagram || undefined,
+      area: data.area,
+      photoUrl: data.photo_url || undefined,
+      idUrl: data.id_url || undefined,
+      paymentStatus: data.payment_status,
+      orderId: data.order_id || undefined,
+      createdAt: data.created_at,
+    };
+
+    return { success: true, data: player };
+  } catch (err: any) {
+    console.error("Insert player exception:", err);
+    return { success: false, error: "Failed to save player registration" };
+  }
+}
+
+/**
+ * Update player payment status after successful Cashfree payment
+ */
+export async function updatePlayerPaymentStatus(
+  playerId: string,
+  status: "completed" | "failed",
+  orderId: string
+): Promise<DatabaseResult<void>> {
+  try {
+    const { error } = await supabase
+      .from("players")
+      .update({
+        payment_status: status,
+        order_id: orderId,
+      })
+      .eq("id", playerId);
+
+    if (error) {
+      console.error("Update payment status error:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Update payment status exception:", err);
+    return { success: false, error: "Failed to update payment status" };
+  }
+}
+
+/**
+ * Get player by order ID (for callback verification)
+ */
+export async function getPlayerByOrderId(
+  orderId: string
+): Promise<DatabaseResult<Player>> {
+  try {
+    const { data, error } = await supabase
+      .from("players")
+      .select()
+      .eq("order_id", orderId)
+      .single();
+
+    if (error) {
+      console.error("Get player by order ID error:", error);
+      return { success: false, error: error.message };
+    }
+
+    if (!data) {
+      return { success: false, error: "Player not found" };
+    }
+
+    // Transform database row to frontend type
+    const player: Player = {
+      id: data.id,
+      fullName: data.full_name,
+      age: data.age,
+      position: data.position,
+      preferredFoot: data.preferred_foot,
+      contactNumber: data.contact_number,
+      email: data.email,
+      instagram: data.instagram || undefined,
+      area: data.area,
+      photoUrl: data.photo_url || undefined,
+      idUrl: data.id_url || undefined,
+      paymentStatus: data.payment_status,
+      orderId: data.order_id || undefined,
+      createdAt: data.created_at,
+    };
+
+    return { success: true, data: player };
+  } catch (err: any) {
+    console.error("Get player by order ID exception:", err);
+    return { success: false, error: "Failed to fetch player" };
+  }
+}
+
+/**
+ * Insert a new franchise application into the database
+ */
+export async function insertFranchise(
+  franchiseData: Omit<
+    Database["public"]["Tables"]["franchises"]["Insert"],
+    "id"
+  >
+): Promise<DatabaseResult<Franchise>> {
+  try {
+    const { data, error } = await supabase
+      .from("franchises")
+      .insert([franchiseData])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Insert franchise error:", error);
+      return { success: false, error: error.message };
+    }
+
+    // Transform database row to frontend type
+    const franchise: Franchise = {
+      id: data.id,
+      ownerName: data.owner_name,
+      contactNumber: data.contact_number,
+      email: data.email,
+      teamArea: data.team_area,
+      teamName: data.team_name || undefined,
+      teamColors: data.team_colors || undefined,
+      squadEstimate: data.squad_estimate || undefined,
+      managerName: data.manager_name || undefined,
+      instagram: data.instagram || undefined,
+      previousExperience: data.previous_experience || undefined,
+      logoUrl: data.logo_url || undefined,
+      approvalStatus: data.approval_status,
+      createdAt: data.created_at,
+    };
+
+    return { success: true, data: franchise };
+  } catch (err: any) {
+    console.error("Insert franchise exception:", err);
+    return { success: false, error: "Failed to save franchise application" };
+  }
+}
+
+/**
+ * Get franchise by ID
+ */
+export async function getFranchiseById(
+  franchiseId: string
+): Promise<DatabaseResult<Franchise>> {
+  try {
+    const { data, error } = await supabase
+      .from("franchises")
+      .select()
+      .eq("id", franchiseId)
+      .single();
+
+    if (error) {
+      console.error("Get franchise error:", error);
+      return { success: false, error: error.message };
+    }
+
+    if (!data) {
+      return { success: false, error: "Franchise not found" };
+    }
+
+    // Transform database row to frontend type
+    const franchise: Franchise = {
+      id: data.id,
+      ownerName: data.owner_name,
+      contactNumber: data.contact_number,
+      email: data.email,
+      teamArea: data.team_area,
+      teamName: data.team_name || undefined,
+      teamColors: data.team_colors || undefined,
+      squadEstimate: data.squad_estimate || undefined,
+      managerName: data.manager_name || undefined,
+      instagram: data.instagram || undefined,
+      previousExperience: data.previous_experience || undefined,
+      logoUrl: data.logo_url || undefined,
+      approvalStatus: data.approval_status,
+      createdAt: data.created_at,
+    };
+
+    return { success: true, data: franchise };
+  } catch (err: any) {
+    console.error("Get franchise exception:", err);
+    return { success: false, error: "Failed to fetch franchise" };
+  }
+}
+
+/**
+ * Get all franchises (for admin/dashboard)
+ */
+export async function getAllFranchises(): Promise<DatabaseResult<Franchise[]>> {
+  try {
+    const { data, error } = await supabase
+      .from("franchises")
+      .select()
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Get all franchises error:", error);
+      return { success: false, error: error.message };
+    }
+
+    // Transform database rows to frontend types
+    const franchises: Franchise[] = (data || []).map((row) => ({
+      id: row.id,
+      ownerName: row.owner_name,
+      contactNumber: row.contact_number,
+      email: row.email,
+      teamArea: row.team_area,
+      teamName: row.team_name || undefined,
+      teamColors: row.team_colors || undefined,
+      squadEstimate: row.squad_estimate || undefined,
+      managerName: row.manager_name || undefined,
+      instagram: row.instagram || undefined,
+      previousExperience: row.previous_experience || undefined,
+      logoUrl: row.logo_url || undefined,
+      approvalStatus: row.approval_status,
+      createdAt: row.created_at,
+    }));
+
+    return { success: true, data: franchises };
+  } catch (err: any) {
+    console.error("Get all franchises exception:", err);
+    return { success: false, error: "Failed to fetch franchises" };
+  }
+}
+
+/**
+ * Get all players (for admin/dashboard)
+ */
+export async function getAllPlayers(): Promise<DatabaseResult<Player[]>> {
+  try {
+    const { data, error } = await supabase
+      .from("players")
+      .select()
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Get all players error:", error);
+      return { success: false, error: error.message };
+    }
+
+    // Transform database rows to frontend types
+    const players: Player[] = (data || []).map((row) => ({
+      id: row.id,
+      fullName: row.full_name,
+      age: row.age,
+      position: row.position,
+      preferredFoot: row.preferred_foot,
+      contactNumber: row.contact_number,
+      email: row.email,
+      instagram: row.instagram || undefined,
+      area: row.area,
+      photoUrl: row.photo_url || undefined,
+      idUrl: row.id_url || undefined,
+      paymentStatus: row.payment_status,
+      orderId: row.order_id || undefined,
+      createdAt: row.created_at,
+    }));
+
+    return { success: true, data: players };
+  } catch (err: any) {
+    console.error("Get all players exception:", err);
+    return { success: false, error: "Failed to fetch players" };
+  }
+}

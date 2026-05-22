@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { insertPlayer, getPlayerByOrderId } from "@/lib/database";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,54 @@ function PaymentCallbackContent() {
         setOrderStatus(statusValue);
 
         if (statusValue === "PAID") {
+          // Ensure we haven't already saved this order
+          try {
+            const existing = await getPlayerByOrderId(orderId);
+            if (existing.success && existing.data) {
+              setStatus("success");
+              // Cleanup any leftover session data
+              sessionStorage.removeItem("pendingPlayerRegistration");
+              return;
+            }
+          } catch (e) {
+            // ignore and continue to attempt save
+          }
+
+          // Retrieve pending registration data saved before checkout
+          const pending = sessionStorage.getItem("pendingPlayerRegistration");
+          if (!pending) {
+            // No local data to save, still show success
+            setStatus("success");
+            return;
+          }
+
+          const parsed = JSON.parse(pending);
+
+          const insertPayload = {
+            full_name: parsed.fullName,
+            age: parsed.age,
+            position: parsed.position,
+            preferred_foot: parsed.preferredFoot || parsed.foot || "",
+            contact_number: parsed.contactNumber,
+            email: parsed.email,
+            instagram: parsed.instagram || null,
+            area: parsed.area,
+            photo_url: parsed.photoUrl || null,
+            id_url: parsed.idUrl || null,
+            payment_status: "completed",
+            order_id: orderId,
+          };
+
+          const insertResult = await insertPlayer(insertPayload as any);
+          if (!insertResult.success) {
+            console.error("Failed to save player after payment:", insertResult.error);
+            setStatus("error");
+            setMessage("Payment verified but we couldn't save your registration. Contact support.");
+            return;
+          }
+
+          // Success: cleanup and show success UI
+          sessionStorage.removeItem("pendingPlayerRegistration");
           setStatus("success");
         } else {
           setStatus("cancelled");
