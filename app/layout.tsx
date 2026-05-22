@@ -2,9 +2,31 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "APEX PREMIER LEAGUE | Rise Above.",
+  title: "Apex Premier League | Kashmir Football League",
   description:
-    "APEX PREMIER LEAGUE is a premium football culture platform built around franchises, players, media, and youth development.",
+    "Apex Premier League (APL) is a premium football league platform from Kashmir focused on football culture, competition, youth talent, and professional league experiences.",
+  keywords: [
+    "Apex Premier League",
+    "APL Football",
+    "Kashmir Football",
+    "Baramulla Football",
+    "Football League Kashmir",
+    "Football Tournament Baramulla"
+  ],
+  metadataBase: new URL("https://apexpremiereleague.in"),
+  openGraph: {
+    title: "Apex Premier League",
+    description: "Kashmir's Premier Football Competition.",
+    url: "https://apexpremiereleague.in",
+    siteName: "APL",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630
+      }
+    ]
+  },
   icons: {
     icon: "/apl-logo.png"
   }
