@@ -3,7 +3,6 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { supabase } from "../../lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +16,6 @@ function PaymentCallbackContent() {
   const [status, setStatus] = useState<"loading" | "success" | "cancelled" | "error">("loading");
   const [message, setMessage] = useState<string | null>(null);
   const [orderStatus, setOrderStatus] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -45,43 +43,6 @@ function PaymentCallbackContent() {
         setOrderStatus(statusValue);
 
         if (statusValue === "PAID") {
-          const playerDataRaw = typeof window !== "undefined" ? localStorage.getItem("aplPlayerRegistration") : null;
-
-          if (playerDataRaw) {
-            try {
-              const playerData = JSON.parse(playerDataRaw);
-
-              if (!supabase) {
-                console.warn("Supabase is not configured. Skipping player registration save.");
-              } else {
-                const { error: insertError } = await supabase.from("players").insert([
-                  {
-                    full_name: playerData.fullName,
-                    age: playerData.age,
-                    phone: playerData.phone,
-                    email: playerData.email,
-                    position: playerData.position,
-                    district: playerData.district || playerData.area,
-                    instagram: playerData.instagram,
-                    photo_url: playerData.photoUrl,
-                    id_url: playerData.idUrl,
-                    payment_status: "PAID",
-                    payment_id: orderId,
-                  },
-                ]);
-
-                if (insertError) {
-                  console.error("Supabase insert error:", insertError);
-                  setSaveError(insertError.message);
-                } else {
-                  localStorage.removeItem("aplPlayerRegistration");
-                }
-              }
-            } catch (storageError) {
-              console.error("Player registration storage read error:", storageError);
-            }
-          }
-
           setStatus("success");
         } else {
           setStatus("cancelled");
@@ -120,9 +81,6 @@ function PaymentCallbackContent() {
           <p className="mt-2 text-sm text-ink/48">
             You will receive an email once your registration has been reviewed and approved by the APL Committee.
           </p>
-          {saveError && (
-            <p className="mt-4 text-sm text-red-600">Registration saved, but Supabase update failed: {saveError}</p>
-          )}
           <Link href="/" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
             Return Home
           </Link>
