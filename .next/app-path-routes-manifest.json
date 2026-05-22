@@ -1,0 +1,10 @@
+{
+  "/api/payments/webhook/route": "/api/payments/webhook",
+  "/api/payments/verify/route": "/api/payments/verify",
+  "/_not-found/page": "/_not-found",
+  "/api/payments/create/route": "/api/payments/create",
+  "/terms-and-conditions/page": "/terms-and-conditions",
+  "/page": "/",
+  "/privacy-policy/page": "/privacy-policy",
+  "/payment-callback/page": "/payment-callback"
+}

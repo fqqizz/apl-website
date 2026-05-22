@@ -4,12 +4,10 @@
  */
 
 import { supabase } from "./supabase";
-import type {
-  Database,
-  Player,
-  Franchise,
-  DatabaseResult,
-} from "./database.types";
+import type { Database, Player, Franchise, DatabaseResult } from "./database.types";
+
+// Use an untyped alias to avoid strict generic typing issues with supabase-js
+const untyped = supabase as unknown as any;
 
 /**
  * Insert a new player registration into the database
@@ -19,18 +17,13 @@ export async function insertPlayer(
   playerData: Omit<Database["public"]["Tables"]["players"]["Insert"], "id">
 ): Promise<DatabaseResult<Player>> {
   try {
-    const { data, error } = await supabase
-      .from("players")
-      .insert([playerData])
-      .select()
-      .single();
+    const { data, error } = await untyped.from("players").insert([playerData]).select().single();
 
     if (error) {
       console.error("Insert player error:", error);
       return { success: false, error: error.message };
     }
 
-    // Transform database row to frontend type
     const player: Player = {
       id: data.id,
       fullName: data.full_name,
@@ -64,12 +57,9 @@ export async function updatePlayerPaymentStatus(
   orderId: string
 ): Promise<DatabaseResult<void>> {
   try {
-    const { error } = await supabase
+    const { error } = await untyped
       .from("players")
-      .update({
-        payment_status: status,
-        order_id: orderId,
-      })
+      .update({ payment_status: status, order_id: orderId })
       .eq("id", playerId);
 
     if (error) {
@@ -87,26 +77,17 @@ export async function updatePlayerPaymentStatus(
 /**
  * Get player by order ID (for callback verification)
  */
-export async function getPlayerByOrderId(
-  orderId: string
-): Promise<DatabaseResult<Player>> {
+export async function getPlayerByOrderId(orderId: string): Promise<DatabaseResult<Player>> {
   try {
-    const { data, error } = await supabase
-      .from("players")
-      .select()
-      .eq("order_id", orderId)
-      .single();
+    const { data, error } = await untyped.from("players").select().eq("order_id", orderId).single();
 
     if (error) {
       console.error("Get player by order ID error:", error);
       return { success: false, error: error.message };
     }
 
-    if (!data) {
-      return { success: false, error: "Player not found" };
-    }
+    if (!data) return { success: false, error: "Player not found" };
 
-    // Transform database row to frontend type
     const player: Player = {
       id: data.id,
       fullName: data.full_name,
@@ -135,24 +116,16 @@ export async function getPlayerByOrderId(
  * Insert a new franchise application into the database
  */
 export async function insertFranchise(
-  franchiseData: Omit<
-    Database["public"]["Tables"]["franchises"]["Insert"],
-    "id"
-  >
+  franchiseData: Omit<Database["public"]["Tables"]["franchises"]["Insert"], "id">
 ): Promise<DatabaseResult<Franchise>> {
   try {
-    const { data, error } = await supabase
-      .from("franchises")
-      .insert([franchiseData])
-      .select()
-      .single();
+    const { data, error } = await untyped.from("franchises").insert([franchiseData]).select().single();
 
     if (error) {
       console.error("Insert franchise error:", error);
       return { success: false, error: error.message };
     }
 
-    // Transform database row to frontend type
     const franchise: Franchise = {
       id: data.id,
       ownerName: data.owner_name,
@@ -180,26 +153,17 @@ export async function insertFranchise(
 /**
  * Get franchise by ID
  */
-export async function getFranchiseById(
-  franchiseId: string
-): Promise<DatabaseResult<Franchise>> {
+export async function getFranchiseById(franchiseId: string): Promise<DatabaseResult<Franchise>> {
   try {
-    const { data, error } = await supabase
-      .from("franchises")
-      .select()
-      .eq("id", franchiseId)
-      .single();
+    const { data, error } = await untyped.from("franchises").select().eq("id", franchiseId).single();
 
     if (error) {
       console.error("Get franchise error:", error);
       return { success: false, error: error.message };
     }
 
-    if (!data) {
-      return { success: false, error: "Franchise not found" };
-    }
+    if (!data) return { success: false, error: "Franchise not found" };
 
-    // Transform database row to frontend type
     const franchise: Franchise = {
       id: data.id,
       ownerName: data.owner_name,
@@ -229,18 +193,14 @@ export async function getFranchiseById(
  */
 export async function getAllFranchises(): Promise<DatabaseResult<Franchise[]>> {
   try {
-    const { data, error } = await supabase
-      .from("franchises")
-      .select()
-      .order("created_at", { ascending: false });
+    const { data, error } = await untyped.from("franchises").select().order("created_at", { ascending: false });
 
     if (error) {
       console.error("Get all franchises error:", error);
       return { success: false, error: error.message };
     }
 
-    // Transform database rows to frontend types
-    const franchises: Franchise[] = (data || []).map((row) => ({
+    const franchises: Franchise[] = (data || []).map((row: any) => ({
       id: row.id,
       ownerName: row.owner_name,
       contactNumber: row.contact_number,
@@ -269,18 +229,14 @@ export async function getAllFranchises(): Promise<DatabaseResult<Franchise[]>> {
  */
 export async function getAllPlayers(): Promise<DatabaseResult<Player[]>> {
   try {
-    const { data, error } = await supabase
-      .from("players")
-      .select()
-      .order("created_at", { ascending: false });
+    const { data, error } = await untyped.from("players").select().order("created_at", { ascending: false });
 
     if (error) {
       console.error("Get all players error:", error);
       return { success: false, error: error.message };
     }
 
-    // Transform database rows to frontend types
-    const players: Player[] = (data || []).map((row) => ({
+    const players: Player[] = (data || []).map((row: any) => ({
       id: row.id,
       fullName: row.full_name,
       age: row.age,
