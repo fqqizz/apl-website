@@ -1,6 +1,9 @@
 {
   "/_not-found/page": "/_not-found",
+  "/api/payments/create/route": "/api/payments/create",
+  "/api/payments/webhook/route": "/api/payments/webhook",
+  "/payment-callback/page": "/payment-callback",
   "/page": "/",
-  "/terms-and-conditions/page": "/terms-and-conditions",
-  "/privacy-policy/page": "/privacy-policy"
+  "/privacy-policy/page": "/privacy-policy",
+  "/terms-and-conditions/page": "/terms-and-conditions"
 }

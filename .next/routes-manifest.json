@@ -33,6 +33,12 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/payment-callback",
+      "regex": "^/payment\\-callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/payment\\-callback(?:/)?$"
+    },
+    {
       "page": "/privacy-policy",
       "regex": "^/privacy\\-policy(?:/)?$",
       "routeKeys": {},

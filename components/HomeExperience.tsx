@@ -464,13 +464,23 @@ function validateForm(form: HTMLFormElement, required: string[]) {
 function RegistrationSection() {
   const [errors, setErrors] = useState<ErrorMap>({});
   const [paymentState, setPaymentState] = useState<PaymentState>("idle");
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const required = ["fullName", "age", "position", "foot", "phone", "email", "area", "photo", "idUpload", "termsAcceptance"];
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextErrors = validateForm(event.currentTarget, required);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) setPaymentState("checkout");
+    if (Object.keys(nextErrors).length === 0) {
+      // Store form data before payment
+      const data = new FormData(event.currentTarget);
+      const formDataObj: Record<string, any> = {};
+      data.forEach((value, key) => {
+        formDataObj[key] = value;
+      });
+      setFormData(formDataObj);
+      setPaymentState("checkout");
+    }
   };
 
   return (
@@ -528,12 +538,63 @@ function RegistrationSection() {
           </form>
         </AnimatedBlock>
       </div>
-      <PaymentModal state={paymentState} setState={setPaymentState} />
+      <PaymentModal state={paymentState} setState={setPaymentState} formData={formData} />
     </section>
   );
 }
 
-function PaymentModal({ state, setState }: { state: PaymentState; setState: (state: PaymentState) => void }) {
+function PaymentModal({ state, setState, formData }: { state: PaymentState; setState: (state: PaymentState) => void; formData: Record<string, any> }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleCashfreePayment = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Call your API to create payment order
+      const response = await fetch("/api/payments/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+        }),
+      });
+
+      const paymentData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(paymentData.error || "Failed to create payment");
+      }
+
+      // Load Cashfree script dynamically
+      const script = document.createElement("script");
+      script.src = "https://sdk.cashfree.com/js/core/2.0.9/cashfree.prod.js";
+      script.onload = () => {
+        // @ts-ignore - Cashfree is loaded from script
+        const cf = window.Cashfree;
+        cf.setPublicKey(process.env.NEXT_PUBLIC_CASHFREE_APP_ID);
+
+        // Redirect to payment
+        if (paymentData.redirectUrl) {
+          window.location.href = paymentData.redirectUrl;
+        } else {
+          throw new Error("No redirect URL received");
+        }
+      };
+      script.onerror = () => {
+        setError("Failed to load payment gateway");
+        setIsLoading(false);
+      };
+      document.body.appendChild(script);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Payment failed";
+      setError(errorMessage);
+      setIsLoading(false);
+    }
+  };
   return (
     <AnimatePresence>
       {state !== "idle" && (
@@ -555,7 +616,7 @@ function PaymentModal({ state, setState }: { state: PaymentState; setState: (sta
                 </div>
                 <h3 className="display mt-6 text-5xl">₹249</h3>
                 <p className="mt-4 text-sm leading-7 text-ink/58">
-                  Official APL player registration. This demo checkout is styled for integration with Razorpay, Stripe, or another approved secure payment provider.
+                  Official APL player registration. Secure payment processing via Cashfree.
                 </p>
                 <div className="mt-6 rounded-3xl border border-ink/10 bg-mist p-4">
                   <div className="flex items-center gap-3">
@@ -567,12 +628,21 @@ function PaymentModal({ state, setState }: { state: PaymentState; setState: (sta
                     Encrypted checkout handoff
                   </div>
                 </div>
+                {error && (
+                  <div className="mt-6 rounded-lg bg-red-50 border border-red-200 p-4">
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                )}
                 <div className="mt-6 grid gap-3">
-                  <button onClick={() => setState("success")} className="rounded-full bg-ink px-5 py-4 text-sm font-medium text-white transition hover:bg-apex">
-                    Simulate Successful Payment
+                  <button
+                    onClick={handleCashfreePayment}
+                    disabled={isLoading}
+                    className="rounded-full bg-ink px-5 py-4 text-sm font-medium text-white transition hover:bg-apex disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? "Processing..." : "Proceed to Payment"}
                   </button>
-                  <button onClick={() => setState("failed")} className="rounded-full border border-ink/10 px-5 py-4 text-sm font-medium text-ink/64 transition hover:border-apex hover:text-apex">
-                    Simulate Failure
+                  <button onClick={() => setState("idle")} className="rounded-full border border-ink/10 px-5 py-4 text-sm font-medium text-ink/64 transition hover:border-apex hover:text-apex">
+                    Cancel
                   </button>
                 </div>
               </>
