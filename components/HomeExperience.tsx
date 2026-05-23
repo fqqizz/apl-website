@@ -556,6 +556,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
     setIsLoading(true);
     setUploadProgress("Compressing and uploading files...");
     setError(null);
+    let paymentData: any = null;
 
     try {
       // Step 1: Upload files to Supabase Storage in parallel
@@ -602,6 +603,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
 
       // Step 3: Create payment order with Cashfree
       setUploadProgress("Initiating payment...");
+      let paymentData: any = null;
       const response = await fetch("/api/payments/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -612,7 +614,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         }),
       });
 
-      const paymentData = await response.json();
+      paymentData = await response.json();
 
       if (!response.ok) {
         console.error("Create payment API error", response.status, paymentData);
@@ -622,8 +624,8 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         return;
       }
 
-      if (!paymentData.paymentSessionId) {
-        console.error("Missing payment session ID", paymentData);
+      if (!paymentData.paymentSessionId && !paymentData.paymentLink) {
+        console.error("Missing payment session or link", paymentData);
         setError("Failed to load payment gateway");
         sessionStorage.removeItem("pendingPlayerRegistration");
         setIsLoading(false);
@@ -641,14 +643,26 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         mode: cashfreeMode,
       });
 
-      setUploadProgress("");
-      await cashfree.checkout({
-        paymentSessionId: paymentData.paymentSessionId,
-        redirectTarget: "_self",
-      });
+      if (paymentData.paymentSessionId && cashfree && typeof cashfree.checkout === "function") {
+        setUploadProgress("Opening secure payment...");
+        await cashfree.checkout({
+          paymentSessionId: paymentData.paymentSessionId,
+          redirectTarget: "_self",
+        });
+      } else if (paymentData.paymentLink) {
+        setUploadProgress("Redirecting to payment page...");
+        window.location.assign(paymentData.paymentLink);
+      } else {
+        throw new Error("No payment session or link available");
+      }
     } catch (err: any) {
       console.error("FULL PAYMENT ERROR:", err);
-      setError("Failed to process payment. Please try again.");
+      if (paymentData?.paymentLink) {
+        setError("Opening fallback payment page...");
+        window.location.assign(paymentData.paymentLink);
+      } else {
+        setError("Failed to process payment. Please try again.");
+      }
       setUploadProgress("");
       setIsLoading(false);
     }

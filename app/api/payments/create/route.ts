@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
       orderId,
       ...responseData,
       paymentSessionId: responseData.payment_session_id || responseData.order_id,
+      paymentLink: responseData.payment_link || responseData.paymentLink || null,
     });
   } catch (error) {
     console.error("Payment creation error:", error);
