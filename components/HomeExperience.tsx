@@ -428,9 +428,9 @@ function Field({
   type?: string;
   required?: boolean;
   error?: string;
-  inputMode?: string;
+  inputMode?: "email" | "url" | "search" | "text" | "none" | "tel" | "numeric" | "decimal";
   pattern?: string;
-  onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
+  onInput?: (event: FormEvent<HTMLInputElement>) => void;
 }) {
   return (
     <label className="block">
@@ -439,10 +439,10 @@ function Field({
       </span>
       <input
         name={name}
-        type={type}
-     inputMode?: "email" | "url" | "search" | "text" | "none" | "tel" | "numeric" | "decimal";
-     onInput?: (event: FormEvent<HTMLInputElement>) => void;
-        onInput={onInput}
+          type={type}
+          inputMode={inputMode}
+          pattern={pattern}
+          onInput={onInput}
         className={`field ${error ? "field-error" : ""}`}
         placeholder={label}
       />
@@ -537,7 +537,7 @@ function RegistrationSection() {
       : "production";
 
     load({ mode: cashfreeMode })
-      .then((instance) => {
+      .then((instance: any) => {
         if (instance) {
           setIsCashfreeReady(true);
         }
