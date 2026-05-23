@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, type MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, type Transition, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { uploadPlayerPhoto, uploadPlayerID, uploadFranchiseLogo } from "@/lib/uploads";
 import { insertPlayer, insertFranchise } from "@/lib/database";
+import { savePendingPlayerRegistration } from "@/lib/pendingRegistration";
 
 const navItems = ["Home", "About", "Franchises", "Players", "Media", "Contact"];
 const transition: Transition = { duration: 0.76, ease: [0.22, 1, 0.36, 1] };
@@ -97,6 +98,16 @@ export default function HomeExperience() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.24], [1, 0.58]);
 
   const navHref = (item: string) => (item === "Home" ? "#home" : `#${item.toLowerCase()}`);
+
+  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, item: string) => {
+    event.preventDefault();
+    const sectionId = item === "Home" ? "home" : item.toLowerCase();
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setMenuOpen(false);
+  };
 
   const heroDust = useMemo(
     () =>
@@ -199,18 +210,18 @@ export default function HomeExperience() {
 
       <header className="fixed left-0 right-0 top-3 z-50 px-3 md:top-5">
         <nav className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-full border border-ink/10 bg-white/70 px-3 py-2 shadow-glass backdrop-blur-2xl">
-          <a href="#home" aria-label="APEX PREMIERE LEAGUE home" className="rounded-full px-2 py-1.5">
+          <a href="#home" onClick={(event) => handleNavClick(event, "Home")} aria-label="APEX PREMIERE LEAGUE home" className="rounded-full px-2 py-1.5">
             <img src="/apl-logo.png" alt="APL logo" className="h-9 w-auto md:h-10" />
           </a>
           <div className="hidden items-center gap-2 md:flex">
             {navItems.map((item) => (
-              <a key={item} href={navHref(item)} className="nav-link">
+              <a key={item} href={navHref(item)} onClick={(event) => handleNavClick(event, item)} className="nav-link">
                 {item}
               </a>
             ))}
           </div>
           <div className="hidden items-center gap-2 md:flex">
-            <a href="#players" className="rounded-full bg-ink px-5 py-3 text-xs font-medium uppercase tracking-[0.12em] text-white transition hover:scale-[1.02] hover:bg-apex">
+            <a href="#players" onClick={(event) => handleNavClick(event, "Players")} className="rounded-full bg-ink px-5 py-3 text-xs font-medium uppercase tracking-[0.12em] text-white transition hover:scale-[1.02] hover:bg-apex">
               Register
             </a>
           </div>
@@ -235,7 +246,9 @@ export default function HomeExperience() {
                 <a
                   key={item}
                   href={navHref(item)}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={(event) => {
+                    handleNavClick(event, item);
+                  }}
                   className="block rounded-2xl px-4 py-4 text-sm font-medium uppercase tracking-[0.14em] text-ink/70"
                 >
                   {item}
@@ -405,19 +418,34 @@ function Field({
   type = "text",
   required = false,
   error
+  ,
+  inputMode,
+  pattern,
+  onInput
 }: {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
   error?: string;
+  inputMode?: string;
+  pattern?: string;
+  onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
 }) {
   return (
     <label className="block">
       <span className="mb-2 block text-[0.68rem] font-medium uppercase tracking-[0.18em] text-ink/48">
         {label} {required && <span className="text-apex">*</span>}
       </span>
-      <input name={name} type={type} className={`field ${error ? "field-error" : ""}`} placeholder={label} />
+      <input
+        name={name}
+        type={type}
+        inputMode={inputMode}
+        pattern={pattern}
+        onInput={onInput}
+        className={`field ${error ? "field-error" : ""}`}
+        placeholder={label}
+      />
       <AnimatePresence>
         {error && (
           <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} className="mt-2 text-xs text-apex">
@@ -429,7 +457,21 @@ function Field({
   );
 }
 
-function UploadField({ label, name, required = false, error }: { label: string; name: string; required?: boolean; error?: string }) {
+function UploadField({
+  label,
+  name,
+  required = false,
+  error,
+  fileName,
+  onFileChange
+}: {
+  label: string;
+  name: string;
+  required?: boolean;
+  error?: string;
+  fileName?: string;
+  onFileChange?: (file: File | null) => void;
+}) {
   return (
     <label className={`upload-field ${error ? "border-apex/60" : ""}`}>
       <span>
@@ -437,7 +479,17 @@ function UploadField({ label, name, required = false, error }: { label: string; 
         {error && <span className="mt-1 block text-xs font-normal normal-case tracking-normal text-apex">{error}</span>}
       </span>
       <Upload size={17} />
-      <input name={name} type="file" className="hidden" />
+      <input
+        name={name}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,application/pdf"
+        className="hidden"
+        onChange={(event) => {
+          const file = event.target.files?.[0] ?? null;
+          onFileChange?.(file);
+        }}
+      />
+      {fileName && <p className="mt-2 text-xs text-ink/60">{fileName}</p>}
     </label>
   );
 }
@@ -469,20 +521,66 @@ function RegistrationSection() {
   const [errors, setErrors] = useState<ErrorMap>({});
   const [paymentState, setPaymentState] = useState<PaymentState>("idle");
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [idFile, setIdFile] = useState<File | null>(null);
+  const [photoFileName, setPhotoFileName] = useState("");
+  const [idFileName, setIdFileName] = useState("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isCashfreeReady, setIsCashfreeReady] = useState(false);
   const required = ["fullName", "age", "position", "foot", "phone", "email", "area", "photo", "idUpload", "termsAcceptance"];
+
+  useEffect(() => {
+    const cashfreeMode = ["TEST", "SANDBOX"].includes(
+      (process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT || "").toUpperCase()
+    )
+      ? "sandbox"
+      : "production";
+
+    load({ mode: cashfreeMode })
+      .then((instance) => {
+        if (instance) {
+          setIsCashfreeReady(true);
+        }
+      })
+      .catch(() => {
+        setIsCashfreeReady(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = window.setTimeout(() => setToastMessage(null), 4200);
+    return () => window.clearTimeout(timer);
+  }, [toastMessage]);
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextErrors = validateForm(event.currentTarget, required);
     setErrors(nextErrors);
+
+    if (photoFile && photoFile.size > 5 * 1024 * 1024) {
+      nextErrors.photo = "Photo must be 5MB or smaller.";
+    }
+    if (idFile && idFile.size > 5 * 1024 * 1024) {
+      nextErrors.idUpload = "ID upload must be 5MB or smaller.";
+    }
+
+    setErrors(nextErrors);
+
     if (Object.keys(nextErrors).length === 0) {
-      // Store form data before payment
       const data = new FormData(event.currentTarget);
       const formDataObj: Record<string, any> = {};
       data.forEach((value, key) => {
         formDataObj[key] = value;
       });
+      formDataObj.photo = photoFile;
+      formDataObj.idUpload = idFile;
       setFormData(formDataObj);
+      showToast("Ready to connect to payment gateway...");
       setPaymentState("checkout");
     }
   };
@@ -506,12 +604,44 @@ function RegistrationSection() {
             <Field label="Age" name="age" type="number" required error={errors.age} />
             <Field label="Position" name="position" required error={errors.position} />
             <Field label="Preferred Foot" name="foot" required error={errors.foot} />
-            <Field label="Contact Number" name="phone" type="tel" required error={errors.phone} />
+            <Field
+              label="Contact Number"
+              name="phone"
+              type="tel"
+              required
+              error={errors.phone}
+              inputMode="numeric"
+              pattern="[0-9]*"
+              onInput={(event) => {
+                const input = event.currentTarget;
+                input.value = input.value.replace(/\D/g, "");
+              }}
+            />
             <Field label="Email" name="email" type="email" required error={errors.email} />
             <Field label="Instagram" name="instagram" />
             <Field label="Area/District" name="area" required error={errors.area} />
-            <UploadField label="Upload Photo" name="photo" required error={errors.photo} />
-            <UploadField label="Upload ID" name="idUpload" required error={errors.idUpload} />
+            <UploadField
+              label="Upload Photo"
+              name="photo"
+              required
+              error={errors.photo}
+              fileName={photoFileName}
+              onFileChange={(file) => {
+                setPhotoFile(file);
+                setPhotoFileName(file?.name || "");
+              }}
+            />
+            <UploadField
+              label="Upload ID"
+              name="idUpload"
+              required
+              error={errors.idUpload}
+              fileName={idFileName}
+              onFileChange={(file) => {
+                setIdFile(file);
+                setIdFileName(file?.name || "");
+              }}
+            />
             <label className={`md:col-span-2 flex gap-3 ${errors.termsAcceptance ? "text-apex" : ""}`}>
               <input type="checkbox" name="termsAcceptance" className="mt-1 h-5 w-5 shrink-0" />
               <div>
@@ -554,12 +684,11 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
 
   const handleCashfreePayment = async () => {
     setIsLoading(true);
-    setUploadProgress("Compressing and uploading files...");
+    setUploadProgress("Connecting to payment gateway...");
     setError(null);
     let paymentData: any = null;
 
     try {
-      // Step 1: Upload files to Supabase Storage in parallel
       const photoFile = formData.photo as File;
       const idFile = formData.idUpload as File;
 
@@ -569,41 +698,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
         return;
       }
 
-      const [photoResult, idResult] = await Promise.all([
-        uploadPlayerPhoto(photoFile),
-        uploadPlayerID(idFile),
-      ]);
-
-      if (!photoResult.success || !idResult.success) {
-        const errorMessage = photoResult.error || idResult.error || "Failed to upload files";
-        setError(errorMessage);
-        setIsLoading(false);
-        return;
-      }
-
-      // Step 2: Store uploaded URLs and form data in localStorage for post-payment processing
-      const playerDataForPayment = {
-        fullName: formData.fullName,
-        age: parseInt(formData.age),
-        position: formData.position,
-        preferredFoot: formData.foot,
-        contactNumber: formData.phone,
-        email: formData.email,
-        instagram: formData.instagram || null,
-        area: formData.area,
-        photoUrl: photoResult.url,
-        idUrl: idResult.url,
-      };
-
-      // Store in sessionStorage so we can access after payment callback
-      sessionStorage.setItem(
-        "pendingPlayerRegistration",
-        JSON.stringify(playerDataForPayment)
-      );
-
-      // Step 3: Create payment order with Cashfree
       setUploadProgress("Initiating payment...");
-      let paymentData: any = null;
       const response = await fetch("/api/payments/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -617,48 +712,66 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       paymentData = await response.json();
 
       if (!response.ok) {
-        console.error("Create payment API error", response.status, paymentData);
-        setError("Failed to load payment gateway");
-        sessionStorage.removeItem("pendingPlayerRegistration");
+        setError("Failed to load payment gateway. Please try again.");
         setIsLoading(false);
         return;
       }
 
       if (!paymentData.paymentSessionId && !paymentData.paymentLink) {
-        console.error("Missing payment session or link", paymentData);
-        setError("Failed to load payment gateway");
-        sessionStorage.removeItem("pendingPlayerRegistration");
+        setError("Failed to load payment gateway. Please try again.");
         setIsLoading(false);
         return;
       }
 
-      // Step 4: Launch Cashfree checkout
+      const orderId = paymentData.orderId;
+      if (!orderId) {
+        setError("Unable to create payment order. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      const pendingRegistration = {
+        orderId,
+        createdAt: Date.now(),
+        fullName: formData.fullName,
+        age: parseInt(formData.age, 10),
+        position: formData.position,
+        preferredFoot: formData.foot,
+        contactNumber: formData.phone,
+        email: formData.email,
+        instagram: formData.instagram || null,
+        area: formData.area,
+        photoFile,
+        idFile,
+        photoName: photoFile.name,
+        idName: idFile.name,
+        photoType: photoFile.type,
+        idType: idFile.type,
+      };
+
+      await savePendingPlayerRegistration(pendingRegistration);
+
       const cashfreeMode = ["TEST", "SANDBOX"].includes(
         (process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT || "").toUpperCase()
       )
         ? "sandbox"
         : "production";
 
-      const cashfree = await load({
-        mode: cashfreeMode,
-      });
+      const cashfree = await load({ mode: cashfreeMode });
+      setUploadProgress("Opening secure payment...");
 
       if (paymentData.paymentSessionId && cashfree && typeof cashfree.checkout === "function") {
-        setUploadProgress("Opening secure payment...");
         await cashfree.checkout({
           paymentSessionId: paymentData.paymentSessionId,
           redirectTarget: "_self",
         });
       } else if (paymentData.paymentLink) {
-        setUploadProgress("Redirecting to payment page...");
         window.location.assign(paymentData.paymentLink);
       } else {
         throw new Error("No payment session or link available");
       }
     } catch (err: any) {
-      console.error("FULL PAYMENT ERROR:", err);
       if (paymentData?.paymentLink) {
-        setError("Opening fallback payment page...");
         window.location.assign(paymentData.paymentLink);
       } else {
         setError("Failed to process payment. Please try again.");
@@ -854,7 +967,19 @@ function FranchiseSection() {
             ) : (
               <motion.form key="form" onSubmit={handleSubmit} noValidate className="glass grid gap-5 rounded-[2rem] p-5 md:grid-cols-2 md:p-8">
                 <Field label="Owner Name" name="ownerName" required error={errors.ownerName} />
-                <Field label="Contact Number" name="phone" type="tel" required error={errors.phone} />
+                <Field
+                  label="Contact Number"
+                  name="phone"
+                  type="tel"
+                  required
+                  error={errors.phone}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  onInput={(event) => {
+                    const input = event.currentTarget;
+                    input.value = input.value.replace(/\D/g, "");
+                  }}
+                />
                 <Field label="Email" name="email" type="email" required error={errors.email} />
                 <Field label="Team Area" name="teamArea" required error={errors.teamArea} />
                 <div className="md:col-span-2 border-t border-ink/10 pt-5 text-sm leading-7 text-ink/54">
