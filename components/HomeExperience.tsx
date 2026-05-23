@@ -440,8 +440,8 @@ function Field({
       <input
         name={name}
         type={type}
-        inputMode={inputMode}
-        pattern={pattern}
+     inputMode?: "email" | "url" | "search" | "text" | "none" | "tel" | "numeric" | "decimal";
+     onInput?: (event: FormEvent<HTMLInputElement>) => void;
         onInput={onInput}
         className={`field ${error ? "field-error" : ""}`}
         placeholder={label}
