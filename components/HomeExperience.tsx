@@ -18,15 +18,15 @@ import {
   Pause,
   Play,
   Send,
+  Search,
   Upload,
-  X,
-  AlertCircle
+  X
 } from "lucide-react";
-import { uploadPlayerPhoto, uploadPlayerID, uploadFranchiseLogo } from "@/lib/uploads";
-import { insertPlayer, insertFranchise } from "@/lib/database";
+import { uploadFranchiseLogo } from "@/lib/uploads";
+import { insertFranchise } from "@/lib/database";
 import { savePendingPlayerRegistration } from "@/lib/pendingRegistration";
 
-const navItems = ["Home", "About", "Franchises", "Players", "Media", "Contact"];
+const navItems = ["Home", "About", "Franchises", "Players", "Media", "Contact", "Status"];
 const transition: Transition = { duration: 0.76, ease: [0.22, 1, 0.36, 1] };
 
 const reveal = {
@@ -36,6 +36,11 @@ const reveal = {
 
 type ErrorMap = Record<string, string>;
 type PaymentState = "idle" | "checkout" | "success" | "failed";
+type StatusLookupResult = {
+  player_id: string;
+  application_status: string;
+  created_at: string;
+};
 
 function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
   return <p className={`eyebrow ${light ? "text-white/58" : ""}`}>{children}</p>;
@@ -99,7 +104,7 @@ export default function HomeExperience() {
 
   const navHref = (item: string) => (item === "Home" ? "#home" : `#${item.toLowerCase()}`);
 
-  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, item: string) => {
+  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, item: string) => {
     event.preventDefault();
     const sectionId = item === "Home" ? "home" : item.toLowerCase();
     const section = document.getElementById(sectionId);
@@ -325,6 +330,7 @@ export default function HomeExperience() {
       <StructureSection />
       <RegistrationSection />
       <FranchiseSection />
+      <StatusCheckerSection />
       <RulesSection />
       <PrizeSection />
       <MediaSection />
@@ -526,7 +532,6 @@ function RegistrationSection() {
   const [photoFileName, setPhotoFileName] = useState("");
   const [idFileName, setIdFileName] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [isCashfreeReady, setIsCashfreeReady] = useState(false);
   const required = ["fullName", "age", "position", "foot", "phone", "email", "area", "photo", "idUpload", "termsAcceptance"];
 
   useEffect(() => {
@@ -536,15 +541,7 @@ function RegistrationSection() {
       ? "sandbox"
       : "production";
 
-    load({ mode: cashfreeMode })
-      .then((instance: any) => {
-        if (instance) {
-          setIsCashfreeReady(true);
-        }
-      })
-      .catch(() => {
-        setIsCashfreeReady(false);
-      });
+    void load({ mode: cashfreeMode }).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -681,8 +678,11 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<string>("");
+  const paymentLock = useRef(false);
 
   const handleCashfreePayment = async () => {
+    if (paymentLock.current) return;
+    paymentLock.current = true;
     setIsLoading(true);
     setUploadProgress("Connecting to payment gateway...");
     setError(null);
@@ -695,6 +695,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       if (!photoFile || !idFile) {
         setError("Files missing from form data");
         setIsLoading(false);
+        paymentLock.current = false;
         return;
       }
 
@@ -714,12 +715,14 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       if (!response.ok) {
         setError("Failed to load payment gateway. Please try again.");
         setIsLoading(false);
+        paymentLock.current = false;
         return;
       }
 
       if (!paymentData.paymentSessionId && !paymentData.paymentLink) {
         setError("Failed to load payment gateway. Please try again.");
         setIsLoading(false);
+        paymentLock.current = false;
         return;
       }
 
@@ -727,6 +730,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       if (!orderId) {
         setError("Unable to create payment order. Please try again.");
         setIsLoading(false);
+        paymentLock.current = false;
         return;
       }
 
@@ -770,6 +774,8 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       } else {
         throw new Error("No payment session or link available");
       }
+      setIsLoading(false);
+      paymentLock.current = false;
     } catch (err: any) {
       if (paymentData?.paymentLink) {
         window.location.assign(paymentData.paymentLink);
@@ -778,6 +784,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
       }
       setUploadProgress("");
       setIsLoading(false);
+      paymentLock.current = false;
     }
   };
   return (
@@ -789,7 +796,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.96 }}
             transition={transition}
-            className="w-full max-w-md rounded-[2rem] border border-ink/10 bg-white p-6 shadow-[0_40px_120px_rgba(17,17,17,0.18)]"
+            className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-[2rem] border border-ink/10 bg-white p-6 shadow-[0_40px_120px_rgba(17,17,17,0.18)]"
           >
             {state === "checkout" && (
               <>
@@ -831,7 +838,11 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
                   >
                     {isLoading ? "Processing..." : "Proceed to Payment"}
                   </button>
-                  <button onClick={() => setState("idle")} className="rounded-full border border-ink/10 px-5 py-4 text-sm font-medium text-ink/64 transition hover:border-apex hover:text-apex">
+                  <button
+                    onClick={() => setState("idle")}
+                    disabled={isLoading}
+                    className="rounded-full border border-ink/10 px-5 py-4 text-sm font-medium text-ink/64 transition hover:border-apex hover:text-apex disabled:pointer-events-none disabled:opacity-60"
+                  >
                     Cancel
                   </button>
                 </div>
@@ -935,8 +946,7 @@ function FranchiseSection() {
       }
 
       setSubmitted(true);
-    } catch (err: any) {
-      console.error("Franchise submit error", err);
+    } catch {
       setSubmitError("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
@@ -1013,6 +1023,130 @@ function FranchiseSection() {
               </motion.form>
             )}
           </AnimatePresence>
+        </AnimatedBlock>
+      </div>
+    </section>
+  );
+}
+
+function StatusCheckerSection() {
+  const [playerId, setPlayerId] = useState("");
+  const [phase, setPhase] = useState<"idle" | "checking" | "verifying">("idle");
+  const [result, setResult] = useState<StatusLookupResult | null>(null);
+  const [error, setError] = useState("");
+  const loading = phase !== "idle";
+
+  const handleLookup = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (loading) return;
+
+    const normalized = playerId.trim().toUpperCase();
+    setResult(null);
+    setError("");
+
+    if (!/^APL-\d{4,5}$/.test(normalized)) {
+      setError("Enter a valid Player ID, for example APL-4821.");
+      return;
+    }
+
+    setPhase("checking");
+    const verifyTimer = window.setTimeout(() => setPhase("verifying"), 650);
+
+    try {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 10000);
+      const response = await fetch(`/api/status?player_id=${encodeURIComponent(normalized)}`, {
+        signal: controller.signal
+      });
+      window.clearTimeout(timeout);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Application not found.");
+        return;
+      }
+
+      setResult(data);
+    } catch {
+      setError("Status lookup is taking too long. Please try again.");
+    } finally {
+      window.clearTimeout(verifyTimer);
+      setPhase("idle");
+    }
+  };
+
+  return (
+    <section id="status" className="section bg-white">
+      <div className="container grid gap-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:gap-16">
+        <AnimatedBlock>
+          <SectionLabel>Status Checker</SectionLabel>
+          <h2 className="display mt-6 text-[clamp(3.2rem,7vw,6.8rem)]">Know where your application stands.</h2>
+          <p className="mt-6 max-w-md text-lg font-light leading-8 text-ink/62">
+            Use your Player ID to check the current committee status without exposing any sensitive registration details.
+          </p>
+        </AnimatedBlock>
+        <AnimatedBlock delay={0.08}>
+          <form onSubmit={handleLookup} className="glass rounded-[2rem] p-5 md:p-8">
+            <label className="block">
+              <span className="mb-2 block text-[0.68rem] font-medium uppercase tracking-[0.18em] text-ink/48">Player ID</span>
+              <input
+                value={playerId}
+                onChange={(event) => setPlayerId(event.target.value.toUpperCase())}
+                inputMode="text"
+                autoCapitalize="characters"
+                autoComplete="off"
+                placeholder="APL-4821"
+                className="field bg-white"
+              />
+            </label>
+            <button
+              disabled={loading}
+              className="mt-4 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:bg-apex disabled:pointer-events-none disabled:opacity-60"
+            >
+              <Search size={16} />
+              {phase === "checking" ? "Checking Status..." : phase === "verifying" ? "Verifying Application..." : "Check Status"}
+            </button>
+            <AnimatePresence mode="wait">
+              {error && (
+                <motion.div
+                  key="status-error"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="mt-5 rounded-[1.35rem] border border-apex/15 bg-white/80 p-4 text-sm leading-7 text-ink/62"
+                >
+                  {error}
+                </motion.div>
+              )}
+              {result && (
+                <motion.div
+                  key="status-result"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="mt-5 rounded-[1.5rem] border border-ink/10 bg-white/86 p-5"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.2em] text-ink/42">Player ID</p>
+                      <p className="mt-2 text-2xl font-medium">{result.player_id}</p>
+                    </div>
+                    <span className="rounded-full bg-ink px-4 py-2 text-xs font-medium uppercase tracking-[0.14em] text-white">
+                      {result.application_status || "UNDER REVIEW"}
+                    </span>
+                  </div>
+                  <p className="mt-5 border-t border-ink/10 pt-5 text-sm text-ink/58">
+                    Submitted on{" "}
+                    {new Date(result.created_at).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric"
+                    })}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </form>
         </AnimatedBlock>
       </div>
     </section>
@@ -1188,16 +1322,11 @@ function ContactSection() {
 
 function FaqSection() {
   const faqs = [
-    ["How do player registrations work?", "Players complete the official registration form, pay the ₹249 registration fee, and enter the APL review process."],
-    ["What is the registration fee?", "The official player registration fee is ₹249."],
-    ["How are franchises approved?", "Franchise applications are reviewed by the APL Committee based on owner details, area, communication, and league fit."],
-    ["What is the league format?", "Season 1 is structured around 16 franchises, 288 players, a 12 week season, league competition, and playoffs."],
-    ["What happens after submission?", "Players and franchise applicants receive email communication after committee review and approval decisions."],
-    ["How can players benefit from APL?", "Players receive competitive exposure, professional match experience, media visibility, statistics tracking, and opportunities to build recognition within the football community."],
-    ["Can franchises earn through APL?", "Yes. Franchises can build local fanbases, attract sponsors, sell merchandise, grow their brand presence, and gain media exposure through the league ecosystem."],
-    ["Will matches be livestreamed and promoted?", "Selected matches, highlights, player moments, interviews, and media content will be featured across APL’s official digital platforms and social media channels."],
-    ["What happens after my application is approved?", "Approved players and franchises will receive an official confirmation email with the next steps, registration details, league onboarding instructions, and match-related updates."],
-    ["Why was Apex Premiere League created?", "APL was created to bring a modern, professional, and premium football platform to regional football while building a stronger football culture, community, and competitive ecosystem."]
+    ["Refund Policy", "Registration fees are non-refundable once payment is successfully completed, except in rare technical/payment duplication cases reviewed by the APL committee."],
+    ["Player Selection Process", "All player registrations are reviewed by the APL committee and participating franchises. Selection depends on squad requirements, competition, position availability, and overall evaluation."],
+    ["Franchise Approval Process", "Franchise applications are manually reviewed by the APL committee. Approval depends on professionalism, commitment, operational readiness, and league fit."],
+    ["Age Eligibility", "APL is open to players of all age groups. However, players are expected to participate responsibly and meet the competitive standards of the league."],
+    ["Match Format", "APL follows a franchise-based league format with group-stage fixtures, standings, and playoff rounds leading to the championship finals."]
   ];
 
   return (
@@ -1237,6 +1366,7 @@ function Footer() {
           <a href="#franchises">Franchises</a>
           <a href="#players">Players</a>
           <a href="#media">Media</a>
+          <a href="#status">Status</a>
           <a href="/apl-rulebook.pdf" download>Rulebook</a>
           <a href="https://www.instagram.com/apexpremiereleague/" target="_blank" rel="noreferrer">Instagram</a>
           <a href="mailto:contact@apexpremiereleague.in">Email</a>

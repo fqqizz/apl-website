@@ -63,7 +63,6 @@ export async function insertPlayer(
           continue;
         }
 
-        console.error("Insert player error:", error);
         return { success: false, error: error.message };
       }
 
@@ -82,6 +81,7 @@ export async function insertPlayer(
         paymentStatus: data.payment_status,
         orderId: data.order_id || undefined,
         playerId: data.player_id || undefined,
+        applicationStatus: data.application_status || 'UNDER REVIEW',
         createdAt: data.created_at,
       };
 
@@ -90,7 +90,6 @@ export async function insertPlayer(
 
     return { success: false, error: "Unable to generate a unique Player ID. Please try again." };
   } catch (err: any) {
-    console.error("Insert player exception:", err);
     return { success: false, error: "Failed to save player registration" };
   }
 }
@@ -110,13 +109,11 @@ export async function updatePlayerPaymentStatus(
       .eq("id", playerId);
 
     if (error) {
-      console.error("Update payment status error:", error);
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (err: any) {
-    console.error("Update payment status exception:", err);
     return { success: false, error: "Failed to update payment status" };
   }
 }
@@ -129,7 +126,6 @@ export async function getPlayerByOrderId(orderId: string): Promise<DatabaseResul
     const { data, error } = await untyped.from("players").select().eq("order_id", orderId).single();
 
     if (error) {
-      console.error("Get player by order ID error:", error);
       return { success: false, error: error.message };
     }
 
@@ -150,12 +146,12 @@ export async function getPlayerByOrderId(orderId: string): Promise<DatabaseResul
       paymentStatus: data.payment_status,
       orderId: data.order_id || undefined,
       playerId: data.player_id || undefined,
+      applicationStatus: data.application_status || 'UNDER REVIEW',
       createdAt: data.created_at,
     };
 
     return { success: true, data: player };
   } catch (err: any) {
-    console.error("Get player by order ID exception:", err);
     return { success: false, error: "Failed to fetch player" };
   }
 }
@@ -170,7 +166,6 @@ export async function insertFranchise(
     const { data, error } = await untyped.from("franchises").insert([franchiseData]).select().single();
 
     if (error) {
-      console.error("Insert franchise error:", error);
       return { success: false, error: error.message };
     }
 
@@ -193,7 +188,6 @@ export async function insertFranchise(
 
     return { success: true, data: franchise };
   } catch (err: any) {
-    console.error("Insert franchise exception:", err);
     return { success: false, error: "Failed to save franchise application" };
   }
 }
@@ -206,7 +200,6 @@ export async function getFranchiseById(franchiseId: string): Promise<DatabaseRes
     const { data, error } = await untyped.from("franchises").select().eq("id", franchiseId).single();
 
     if (error) {
-      console.error("Get franchise error:", error);
       return { success: false, error: error.message };
     }
 
@@ -231,7 +224,6 @@ export async function getFranchiseById(franchiseId: string): Promise<DatabaseRes
 
     return { success: true, data: franchise };
   } catch (err: any) {
-    console.error("Get franchise exception:", err);
     return { success: false, error: "Failed to fetch franchise" };
   }
 }
@@ -244,7 +236,6 @@ export async function getAllFranchises(): Promise<DatabaseResult<Franchise[]>> {
     const { data, error } = await untyped.from("franchises").select().order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Get all franchises error:", error);
       return { success: false, error: error.message };
     }
 
@@ -267,7 +258,6 @@ export async function getAllFranchises(): Promise<DatabaseResult<Franchise[]>> {
 
     return { success: true, data: franchises };
   } catch (err: any) {
-    console.error("Get all franchises exception:", err);
     return { success: false, error: "Failed to fetch franchises" };
   }
 }
@@ -280,7 +270,6 @@ export async function getAllPlayers(): Promise<DatabaseResult<Player[]>> {
     const { data, error } = await untyped.from("players").select().order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Get all players error:", error);
       return { success: false, error: error.message };
     }
 
@@ -299,12 +288,12 @@ export async function getAllPlayers(): Promise<DatabaseResult<Player[]>> {
       paymentStatus: row.payment_status,
       orderId: row.order_id || undefined,
       playerId: row.player_id || undefined,
+      applicationStatus: row.application_status || 'UNDER REVIEW',
       createdAt: row.created_at,
     }));
 
     return { success: true, data: players };
   } catch (err: any) {
-    console.error("Get all players exception:", err);
     return { success: false, error: "Failed to fetch players" };
   }
 }

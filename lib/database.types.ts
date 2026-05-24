@@ -22,6 +22,7 @@ export interface Database {
           payment_status: "pending" | "completed" | "failed";
           order_id: string | null;
           player_id: string | null;
+          application_status: string;
           created_at: string;
         };
         Insert: {
@@ -39,6 +40,7 @@ export interface Database {
           payment_status?: "pending" | "completed" | "failed";
           order_id?: string | null;
           player_id?: string | null;
+          application_status?: string;
           created_at?: string;
         };
         Update: {
@@ -56,6 +58,7 @@ export interface Database {
           payment_status?: "pending" | "completed" | "failed";
           order_id?: string | null;
           player_id?: string | null;
+          application_status?: string;
           created_at?: string;
         };
       };
@@ -136,6 +139,7 @@ export interface Player {
   paymentStatus: "pending" | "completed" | "failed";
   orderId?: string;
   playerId?: string;
+  applicationStatus: string;
   createdAt: string;
 }
 

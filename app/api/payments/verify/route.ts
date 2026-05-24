@@ -23,10 +23,6 @@ export async function GET(request: Request) {
     const cashfreeSecret = process.env.CASHFREE_SECRET_KEY || process.env.CASHFREE_APP_SECRET || process.env.CASHFREE_SECRET || "";
 
     if (!cashfreeAppId || !cashfreeSecret) {
-      console.error("Missing Cashfree credentials for verify route", {
-        cashfreeAppId: !!cashfreeAppId,
-        cashfreeSecret: !!cashfreeSecret,
-      });
       return NextResponse.json(
         { error: "Cashfree credentials are not configured properly" },
         { status: 500 }
@@ -43,13 +39,13 @@ export async function GET(request: Request) {
           "x-client-id": cashfreeAppId,
           "x-client-secret": cashfreeSecret,
         },
+        signal: AbortSignal.timeout(15000),
       }
     );
 
     const responseData = await cashfreeResponse.json();
 
     if (!cashfreeResponse.ok) {
-      console.error("Cashfree verify error", cashfreeResponse.status, responseData);
       return new Response(JSON.stringify(responseData), {
         status: cashfreeResponse.status,
         headers: { "Content-Type": "application/json" },
@@ -57,8 +53,7 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json(responseData);
-  } catch (error) {
-    console.error("Payment verify error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Payment verification failed" },
       { status: 500 }

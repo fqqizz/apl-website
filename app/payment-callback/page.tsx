@@ -1,10 +1,12 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { insertPlayer, getPlayerByOrderId } from "@/lib/database";
 import type { Database } from "@/lib/database.types";
+import { deletePendingPlayerRegistration, getPendingPlayerRegistration } from "@/lib/pendingRegistration";
+import { uploadPlayerID, uploadPlayerPhoto } from "@/lib/uploads";
 
 export const dynamic = "force-dynamic";
 
@@ -17,11 +19,14 @@ type PaymentResult = {
 function PaymentCallbackContent() {
   const [status, setStatus] = useState<"loading" | "success" | "cancelled" | "error">("loading");
   const [message, setMessage] = useState<string | null>(null);
-  const [orderStatus, setOrderStatus] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const searchParams = useSearchParams();
+  const verificationStarted = useRef(false);
 
   useEffect(() => {
+    if (verificationStarted.current) return;
+    verificationStarted.current = true;
+
     const orderId = searchParams.get("order_id");
 
     if (!orderId) {
@@ -32,18 +37,21 @@ function PaymentCallbackContent() {
 
     const verifyPayment = async () => {
       try {
-        const response = await fetch(`/api/payments/verify?order_id=${encodeURIComponent(orderId)}`);
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 15000);
+        const response = await fetch(`/api/payments/verify?order_id=${encodeURIComponent(orderId)}`, {
+          signal: controller.signal
+        });
+        window.clearTimeout(timeout);
         const data: PaymentResult = await response.json();
 
         if (!response.ok) {
-          console.error("Payment verify failed", response.status, data);
           setStatus("error");
           setMessage("Unable to verify payment. Please return to the registration form and try again.");
           return;
         }
 
         const statusValue = data.order_status?.toUpperCase() || "";
-        setOrderStatus(statusValue);
 
         if (statusValue === "PAID") {
           setMessage("Payment verified. Finalizing registration and generating your Player ID...");
@@ -58,56 +66,76 @@ function PaymentCallbackContent() {
               sessionStorage.removeItem("pendingPlayerRegistration");
               return;
             }
-          } catch (e) {
-            // ignore and continue to attempt save
+          } catch {
+            // Continue to attempt save; duplicate protection remains on order_id.
           }
 
-          // Retrieve pending registration data saved before checkout
-          const pending = sessionStorage.getItem("pendingPlayerRegistration");
+          const pending = await getPendingPlayerRegistration(orderId);
           if (!pending) {
-            // No local data to save, still show success
-            setStatus("success");
+            setStatus("error");
+            setMessage("Payment verified, but your registration files were not found on this device. Contact support with your order ID.");
             return;
           }
 
-          const parsed = JSON.parse(pending) as {
-            fullName: string;
-            age: number;
-            position: string;
-            preferredFoot?: string;
-            foot?: string;
-            contactNumber: string;
-            email: string;
-            instagram?: string | null;
-            area: string;
-            photoUrl?: string | null;
-            idUrl?: string | null;
-          };
+          setMessage("Payment verified. Uploading your documents securely...");
+
+          const photoFile = pending.photoFile instanceof File
+            ? pending.photoFile
+            : new File([pending.photoFile], pending.photoName, { type: pending.photoType });
+          const idFile = pending.idFile instanceof File
+            ? pending.idFile
+            : new File([pending.idFile], pending.idName, { type: pending.idType });
+
+          const [photoUpload, idUpload] = await Promise.all([
+            uploadPlayerPhoto(photoFile),
+            uploadPlayerID(idFile)
+          ]);
+
+          if (!photoUpload.success || !idUpload.success) {
+            setStatus("error");
+            setMessage("Payment verified, but file upload failed. Please contact support so we can complete your registration.");
+            return;
+          }
+
+          setMessage("Files uploaded. Generating your official Player ID...");
 
           const insertPayload: Omit<Database["public"]["Tables"]["players"]["Insert"], "id"> = {
-            full_name: parsed.fullName,
-            age: parsed.age,
-            position: parsed.position,
-            preferred_foot: parsed.preferredFoot || parsed.foot || "",
-            contact_number: parsed.contactNumber,
-            email: parsed.email,
-            instagram: parsed.instagram || null,
-            area: parsed.area,
-            photo_url: parsed.photoUrl || null,
-            id_url: parsed.idUrl || null,
+            full_name: pending.fullName,
+            age: pending.age,
+            position: pending.position,
+            preferred_foot: pending.preferredFoot,
+            contact_number: pending.contactNumber,
+            email: pending.email,
+            instagram: pending.instagram || null,
+            area: pending.area,
+            photo_url: photoUpload.url || null,
+            id_url: idUpload.url || null,
             payment_status: "completed",
             order_id: orderId,
+            application_status: "UNDER REVIEW",
           };
 
           const insertResult = await insertPlayer(insertPayload);
           if (!insertResult.success) {
-            console.error("Failed to save player after payment:", insertResult.error);
             setStatus("error");
             setMessage("Payment verified but we couldn't save your registration. Contact support.");
             return;
           }
 
-          // Success: cleanup and show success UI
+          const emailData = {
+            playerName: pending.fullName,
+            playerId: insertResult.data?.playerId || "",
+            email: pending.email,
+            paymentStatus: "completed"
+          };
+
+          void fetch("/api/send-confirmation-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(emailData)
+          }).catch(() => undefined);
+
+          await deletePendingPlayerRegistration(orderId).catch(() => undefined);
           sessionStorage.removeItem("pendingPlayerRegistration");
           setPlayerId(insertResult.data?.playerId || null);
           setStatus("success");
@@ -117,8 +145,7 @@ function PaymentCallbackContent() {
             "Your payment was cancelled or not completed. Please return to the registration form to try again."
           );
         }
-      } catch (error) {
-        console.error("Payment verify exception", error);
+      } catch {
         setStatus("error");
         setMessage("Unable to verify payment. Please try again later.");
       }

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import crypto from "crypto";
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,7 +7,6 @@ export async function POST(request: NextRequest) {
     const { email, phone, name } = body;
     const amount = 249;
 
-    // Validate required fields
     if (!email || !phone || !name) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -26,23 +24,14 @@ export async function POST(request: NextRequest) {
     const cashfreeAppId = process.env.NEXT_PUBLIC_CASHFREE_APP_ID || process.env.CASHFREE_APP_ID || "";
     const cashfreeSecret = process.env.CASHFREE_SECRET_KEY || process.env.CASHFREE_APP_SECRET || process.env.CASHFREE_SECRET || "";
 
-    console.log("Cashfree backend env status", {
-      NEXT_PUBLIC_CASHFREE_APP_ID: !!process.env.NEXT_PUBLIC_CASHFREE_APP_ID,
-      CASHFREE_SECRET_KEY: !!process.env.CASHFREE_SECRET_KEY,
-      NEXT_PUBLIC_CASHFREE_ENVIRONMENT: process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT,
-      NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-      cashfreeHost,
-    });
 
     if (!cashfreeAppId || !cashfreeSecret) {
-      console.error("Missing Cashfree credentials", { cashfreeAppId: !!cashfreeAppId, cashfreeSecret: !!cashfreeSecret });
       return NextResponse.json(
         { error: "Cashfree credentials are not configured properly" },
         { status: 500 }
       );
     }
 
-    // Prepare Cashfree request
     const cashfreePayload = {
       order_id: orderId,
       order_amount: amount,
@@ -62,14 +51,6 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    // Create request signature for Cashfree (not currently sent, kept for reference)
-    const signatureString = `${orderId}${amount}INR${cashfreeSecret}`;
-    const signature = crypto
-      .createHash("sha256")
-      .update(signatureString)
-      .digest("hex");
-
-    // Call Cashfree API
     const cashfreeResponse = await fetch(
       `https://${cashfreeHost}.cashfree.com/pg/orders`,
       {
@@ -82,6 +63,7 @@ export async function POST(request: NextRequest) {
           "x-client-secret": cashfreeSecret,
         },
         body: JSON.stringify(cashfreePayload),
+        signal: AbortSignal.timeout(15000),
       }
     );
 
@@ -90,19 +72,17 @@ export async function POST(request: NextRequest) {
 
     try {
       responseData = JSON.parse(responseText);
-    } catch (parseError) {
+    } catch {
       responseData = { error: responseText };
     }
 
     if (!cashfreeResponse.ok) {
-      console.error("Cashfree Error response:", cashfreeResponse.status, responseText, responseData);
       return new Response(responseText, {
         status: cashfreeResponse.status,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    console.log("Cashfree create order response", responseData);
 
     return NextResponse.json({
       orderId,
@@ -110,8 +90,7 @@ export async function POST(request: NextRequest) {
       paymentSessionId: responseData.payment_session_id || responseData.order_id,
       paymentLink: responseData.payment_link || responseData.paymentLink || null,
     });
-  } catch (error) {
-    console.error("Payment creation error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

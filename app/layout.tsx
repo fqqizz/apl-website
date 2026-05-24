@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     description: "Kashmir's Premiere Football Competition.",
     url: "https://apexpremiereleague.in",
     siteName: "APL",
+    type: "website",
     images: [
       {
         url: "/og-image.jpg",
@@ -27,6 +28,15 @@ export const metadata: Metadata = {
         height: 630
       }
     ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Apex Premiere League",
+    description: "A premium football league platform for culture, competition, and regional talent.",
+    images: ["/og-image.jpg"]
+  },
+  alternates: {
+    canonical: "https://apexpremiereleague.in"
   },
   icons: {
     icon: "/apl-logo.png"

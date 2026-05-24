@@ -31,8 +31,7 @@ async function compressImageFile(file: File): Promise<File> {
 
     const compressed = await imageCompression(file, options);
     return compressed instanceof File ? compressed : file;
-  } catch (error) {
-    console.error("Image compression failed, uploading original file:", error);
+  } catch {
     return file;
   }
 }
@@ -101,7 +100,6 @@ export async function uploadPlayerPhoto(file: File): Promise<UploadResult> {
       });
 
     if (error) {
-      console.error("Photo upload error:", error);
       return { success: false, error: error.message };
     }
 
@@ -111,8 +109,7 @@ export async function uploadPlayerPhoto(file: File): Promise<UploadResult> {
       .getPublicUrl(filePath);
 
     return { success: true, url: publicData.publicUrl };
-  } catch (err: any) {
-    console.error("Photo upload exception:", err);
+  } catch {
     return { success: false, error: "Failed to upload photo" };
   }
 }
@@ -143,7 +140,6 @@ export async function uploadPlayerID(file: File): Promise<UploadResult> {
       });
 
     if (error) {
-      console.error("ID upload error:", error);
       return { success: false, error: error.message };
     }
 
@@ -153,8 +149,7 @@ export async function uploadPlayerID(file: File): Promise<UploadResult> {
       .getPublicUrl(filePath);
 
     return { success: true, url: publicData.publicUrl };
-  } catch (err: any) {
-    console.error("ID upload exception:", err);
+  } catch {
     return { success: false, error: "Failed to upload ID" };
   }
 }
@@ -182,7 +177,6 @@ export async function uploadFranchiseLogo(file: File): Promise<UploadResult> {
       });
 
     if (error) {
-      console.error("Logo upload error:", error);
       return { success: false, error: error.message };
     }
 
@@ -192,8 +186,7 @@ export async function uploadFranchiseLogo(file: File): Promise<UploadResult> {
       .getPublicUrl(filePath);
 
     return { success: true, url: publicData.publicUrl };
-  } catch (err: any) {
-    console.error("Logo upload exception:", err);
+  } catch {
     return { success: false, error: "Failed to upload logo" };
   }
 }
