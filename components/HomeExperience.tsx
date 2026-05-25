@@ -316,10 +316,10 @@ export default function HomeExperience() {
             transition={{ ...transition, delay: 0.28 }}
             className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center"
           >
-            <a href="#players" className="rounded-full bg-ink px-4 py-2 text-xs font-medium text-white transition hover:scale-[1.025] hover:bg-apex sm:px-7 sm:py-4 sm:text-sm">
+            <a href="#players" className="rounded-full bg-ink px-3 py-3 text-xs font-medium text-white transition hover:scale-[1.025] hover:bg-apex sm:px-7 sm:py-4 sm:text-sm">
               I Am A Player
             </a>
-            <a href="#franchises" className="rounded-full border border-ink/18 bg-white/68 px-4 py-2 text-xs font-medium text-ink transition hover:scale-[1.025] hover:border-apex hover:text-apex sm:px-7 sm:py-4 sm:text-sm">
+            <a href="#franchises" className="rounded-full border border-ink/18 bg-white/68 px-3 py-3 text-xs font-medium text-ink transition hover:scale-[1.025] hover:border-apex hover:text-apex sm:px-7 sm:py-4 sm:text-sm">
               We Are A Franchise
             </a>
           </motion.div>
