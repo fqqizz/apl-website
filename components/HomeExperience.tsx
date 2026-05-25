@@ -316,10 +316,10 @@ export default function HomeExperience() {
             transition={{ ...transition, delay: 0.28 }}
             className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center"
           >
-            <a href="#players" className="rounded-full bg-ink px-7 py-4 text-sm font-medium text-white transition hover:scale-[1.025] hover:bg-apex">
+            <a href="#players" className="rounded-full bg-ink px-4 py-2 text-xs font-medium text-white transition hover:scale-[1.025] hover:bg-apex sm:px-7 sm:py-4 sm:text-sm">
               I Am A Player
             </a>
-            <a href="#franchises" className="rounded-full border border-ink/18 bg-white/68 px-7 py-4 text-sm font-medium text-ink transition hover:scale-[1.025] hover:border-apex hover:text-apex">
+            <a href="#franchises" className="rounded-full border border-ink/18 bg-white/68 px-4 py-2 text-xs font-medium text-ink transition hover:scale-[1.025] hover:border-apex hover:text-apex sm:px-7 sm:py-4 sm:text-sm">
               We Are A Franchise
             </a>
           </motion.div>
@@ -663,7 +663,7 @@ function RegistrationSection() {
                 </AnimatePresence>
               </div>
             </label>
-            <button className="md:col-span-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex">
+            <button className="md:col-span-2 rounded-full bg-ink px-4 py-2 text-xs font-medium text-white transition hover:scale-[1.01] hover:bg-apex sm:px-6 sm:py-4 sm:text-sm">
               Continue To Payment
             </button>
           </form>
@@ -1004,7 +1004,7 @@ function FranchiseSection() {
                 <div className="md:col-span-2">
                   <UploadField label="Logo Upload" name="logo" />
                 </div>
-                <button disabled={isSubmitting} className="rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2 disabled:opacity-60 disabled:cursor-not-allowed">
+                <button disabled={isSubmitting} className="rounded-full bg-ink px-4 py-2 text-xs font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2 sm:px-6 sm:py-4 sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed">
                   {isSubmitting ? "Submitting..." : "Submit Franchise Application"}
                 </button>
                 {submitMessage && (
