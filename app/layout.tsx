@@ -10,7 +10,10 @@ export const metadata: Metadata = createRootMetadata();
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-IN">
+    <html
+  lang="en-IN"
+  className={`${displayFont.variable} ${bodyFont.variable}`}
+  >
       <head>
         <GlobalSeoSchemas />
       </head>
