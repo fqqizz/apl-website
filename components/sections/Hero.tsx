@@ -4,13 +4,17 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { MOTION } from "@/lib/motion";
+import { useIntroReady } from "@/components/layout/IntroProvider";
 import Button from "@/components/ui/Button";
 import SectionLabel from "@/components/ui/SectionLabel";
 import MarqueeStrip from "@/components/features/MarqueeStrip";
 
 const headline = ["KASHMIR'S", "FOOTBALL", "MOVEMENT", "STARTS HERE."];
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Hero() {
+  const introReady = useIntroReady();
+
   return (
     <section className="relative min-h-[100dvh] overflow-hidden">
       <div className="absolute inset-0 will-change-transform">
@@ -27,15 +31,24 @@ export default function Hero() {
 
       <div className="relative z-10 flex min-h-[100dvh] flex-col">
         <div className="container-apl flex flex-1 flex-col items-center justify-center px-4 pb-32 pt-28 text-center md:pt-32">
-          <SectionLabel className="justify-center">APEX PREMIER LEAGUE · SEASON ONE</SectionLabel>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            transition={{ duration: 0.5, ease }}
+          >
+            <SectionLabel className="justify-center">APEX PREMIER LEAGUE · SEASON ONE</SectionLabel>
+          </motion.div>
 
           <h1 className="mt-8 max-w-4xl">
             {headline.map((word, i) => (
               <motion.span
                 key={word}
                 initial={MOTION.heroReveal.initial}
-                animate={MOTION.heroReveal.animate}
-                transition={{ ...MOTION.heroReveal.transition, delay: 0.15 + i * 0.08 }}
+                animate={introReady ? MOTION.heroReveal.animate : MOTION.heroReveal.initial}
+                transition={{
+                  ...MOTION.heroReveal.transition,
+                  delay: introReady ? 0.08 + i * 0.07 : 0
+                }}
                 className="text-display-xl block text-apl-white"
               >
                 {word}
@@ -45,8 +58,8 @@ export default function Hero() {
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            transition={{ delay: introReady ? 0.38 : 0, duration: 0.6, ease }}
             className="mt-6 max-w-2xl text-body-lg text-apl-text-secondary"
           >
             The first structured football league from the valley — 16 franchises, 288 players, one founding season.
@@ -54,8 +67,8 @@ export default function Hero() {
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            transition={{ delay: introReady ? 0.48 : 0, duration: 0.6, ease }}
             className="mt-8 flex flex-wrap items-center justify-center gap-2"
           >
             <Button href="/register/player">Join as Player</Button>
@@ -68,7 +81,13 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <MarqueeStrip />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={introReady ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ delay: introReady ? 0.55 : 0, duration: 0.5, ease }}
+        >
+          <MarqueeStrip />
+        </motion.div>
 
         <a
           href="#vision"
