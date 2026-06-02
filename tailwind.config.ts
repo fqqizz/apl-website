@@ -8,19 +8,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#111111",
-        paper: "#FFFFFF",
-        mist: "#F5F5F5",
-        line: "#EAEAEA",
-        apex: "#00029C"
+        apl: {
+          white: "var(--apl-white)",
+          "off-white": "var(--apl-off-white)",
+          navy: "var(--apl-navy)",
+          "navy-mid": "var(--apl-navy-mid)",
+          "navy-light": "var(--apl-navy-light)",
+          blue: "var(--apl-blue)",
+          "blue-bright": "var(--apl-blue-bright)",
+          "blue-dim": "var(--apl-blue-dim)",
+          gold: "var(--apl-gold)",
+          "gold-dim": "var(--apl-gold-dim)",
+          "text-primary": "var(--apl-text-primary)",
+          "text-secondary": "var(--apl-text-secondary)",
+          "text-muted": "var(--apl-text-muted)"
+        }
+      },
+      borderColor: {
+        apl: "var(--apl-border)",
+        "apl-accent": "var(--apl-border-accent)"
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "Inter", "Arial", "sans-serif"],
-        display: ["var(--font-display)", "Helvetica Neue", "Arial", "sans-serif"]
-      },
-      boxShadow: {
-        soft: "0 24px 80px rgba(17, 17, 17, 0.08)",
-        glass: "0 18px 45px rgba(17, 17, 17, 0.08)"
+        display: ["var(--font-display)", "sans-serif"],
+        body: ["var(--font-body)", "sans-serif"]
       }
     }
   },
