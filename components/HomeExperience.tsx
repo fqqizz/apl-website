@@ -226,7 +226,7 @@ export default function HomeExperience() {
             ))}
           </div>
           <div className="hidden items-center gap-2 md:flex">
-            <a href="#players" onClick={(event) => handleNavClick(event, "Players")} className="rounded-full bg-ink px-5 py-3 text-xs font-medium uppercase tracking-[0.12em] text-white transition hover:scale-[1.02] hover:bg-apex">
+            <a href="#players" onClick={(event) => handleNavClick(event, "Players")} className="btn btn-primary !min-h-10 !px-4 !py-2 !text-xs uppercase tracking-[0.12em]">
               Register
             </a>
           </div>
@@ -274,8 +274,22 @@ export default function HomeExperience() {
       </button>
 
       <section id="home" className="relative min-h-screen overflow-hidden px-4 pb-12 pt-28 md:px-8 md:pt-36">
-        <div className="absolute inset-0 bg-[url('/media-white-ball.jpeg')] bg-[length:1200px_auto] bg-center opacity-[0.16] grayscale" />
-        <div className="absolute inset-x-4 bottom-5 top-24 rounded-[2rem] bg-white/60 shadow-[0_30px_120px_rgba(17,17,17,0.08)] md:inset-x-8 md:rounded-[3rem]" />
+        <motion.div
+          className="absolute inset-0 bg-[url('/media-white-ball.jpeg')] bg-[length:980px_auto] bg-center opacity-[0.2] grayscale md:bg-[length:1280px_auto]"
+          animate={{ scale: [1, 1.025, 1], opacity: [0.16, 0.22, 0.16] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div className="hero-shell absolute inset-x-3 bottom-4 top-24 rounded-[2rem] md:inset-x-8 md:rounded-[3rem]" />
+        <motion.div
+          className="kinetic-line left-[7%] top-[30%]"
+          animate={{ x: [0, 18, 0], opacity: [0.25, 0.75, 0.25] }}
+          transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="kinetic-line bottom-[20%] right-[8%] hidden md:block"
+          animate={{ x: [0, -22, 0], opacity: [0.18, 0.62, 0.18] }}
+          transition={{ duration: 7.2, repeat: Infinity, ease: "easeInOut" }}
+        />
         {heroDust.map((particle) => (
           <motion.span
             key={particle.id}
@@ -289,17 +303,34 @@ export default function HomeExperience() {
           style={{ y: heroY, opacity: heroOpacity }}
           className="relative z-10 mx-auto flex min-h-[calc(100vh-9rem)] w-full max-w-6xl flex-col items-center justify-center text-center"
         >
-          <div ref={logoRef} className="mb-7 grid place-items-center">
-            <img src="/apl-logo.png" alt="APEX PREMIERE LEAGUE logo" className="h-36 w-auto md:h-52" />
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...transition, delay: 0.08 }}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/72 px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-ink/58 backdrop-blur-xl"
+          >
+            <span className="size-1.5 rounded-full bg-apex" />
+            Season 1 Registration Live
+          </motion.div>
+          <div ref={logoRef} className="mb-5 grid place-items-center">
+            <img src="/apl-logo.png" alt="APEX PREMIERE LEAGUE logo" className="h-28 w-auto drop-shadow-[0_18px_36px_rgba(17,17,17,0.12)] md:h-44" />
           </div>
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={transition}
-            className="display max-w-5xl text-[clamp(3.2rem,11vw,10rem)]"
+            className="display max-w-5xl text-[clamp(3.25rem,10.5vw,9.5rem)]"
           >
             APEX PREMIERE LEAGUE
           </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...transition, delay: 0.1 }}
+            className="mt-5 max-w-2xl text-base leading-7 text-ink/62 md:text-xl md:leading-9"
+          >
+            A premium franchise football platform built for players, owners, media, and the next wave of regional football culture.
+          </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -314,20 +345,41 @@ export default function HomeExperience() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...transition, delay: 0.28 }}
-            className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center"
+            className="mt-8 flex flex-wrap items-center justify-center gap-2.5"
           >
-            <a href="#players" className="rounded-full bg-ink px-3 py-3 text-xs font-medium text-white transition hover:scale-[1.025] hover:bg-apex sm:px-7 sm:py-4 sm:text-sm">
+            <a href="#players" onClick={(event) => handleNavClick(event, "Players")} className="btn btn-primary">
               I Am A Player
             </a>
-            <a href="#franchises" className="rounded-full border border-ink/18 bg-white/68 px-3 py-3 text-xs font-medium text-ink transition hover:scale-[1.025] hover:border-apex hover:text-apex sm:px-7 sm:py-4 sm:text-sm">
+            <a href="#franchises" onClick={(event) => handleNavClick(event, "Franchises")} className="btn btn-secondary">
               We Are A Franchise
             </a>
+            <a href="#status" onClick={(event) => handleNavClick(event, "Status")} className="btn btn-subtle">
+              Check Status
+            </a>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...transition, delay: 0.42 }}
+            className="mt-8 grid w-full max-w-xl grid-cols-3 gap-2 px-2 sm:px-0"
+          >
+            {[
+              ["16", "Teams"],
+              ["288", "Players"],
+              ["12", "Weeks"]
+            ].map(([value, label]) => (
+              <div key={label} className="rounded-2xl border border-ink/10 bg-white/62 px-3 py-3 backdrop-blur-xl">
+                <p className="display text-2xl text-ink md:text-3xl">{value}</p>
+                <p className="mt-1 text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-ink/42">{label}</p>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
       </section>
 
       <AboutSection />
       <StructureSection />
+      <HowItWorksSection />
       <RegistrationSection />
       <FranchiseSection />
       <StatusCheckerSection />
@@ -367,7 +419,8 @@ function AboutSection() {
           <div className="grid gap-4 sm:grid-cols-2">
             {pillars.map(([title, text], index) => (
               <AnimatedBlock key={title} delay={0.1 + index * 0.04}>
-                <div className="min-h-40 border-t border-ink/10 py-6">
+                <div className="premium-card min-h-40 p-5">
+                  <div className="mb-5 h-px w-12 bg-gradient-to-r from-apex to-[#c8a24a]" />
                   <p className="text-sm font-medium uppercase tracking-[0.18em] text-ink/46">{title}</p>
                   <p className="mt-4 text-base leading-7 text-ink/58">{text}</p>
                 </div>
@@ -403,12 +456,51 @@ function StructureSection() {
             Enough scale to feel elite. Enough clarity to keep every match meaningful.
           </p>
         </AnimatedBlock>
-        <div className="mt-16 grid border-t border-ink/10 md:grid-cols-4">
+        <div className="mt-16 grid gap-3 sm:grid-cols-2 md:grid-cols-4">
           {items.map(([value, label], index) => (
             <AnimatedBlock key={label} delay={index * 0.05}>
-              <div className="border-b border-ink/10 py-8 md:border-r md:px-6 md:last:border-r-0">
+              <div className="stat-card h-full">
                 <p className="display text-5xl font-light md:text-7xl">{value}</p>
                 <p className="mt-4 text-xs font-medium uppercase tracking-[0.2em] text-ink/48">{label}</p>
+              </div>
+            </AnimatedBlock>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorksSection() {
+  const steps = [
+    ["Register", "Submit your player or franchise application with verified details."],
+    ["Pay Securely", "Player registrations move through Cashfree’s secure checkout."],
+    ["Committee Review", "APL reviews applications, documents, and league fit."],
+    ["Rise Above", "Approved applicants receive next steps, onboarding, and match updates."]
+  ];
+
+  return (
+    <section className="section bg-white">
+      <div className="container">
+        <AnimatedBlock className="flex flex-col justify-between gap-7 md:flex-row md:items-end">
+          <div>
+            <SectionLabel>How It Works</SectionLabel>
+            <h2 className="display mt-5 max-w-3xl text-[clamp(3rem,7vw,6.6rem)]">From application to matchday.</h2>
+          </div>
+          <p className="max-w-sm text-lg font-light leading-8 text-ink/62">
+            A short, controlled journey designed to keep the league premium, verified, and competition-ready.
+          </p>
+        </AnimatedBlock>
+        <div className="mt-12 grid gap-3 md:grid-cols-4">
+          {steps.map(([title, text], index) => (
+            <AnimatedBlock key={title} delay={index * 0.05}>
+              <div className="premium-card relative h-full overflow-hidden p-5">
+                <div className="absolute right-4 top-4 text-5xl font-semibold text-ink/[0.035]">0{index + 1}</div>
+                <div className="grid size-10 place-items-center rounded-full bg-ink text-white">
+                  {index === 0 ? <Upload size={16} /> : index === 1 ? <CreditCard size={16} /> : index === 2 ? <Search size={16} /> : <Check size={16} />}
+                </div>
+                <h3 className="mt-8 text-xl font-semibold tracking-tight">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-ink/58">{text}</p>
               </div>
             </AnimatedBlock>
           ))}
@@ -663,7 +755,7 @@ function RegistrationSection() {
                 </AnimatePresence>
               </div>
             </label>
-            <button className="md:col-span-2 rounded-full bg-ink px-4 py-2 text-xs font-medium text-white transition hover:scale-[1.01] hover:bg-apex sm:px-6 sm:py-4 sm:text-sm">
+            <button className="btn btn-primary md:col-span-2">
               Continue To Payment
             </button>
           </form>
@@ -834,14 +926,14 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
                   <button
                     onClick={handleCashfreePayment}
                     disabled={isLoading}
-                    className="rounded-full bg-ink px-5 py-4 text-sm font-medium text-white transition hover:bg-apex disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isLoading ? "Processing..." : "Proceed to Payment"}
                   </button>
                   <button
                     onClick={() => setState("idle")}
                     disabled={isLoading}
-                    className="rounded-full border border-ink/10 px-5 py-4 text-sm font-medium text-ink/64 transition hover:border-apex hover:text-apex disabled:pointer-events-none disabled:opacity-60"
+                    className="btn btn-secondary disabled:pointer-events-none disabled:opacity-60"
                   >
                     Cancel
                   </button>
@@ -859,7 +951,7 @@ function PaymentModal({ state, setState, formData }: { state: PaymentState; setS
               <>
                 <h3 className="display text-5xl">Payment not completed.</h3>
                 <p className="mt-4 text-sm leading-7 text-ink/58">No registration has been submitted. Please retry the checkout when ready.</p>
-                <button onClick={() => setState("checkout")} className="mt-6 rounded-full bg-ink px-5 py-4 text-sm font-medium text-white">
+                <button onClick={() => setState("checkout")} className="btn btn-primary mt-6">
                   Try Again
                 </button>
               </>
@@ -879,7 +971,7 @@ function Confirmation({ title, message, onClose }: { title: string; message: str
       </div>
       <h3 className="display mt-6 text-5xl">{title}</h3>
       <p className="mt-4 text-sm leading-7 text-ink/60">{message}</p>
-      <button onClick={onClose} className="mt-7 rounded-full bg-ink px-5 py-4 text-sm font-medium text-white">
+      <button onClick={onClose} className="btn btn-primary mt-7">
         Close
       </button>
     </div>
@@ -1004,7 +1096,7 @@ function FranchiseSection() {
                 <div className="md:col-span-2">
                   <UploadField label="Logo Upload" name="logo" />
                 </div>
-                <button disabled={isSubmitting} className="rounded-full bg-ink px-4 py-2 text-xs font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2 sm:px-6 sm:py-4 sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed">
+                <button disabled={isSubmitting} className="btn btn-primary md:col-span-2 disabled:cursor-not-allowed disabled:opacity-60">
                   {isSubmitting ? "Submitting..." : "Submit Franchise Application"}
                 </button>
                 {submitMessage && (
@@ -1101,7 +1193,7 @@ function StatusCheckerSection() {
             </label>
             <button
               disabled={loading}
-              className="mt-4 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:bg-apex disabled:pointer-events-none disabled:opacity-60"
+              className="btn btn-primary mt-4 w-full disabled:pointer-events-none disabled:opacity-60"
             >
               <Search size={16} />
               {phase === "checking" ? "Checking Status..." : phase === "verifying" ? "Verifying Application..." : "Check Status"}
@@ -1163,7 +1255,7 @@ function RulesSection() {
           <p className="mt-6 max-w-md text-lg font-light leading-8 text-ink/62">
             Download the official APEX PREMIERE LEAGUE rulebook for registration, conduct, format, and league operating policies.
           </p>
-          <a href="/apl-rulebook.pdf" download className="mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:bg-apex">
+          <a href="/apl-rulebook.pdf" download className="btn btn-primary mt-8">
             <Download size={17} />
             Download APL Rulebook
           </a>
@@ -1309,7 +1401,7 @@ function ContactSection() {
               <span className="mb-2 block text-[0.68rem] font-medium uppercase tracking-[0.18em] text-ink/48">Message</span>
               <textarea className="field min-h-40 resize-none" placeholder="Message" />
             </label>
-            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:scale-[1.01] hover:bg-apex md:col-span-2">
+            <button className="btn btn-primary md:col-span-2">
               <Send size={16} />
               Send Message
             </button>
@@ -1336,10 +1428,10 @@ function FaqSection() {
           <SectionLabel>FAQ</SectionLabel>
           <h2 className="display mt-6 text-[clamp(3.3rem,8vw,7rem)]">Questions, answered cleanly.</h2>
         </AnimatedBlock>
-        <div className="mt-12 border-t border-ink/10">
+        <div className="mt-12 grid gap-3">
           {faqs.map(([question, answer]) => (
-            <details key={question} className="group border-b border-ink/10 py-6">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-xl font-light">
+            <details key={question} className="premium-card group px-5 py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-medium md:text-xl">
                 {question}
                 <ChevronDown className="shrink-0 transition group-open:rotate-180" size={20} />
               </summary>
@@ -1354,8 +1446,10 @@ function FaqSection() {
 
 function Footer() {
   return (
-    <footer className="relative z-10 bg-ink px-5 py-12 text-white md:px-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 md:flex-row md:items-end md:justify-between">
+    <footer className="relative z-10 overflow-hidden bg-ink px-5 py-12 text-white md:px-8">
+      <div className="absolute inset-0 bg-[url('/media-white-ball.jpeg')] bg-[length:900px_auto] bg-center opacity-[0.06] grayscale" />
+      <div className="absolute left-8 top-10 h-px w-40 rotate-[-18deg] bg-gradient-to-r from-transparent via-white/28 to-transparent" />
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 md:flex-row md:items-end md:justify-between">
         <div>
           <img src="/apl-logo.png" alt="APL logo" className="h-16 w-auto brightness-0 invert" />
           <p className="mt-5 max-w-sm text-sm leading-7 text-white/52">APEX PREMIERE LEAGUE. Rise Above.</p>

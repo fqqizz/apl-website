@@ -193,7 +193,7 @@ function PaymentCallbackContent() {
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <button
               onClick={() => window.location.assign("/")}
-              className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-900"
+              className="btn btn-primary"
             >
               Return Home
             </button>
@@ -205,7 +205,7 @@ function PaymentCallbackContent() {
                   window.location.assign("/");
                 }
               }}
-              className="rounded-full border border-ink/10 bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:border-slate-400"
+              className="btn btn-secondary"
             >
               Close
             </button>
@@ -223,7 +223,7 @@ function PaymentCallbackContent() {
           <h1 className="mt-6 text-3xl font-bold">Payment Cancelled</h1>
           <p className="mt-4 text-ink/58">Your payment was cancelled or incomplete.</p>
           <p className="mt-2 text-sm text-ink/48">Please try again to complete your registration.</p>
-          <Link href="/" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
+          <Link href="/" className="btn btn-primary mt-8">
             Back to Registration
           </Link>
         </div>
@@ -238,7 +238,7 @@ function PaymentCallbackContent() {
           </div>
           <h1 className="mt-6 text-3xl font-bold">Unable to Verify Payment</h1>
           <p className="mt-4 text-ink/58">{message || "We could not verify your payment."}</p>
-          <Link href="/" className="mt-8 inline-block bg-ink text-white px-6 py-3 rounded-full hover:bg-apex transition">
+          <Link href="/" className="btn btn-primary mt-8">
             Return to Registration
           </Link>
         </div>

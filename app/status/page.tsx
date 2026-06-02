@@ -66,14 +66,20 @@ export default function StatusPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f5f5f7] px-4 py-6 text-ink">
+    <main className="relative min-h-screen overflow-hidden bg-[#f5f5f7] px-4 py-6 text-ink">
+      <div className="absolute inset-0 bg-[url('/media-white-ball.jpeg')] bg-[length:900px_auto] bg-center opacity-[0.08] grayscale" />
+      <motion.div
+        className="kinetic-line left-[8%] top-[22%]"
+        animate={{ x: [0, 18, 0], opacity: [0.18, 0.62, 0.18] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      />
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-xl flex-col justify-center">
-        <Link href="/" className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-white/70 px-4 py-2 text-sm font-medium text-ink/62 backdrop-blur-xl">
+        <Link href="/" className="btn btn-subtle relative z-10 mb-6 w-fit">
           <ArrowLeft size={15} />
           Home
         </Link>
 
-        <section className="rounded-[2rem] border border-white/60 bg-white/70 p-5 shadow-[0_30px_90px_rgba(17,17,17,0.08)] backdrop-blur-2xl md:p-8">
+        <section className="premium-card relative z-10 p-5 md:p-8">
           <p className="eyebrow">Application Status</p>
           <h1 className="display mt-5 text-[clamp(3rem,12vw,5.8rem)]">Check your APL application.</h1>
           <p className="mt-5 max-w-md text-base leading-7 text-ink/58">
@@ -93,7 +99,7 @@ export default function StatusPage() {
             />
             <button
               disabled={loading}
-              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-ink px-6 py-4 text-sm font-medium text-white transition hover:bg-apex disabled:pointer-events-none disabled:opacity-60"
+              className="btn btn-primary disabled:pointer-events-none disabled:opacity-60"
             >
               <Search size={16} />
               {phase === "checking" ? "Checking Status..." : phase === "verifying" ? "Verifying Application..." : "Check Status"}
