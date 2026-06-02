@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { createMetadata } from "@/lib/seo";
+import { createMetadata, createNoIndexMetadata, SEO_PAGES } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  ...createMetadata({
-    title: "Page Not Found | Apex Premier League",
-    description: "This page could not be found.",
-    path: "/404"
-  }),
-  robots: { index: false, follow: false }
+  ...createMetadata(SEO_PAGES.notFound),
+  ...createNoIndexMetadata(SEO_PAGES.notFound.title, SEO_PAGES.notFound.description)
 };
 
 export default function NotFound() {

@@ -4,9 +4,13 @@ import Image from "next/image";
 const quickLinks = [
   { label: "About", href: "/about" },
   { label: "Vision", href: "/vision" },
-  { label: "Register", href: "/register/player" },
-  { label: "Status", href: "/status" },
-  { label: "FAQ", href: "/faq" }
+  { label: "Founding Players", href: "/founding-players" },
+  { label: "Franchises", href: "/franchises" },
+  { label: "Player Registration", href: "/register/player" },
+  { label: "Franchise Ownership", href: "/register/franchise" },
+  { label: "Status Checker", href: "/status" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact", href: "/contact" }
 ];
 
 const legalLinks = [
@@ -18,7 +22,7 @@ const legalLinks = [
 export default function Footer() {
   return (
     <footer className="relative border-t border-apl bg-apl-navy">
-      <div className="section-gradient-overlay absolute inset-0 pointer-events-none" />
+      <div className="section-gradient-overlay pointer-events-none absolute inset-0" />
       <div className="container-apl relative section-pad !pb-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -27,9 +31,9 @@ export default function Footer() {
               The home of Kashmiri football. Season One — built for players, franchises, and the valley.
             </p>
           </div>
-          <div>
+          <div className="lg:col-span-2">
             <p className="text-label text-apl-text-muted">Quick Links</p>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-body-md text-apl-text-secondary hover:text-apl-white">
@@ -50,10 +54,8 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
-          <div>
-            <p className="text-label text-apl-text-muted">Contact</p>
-            <a href="tel:+918491900407" className="mt-4 block text-body-md text-apl-blue hover:text-apl-blue-bright">
+            <p className="mt-6 text-label text-apl-text-muted">Contact</p>
+            <a href="tel:+918491900407" className="mt-2 block text-body-md text-apl-blue hover:text-apl-blue-bright">
               +91 8491900407
             </a>
             <Link href="/contact" className="mt-2 block text-body-md text-apl-text-secondary hover:text-apl-white">
