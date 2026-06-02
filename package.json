@@ -12,6 +12,7 @@
   "dependencies": {
     "@cashfreepayments/cashfree-js": "^1.0.7",
     "@studio-freight/lenis": "^1.0.42",
+    "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.106.1",
     "@vercel/analytics": "^2.0.1",
     "browser-image-compression": "^2.0.2",

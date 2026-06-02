@@ -6,21 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { MOTION } from "@/lib/motion";
 import SectionLabel from "@/components/ui/SectionLabel";
-
-const faqs = [
-  {
-    q: "How long does registration take?",
-    a: "Applications are reviewed within a few business days after payment and document verification."
-  },
-  {
-    q: "Can I register from outside Baramulla?",
-    a: "Yes. APL welcomes players from across Kashmir who meet league standards."
-  },
-  {
-    q: "Is the registration fee refundable?",
-    a: "See our refund policy for details on eligible cases and committee review."
-  }
-];
+import { FAQ_PREVIEW } from "@/lib/faq-content";
 
 export default function FAQPreview() {
   const [open, setOpen] = useState<number | null>(0);
@@ -32,7 +18,7 @@ export default function FAQPreview() {
           <SectionLabel gold={false}>FAQ</SectionLabel>
           <h2 className="text-display-md mt-6 text-apl-white">Common questions</h2>
           <div className="mt-8 space-y-2">
-            {faqs.map((item, i) => (
+            {FAQ_PREVIEW.map((item, i) => (
               <div key={item.q} className="glass-card overflow-hidden">
                 <button
                   type="button"
@@ -42,7 +28,7 @@ export default function FAQPreview() {
                   <span className="text-body-md text-apl-white">{item.q}</span>
                   <ChevronDown size={18} className={`shrink-0 transition ${open === i ? "rotate-180" : ""}`} />
                 </button>
-                {open === i && <p className="border-t border-apl px-5 pb-5 pt-0 text-body-md text-apl-text-secondary">{item.a}</p>}
+                {open === i && <p className="border-t border-apl px-5 pb-5 text-body-md text-apl-text-secondary">{item.a}</p>}
               </div>
             ))}
           </div>

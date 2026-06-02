@@ -12,23 +12,27 @@ export default function WhyAPL() {
         src="/images/editorial-dribble.png"
         alt=""
         fill
-        className="object-cover opacity-25 mix-blend-luminosity"
+        className="object-cover opacity-20 mix-blend-luminosity"
         sizes="100vw"
         aria-hidden
       />
-      <div className="hero-gradient absolute inset-0 bg-apl-navy-mid/90" />
-      <div className="container-apl relative z-10 max-w-3xl text-center">
+      <div className="absolute inset-0 bg-apl-navy-mid/92" />
+      <div className="container-apl relative z-10 max-w-3xl">
         <motion.div {...MOTION.sectionEnter}>
-          <SectionLabel className="justify-center">THE REASON</SectionLabel>
-          <h2 className="text-display-lg mt-8 text-apl-white">
-            &ldquo;There was no league.
-            <br />
-            So we built one.&rdquo;
-          </h2>
-          <p className="mt-8 text-body-lg text-apl-text-secondary">
-            APL was built because Kashmir&apos;s football community deserved more than informal tournaments. It deserved a
-            structure, an identity, and a future. That future is Season One.
-          </p>
+          <SectionLabel className="justify-center">WHY APL EXISTS</SectionLabel>
+          <div className="mt-8 space-y-6 text-center">
+            <p className="text-body-xl text-apl-text-secondary">
+              Kashmir has always produced football talent.
+            </p>
+            <p className="text-body-lg text-apl-text-secondary">
+              What it lacked was structure, visibility, and a long-term ecosystem.
+            </p>
+            <p className="text-body-lg text-apl-text-secondary">
+              APL was created to bring players, franchises, competition, media, and opportunity into one professionally
+              managed platform.
+            </p>
+            <p className="text-label text-apl-gold">Season One is only the beginning.</p>
+          </div>
         </motion.div>
       </div>
     </section>

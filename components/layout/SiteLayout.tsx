@@ -1,7 +1,10 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ApexAI from "@/components/features/ApexAI";
-import ContactFloat from "@/components/features/ContactFloat";
+import IntroAnimation from "@/components/layout/IntroAnimation";
 
 export default function SiteLayout({
   children,
@@ -10,12 +13,19 @@ export default function SiteLayout({
   children: React.ReactNode;
   showFooter?: boolean;
 }) {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
+
+  if (isAdmin) {
+    return <>{children}</>;
+  }
+
   return (
     <>
+      <IntroAnimation />
       <Navbar />
       <div className="page-shell">{children}</div>
       {showFooter && <Footer />}
-      <ContactFloat />
       <ApexAI />
     </>
   );

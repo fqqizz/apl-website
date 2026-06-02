@@ -208,7 +208,7 @@ export default function PlayerRegistrationForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit} noValidate className="glass-card grid gap-5 md:grid-cols-2">
+      <form onSubmit={handleSubmit} noValidate className="form-surface grid gap-5 md:grid-cols-2">
         <Field label="Full Name" name="fullName" required error={errors.fullName} />
         <Field label="Age" name="age" type="number" required error={errors.age} />
         <Field label="Position" name="position" required error={errors.position} />

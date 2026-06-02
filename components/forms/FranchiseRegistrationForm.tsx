@@ -74,7 +74,7 @@ export default function FranchiseRegistrationForm() {
 
   if (submitted) {
     return (
-      <div className="glass-card p-8 text-center">
+      <div className="form-surface rounded-xl border border-apl bg-apl-glass p-8 text-center">
         <div className="mx-auto grid size-12 place-items-center rounded-full bg-apl-blue">
           <Check size={22} className="text-white" />
         </div>
@@ -90,7 +90,7 @@ export default function FranchiseRegistrationForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="glass-card grid gap-5 md:grid-cols-2">
+    <form onSubmit={handleSubmit} noValidate className="form-surface grid gap-5 md:grid-cols-2">
       <Field label="Owner Name" name="ownerName" required error={errors.ownerName} />
       <Field
         label="Contact Number"

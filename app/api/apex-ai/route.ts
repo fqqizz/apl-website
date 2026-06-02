@@ -1,27 +1,9 @@
 import { NextResponse } from "next/server";
 import { APEX_AI_SYSTEM_PROMPT } from "@/lib/apex-ai-prompt";
+import { getKnowledgeReply } from "@/lib/apex-knowledge";
+import { LEAGUE } from "@/lib/apl-constants";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
-
-function fallbackReply(question: string): string {
-  const q = question.toLowerCase();
-  if (q.includes("register") && q.includes("player")) {
-    return "Register as a player at /register/player. Complete the form, pay ₹249 securely, and you'll receive your Player ID after APL review. Check status at /status.";
-  }
-  if (q.includes("franchise")) {
-    return "Franchise ownership is at /register/franchise. Founding spots are limited for Season One. The committee reviews every application.";
-  }
-  if (q.includes("fee") || q.includes("cost") || q.includes("price")) {
-    return "Player registration is ₹249 via secure online checkout. For franchise investment details, call +91 8491900407.";
-  }
-  if (q.includes("status")) {
-    return "Check your application at /status using your Player ID (e.g. APL-4821).";
-  }
-  if (q.includes("baramulla") || q.includes("kashmir")) {
-    return "APL is based in Baramulla, North Kashmir — the first structured professional football league from the valley. Players from across Kashmir are welcome.";
-  }
-  return "For specific details, visit apexpremiereleague.in or call +91 8491900407. I can help with registration, franchises, fees, and Season One.";
-}
 
 export async function POST(request: Request) {
   try {
@@ -31,6 +13,11 @@ export async function POST(request: Request) {
 
     if (!lastUser?.content) {
       return NextResponse.json({ error: "No message provided" }, { status: 400 });
+    }
+
+    const knowledge = getKnowledgeReply(lastUser.content);
+    if (knowledge) {
+      return NextResponse.json({ reply: knowledge });
     }
 
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY;
@@ -51,19 +38,26 @@ export async function POST(request: Request) {
           body: JSON.stringify({
             systemInstruction: { parts: [{ text: APEX_AI_SYSTEM_PROMPT }] },
             contents,
-            generationConfig: { maxOutputTokens: 512, temperature: 0.7 }
+            generationConfig: { maxOutputTokens: 512, temperature: 0.4 }
           })
         }
       );
 
       if (response.ok) {
         const data = await response.json();
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (reply) return NextResponse.json({ reply: reply.trim() });
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (reply && !/visit.*website|for specific details/i.test(reply)) {
+          return NextResponse.json({ reply });
+        }
       }
     }
 
-    return NextResponse.json({ reply: fallbackReply(lastUser.content) });
+    const fallback = getKnowledgeReply(lastUser.content);
+    return NextResponse.json({
+      reply:
+        fallback ||
+        `Apex Premier League is a franchise-based football league with ${LEAGUE.franchises} teams and ${LEAGUE.players} player registrations. Player fee is ₹${LEAGUE.playerRegistrationFeeInr}. Register at /register/player or own a franchise at /register/franchise. Check status at /status with your Player ID.`
+    });
   } catch {
     return NextResponse.json({ error: "Unable to process request" }, { status: 500 });
   }

@@ -14,7 +14,7 @@ export default function FAQPage() {
     <div className="pb-20">
       <PageHeader label="FAQ" title="QUESTIONS, ANSWERED" description="Player, franchise, and general league information." />
       <div className="container-apl max-w-3xl">
-        <FAQAccordion />
+        <FAQAccordion showRulebook />
       </div>
     </div>
   );

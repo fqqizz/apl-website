@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Mail, Phone } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
+import ContactForm from "@/components/features/ContactForm";
+import { CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/lib/apl-constants";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createMetadata({
@@ -13,18 +15,19 @@ export default function ContactPage() {
   return (
     <div className="pb-20">
       <PageHeader label="CONTACT" title="SPEAK WITH APL" description="Registration, franchise ownership, and league information." />
-      <div className="container-apl max-w-xl">
-        <div className="glass-card space-y-6 p-8">
-          <a href="tel:+918491900407" className="flex items-center gap-3 text-body-lg text-apl-white hover:text-apl-blue">
-            <Phone size={20} />
-            +91 8491900407
+      <div className="container-apl grid gap-12 lg:grid-cols-[1fr_280px]">
+        <ContactForm />
+        <aside className="space-y-6 text-body-md">
+          <a href={CONTACT_PHONE_TEL} className="flex items-center gap-3 text-apl-white hover:text-apl-blue">
+            <Phone size={18} />
+            {CONTACT_PHONE}
           </a>
-          <a href="mailto:contact@apexpremiereleague.in" className="flex items-center gap-3 text-body-lg text-apl-text-secondary hover:text-apl-white">
-            <Mail size={20} />
+          <a href="mailto:contact@apexpremiereleague.in" className="flex items-center gap-3 text-apl-text-secondary hover:text-apl-white">
+            <Mail size={18} />
             contact@apexpremiereleague.in
           </a>
-          <p className="text-body-md text-apl-text-muted">Baramulla, North Kashmir · Season One</p>
-        </div>
+          <p className="text-apl-text-muted">Baramulla, North Kashmir · Season One</p>
+        </aside>
       </div>
     </div>
   );

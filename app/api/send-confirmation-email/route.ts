@@ -1,5 +1,6 @@
 import { resend } from "@/lib/resend";
 import { NextResponse } from "next/server";
+import { LEAGUE, SITE_URL, CONTACT_PHONE } from "@/lib/apl-constants";
 
 function escapeHtml(value: string) {
   return value
@@ -12,18 +13,14 @@ function escapeHtml(value: string) {
 
 async function sendWithRetry(payload: Parameters<typeof resend.emails.send>[0], attempts = 2) {
   let lastError: unknown;
-
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     try {
       return await resend.emails.send(payload);
     } catch (error) {
       lastError = error;
-      if (attempt < attempts - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
-      }
+      if (attempt < attempts - 1) await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
     }
   }
-
   throw lastError;
 }
 
@@ -42,51 +39,59 @@ export async function POST(request: Request) {
     const safeName = escapeHtml(String(playerName));
     const safePlayerId = escapeHtml(String(playerId));
     const safePaymentStatus = escapeHtml(String(paymentStatus || "completed"));
-    const safeEmail = escapeHtml(String(email));
+    const submittedAt = new Date().toLocaleString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
 
     await sendWithRetry({
-      from: "APL <contact@apexpremiereleague.in>",
-      to: [safeEmail],
-      subject: `APL Registration Confirmed — ${safePlayerId}`,
+      from: "Apex Premier League <contact@apexpremiereleague.in>",
+      to: [String(email)],
+      subject: `APL Registration Confirmed — ${String(playerId)}`,
       html: `
         <!doctype html>
         <html>
-          <body style="margin:0;background:#f5f5f5;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#111111;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #eaeaea;border-radius:28px;overflow:hidden;">
+          <body style="margin:0;background:#0a1628;padding:32px 16px;font-family:'Segoe UI',system-ui,sans-serif;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
               <tr>
-                <td style="padding:34px 28px 12px;">
-                  <p style="margin:0 0 18px;color:#00029c;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;">APEX PREMIERE LEAGUE</p>
-                  <h1 style="margin:0;color:#111111;font-size:34px;line-height:1.05;font-weight:500;">Registration confirmed.</h1>
+                <td style="background:linear-gradient(135deg,#0a1628 0%,#1a6bff 100%);padding:28px 24px;text-align:center;">
+                  <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Apex Premier League</p>
+                  <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:600;letter-spacing:0.02em;">Registration Confirmed</h1>
                 </td>
               </tr>
               <tr>
-                <td style="padding:12px 28px 4px;">
-                  <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#444444;">Hello ${safeName},</p>
-                  <p style="margin:0;font-size:16px;line-height:1.7;color:#444444;">Your APL player registration has been submitted successfully and is now with the APL Committee for review.</p>
+                <td style="padding:28px 24px 8px;">
+                  <p style="margin:0 0 12px;font-size:16px;line-height:1.6;color:#3d4f66;">Hello ${safeName},</p>
+                  <p style="margin:0;font-size:15px;line-height:1.7;color:#5a6a7e;">Your player registration for <strong style="color:#0a1628;">${LEAGUE.season}</strong> has been received. Payment is confirmed and your application is now under APL committee review.</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding:24px 28px;">
-                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f7f7f7;border:1px solid #eaeaea;border-radius:22px;">
-                    <tr>
-                      <td style="padding:20px;">
-                        <p style="margin:0 0 8px;color:#777777;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;">Player ID</p>
-                        <p style="margin:0;color:#111111;font-size:28px;font-weight:600;">${safePlayerId}</p>
-                        <p style="margin:18px 0 8px;color:#777777;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;">Payment Status</p>
-                        <p style="margin:0;color:#111111;font-size:16px;text-transform:capitalize;">${safePaymentStatus}</p>
-                      </td>
-                    </tr>
+                <td style="padding:16px 24px;">
+                  <table role="presentation" width="100%" style="background:#f4f6fa;border-radius:12px;border:1px solid #e8ecf2;">
+                    <tr><td style="padding:18px 20px;">
+                      <p style="margin:0 0 6px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#5a6a7e;">Your Player ID</p>
+                      <p style="margin:0;font-size:28px;font-weight:700;color:#1a6bff;font-family:monospace;">${safePlayerId}</p>
+                      <p style="margin:16px 0 6px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#5a6a7e;">Payment</p>
+                      <p style="margin:0;font-size:15px;color:#0a1628;text-transform:capitalize;">${safePaymentStatus} · ₹${LEAGUE.playerRegistrationFeeInr}</p>
+                      <p style="margin:16px 0 6px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#5a6a7e;">Submitted</p>
+                      <p style="margin:0;font-size:15px;color:#0a1628;">${submittedAt}</p>
+                    </td></tr>
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding:0 28px 32px;">
-                  <p style="margin:0 0 18px;font-size:15px;line-height:1.75;color:#555555;">You will receive an email once your registration has been reviewed and approved by the APL Committee.</p>
-                  <p style="margin:0;font-size:14px;line-height:1.7;color:#777777;">Support: <a href="mailto:contact@apexpremiereleague.in" style="color:#00029c;text-decoration:none;">contact@apexpremiereleague.in</a></p>
+                <td style="padding:8px 24px 24px;">
+                  <p style="margin:0 0 16px;font-size:14px;line-height:1.7;color:#5a6a7e;">Check your status anytime at <a href="${SITE_URL}/status" style="color:#1a6bff;">${SITE_URL}/status</a> using your Player ID.</p>
+                  <p style="margin:0;font-size:13px;color:#5a6a7e;">Support: ${CONTACT_PHONE} · <a href="mailto:contact@apexpremiereleague.in" style="color:#1a6bff;">contact@apexpremiereleague.in</a></p>
                 </td>
               </tr>
               <tr>
-                <td style="border-top:1px solid #eaeaea;padding:18px 28px;color:#999999;font-size:12px;">© 2026 APL. Rise Above.</td>
+                <td style="background:#f4f6fa;padding:16px 24px;border-top:1px solid #e8ecf2;font-size:11px;color:#5a6a7e;text-align:center;">
+                  © ${new Date().getFullYear()} Apex Premier League · ${LEAGUE.franchises} Franchises · ${LEAGUE.players} Players
+                </td>
               </tr>
             </table>
           </body>

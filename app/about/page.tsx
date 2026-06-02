@@ -10,9 +10,26 @@ export const metadata: Metadata = createMetadata({
 });
 
 const timeline = [
-  { year: "2024", event: "APL concept formed in Baramulla with franchise-first league design." },
-  { year: "2025", event: "Season One registration opens. Founding players and franchises join the movement." },
-  { year: "Next", event: "Official fixtures, media coverage, and Kashmir's competitive football future." }
+  {
+    year: "2025",
+    title: "Concept & Planning",
+    detail: "League structure, systems, branding, and digital infrastructure developed."
+  },
+  {
+    year: "2026",
+    title: "Applications Open",
+    detail: "Player registrations and franchise ownership applications launched publicly."
+  },
+  {
+    year: "Season One",
+    title: "The Beginning",
+    detail: "The beginning of Kashmir's first franchise-based football movement."
+  },
+  {
+    year: "Future",
+    title: "What's Next",
+    detail: "Expansion, partnerships, media growth, and a stronger football ecosystem."
+  }
 ];
 
 export default function AboutPage() {
@@ -45,7 +62,8 @@ export default function AboutPage() {
           {timeline.map((item) => (
             <li key={item.year}>
               <p className="text-label text-apl-gold">{item.year}</p>
-              <p className="mt-2 text-body-md text-apl-text-secondary">{item.event}</p>
+              <p className="mt-2 text-body-md text-apl-white">{item.title}</p>
+              <p className="mt-1 text-body-md text-apl-text-secondary">{item.detail}</p>
             </li>
           ))}
         </ul>

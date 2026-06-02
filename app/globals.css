@@ -340,17 +340,10 @@ a {
 
 @media (max-width: 640px) {
   .apex-ai-fab {
-    bottom: 88px;
+    bottom: 16px;
     right: 16px;
     padding: 10px 14px;
     font-size: 0.8rem;
-  }
-
-  .contact-float {
-    bottom: 16px;
-    left: 16px;
-    font-size: 0.72rem;
-    padding: 10px 12px;
   }
 }
 
@@ -450,4 +443,242 @@ a {
   color: var(--apl-text-secondary);
   line-height: 1.75;
   margin-top: 1rem;
+}
+
+/* Floating glass navbar */
+.navbar-glass {
+  background: rgba(10, 22, 40, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.navbar-glass-scrolled {
+  background: rgba(10, 22, 40, 0.88);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.nav-link-float {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--apl-text-secondary);
+  border-radius: 999px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.nav-link-float:hover {
+  color: var(--apl-white);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn-nav-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 18px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border-radius: 999px;
+  background: var(--apl-blue);
+  color: white;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.btn-nav-primary:hover {
+  background: var(--apl-blue-bright);
+}
+
+.btn-nav-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--apl-text-primary);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-nav-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.form-surface {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.form-surface .field,
+.form-surface .upload-field {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: var(--apl-border);
+}
+
+@keyframes bounce-subtle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.motion-safe\:animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-safe\:animate-bounce-subtle {
+    animation: none;
+  }
+}
+
+/* Apex AI — light panel */
+.apex-ai-fab {
+  background: white;
+  color: var(--apl-navy);
+  border: 1px solid rgba(26, 107, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(10, 22, 40, 0.12);
+}
+
+.apex-ai-fab:hover {
+  background: #f8faff;
+  border-color: rgba(26, 107, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+.apex-ai-panel {
+  background: #ffffff;
+  border: 1px solid rgba(10, 22, 40, 0.08);
+  box-shadow: 0 24px 80px rgba(10, 22, 40, 0.18);
+  color: var(--apl-navy);
+}
+
+.apex-ai-bubble-user {
+  background: var(--apl-blue);
+  color: white;
+}
+
+.apex-ai-bubble-assistant {
+  background: #f4f6fa;
+  color: #3d4f66;
+  border: 1px solid rgba(10, 22, 40, 0.06);
+}
+
+/* Admin dashboard */
+.admin-glass {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(10, 22, 40, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(10, 22, 40, 0.08);
+}
+
+.admin-card {
+  background: white;
+  border: 1px solid rgba(10, 22, 40, 0.06);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 20px rgba(10, 22, 40, 0.04);
+}
+
+.admin-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--apl-text-muted);
+}
+
+.admin-field {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid rgba(10, 22, 40, 0.1);
+  border-radius: 8px;
+  background: white;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  color: var(--apl-navy);
+  outline: none;
+}
+
+.admin-field:focus {
+  border-color: var(--apl-blue);
+  box-shadow: 0 0 0 3px var(--apl-blue-dim);
+}
+
+.admin-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: var(--apl-blue);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.admin-btn-primary:hover {
+  background: var(--apl-blue-bright);
+}
+
+.admin-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(10, 22, 40, 0.12);
+  background: white;
+  color: var(--apl-navy);
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+}
+
+.admin-btn-ghost:hover {
+  border-color: rgba(26, 107, 255, 0.35);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--apl-text-muted);
+  border-bottom: 1px solid rgba(10, 22, 40, 0.08);
+}
+
+.admin-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(10, 22, 40, 0.05);
+  color: var(--apl-navy);
 }
