@@ -476,6 +476,32 @@ a {
   background: rgba(255, 255, 255, 0.06);
 }
 
+.nav-link-float-active {
+  color: var(--apl-white);
+  background: rgba(26, 107, 255, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(26, 107, 255, 0.35);
+}
+
+/* Cinematic intro */
+.intro-cinematic-vignette {
+  background: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+.intro-cinematic-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.intro-cinematic-tagline {
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
 .btn-nav-primary {
   display: inline-flex;
   align-items: center;

@@ -4,22 +4,23 @@ import { motion } from "framer-motion";
 import { MOTION } from "@/lib/motion";
 import SectionLabel from "@/components/ui/SectionLabel";
 import GlassCard from "@/components/ui/GlassCard";
+import RulebookLink from "@/components/ui/RulebookLink";
 
 const cards = [
   {
     label: "STRUCTURED PLAY",
     title: "A real league format",
-    body: "Official franchises, player registrations, competitive matches. A real league format — not a tournament."
+    body: "Official franchises, player registrations, and competitive fixtures — a season built for football, not a one-off tournament."
   },
   {
     label: "PLAYER FIRST",
     title: "Your football identity",
-    body: "Every registered player gets a unique Player ID. Your football identity. Official. Permanent."
+    body: "Every registered player receives a unique Player ID — your official APL identity for status, selection, and league records."
   },
   {
     label: "FRANCHISE OWNERSHIP",
     title: "Own the history",
-    body: "Own a piece of Kashmiri football history. Founding franchise spots are limited and exclusive."
+    body: "Founding franchise spots are limited. Owners build club identity, squads, and matchday presence within APL standards."
   }
 ];
 
@@ -41,6 +42,10 @@ export default function Standards() {
               </GlassCard>
             </motion.div>
           ))}
+        </motion.div>
+        <motion.div {...MOTION.sectionEnter} className="mt-14 flex flex-col items-center text-center">
+          <p className="text-body-md text-apl-text-secondary">Official regulations for Season One</p>
+          <RulebookLink className="mt-5" label="Download Official Rulebook" />
         </motion.div>
       </div>
     </section>

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { APEX_AI_SYSTEM_PROMPT } from "@/lib/apex-ai-prompt";
-import { getKnowledgeReply } from "@/lib/apex-knowledge";
-import { LEAGUE } from "@/lib/apl-constants";
+import { getDefaultKnowledgeReply, getKnowledgeReply } from "@/lib/apex-knowledge";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -53,11 +52,7 @@ export async function POST(request: Request) {
     }
 
     const fallback = getKnowledgeReply(lastUser.content);
-    return NextResponse.json({
-      reply:
-        fallback ||
-        `Apex Premier League is a franchise-based football league with ${LEAGUE.franchises} teams and ${LEAGUE.players} player registrations. Player fee is ₹${LEAGUE.playerRegistrationFeeInr}. Register at /register/player or own a franchise at /register/franchise. Check status at /status with your Player ID.`
-    });
+    return NextResponse.json({ reply: fallback || getDefaultKnowledgeReply() });
   } catch {
     return NextResponse.json({ error: "Unable to process request" }, { status: 500 });
   }

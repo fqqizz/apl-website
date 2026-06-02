@@ -20,18 +20,22 @@ export default function WhyAPL() {
       <div className="container-apl relative z-10 max-w-3xl">
         <motion.div {...MOTION.sectionEnter}>
           <SectionLabel className="justify-center">WHY APL EXISTS</SectionLabel>
-          <div className="mt-8 space-y-6 text-center">
-            <p className="text-body-xl text-apl-text-secondary">
-              Kashmir has always produced football talent.
+          <h2 className="text-display-lg mt-6 text-center text-apl-white">Why APL Exists</h2>
+          <p className="mt-4 text-center text-body-lg text-apl-gold">
+            Building Structure For Kashmiri Football
+          </p>
+          <div className="mt-10 space-y-6 text-center">
+            <p className="text-body-lg text-apl-text-secondary">
+              Kashmir has never lacked football talent.
             </p>
             <p className="text-body-lg text-apl-text-secondary">
-              What it lacked was structure, visibility, and a long-term ecosystem.
+              What it has lacked is structure, visibility, long-term planning, and a unified competitive ecosystem.
             </p>
             <p className="text-body-lg text-apl-text-secondary">
-              APL was created to bring players, franchises, competition, media, and opportunity into one professionally
-              managed platform.
+              APL was created to connect players, franchises, competition, media, and opportunity under one
+              professional platform.
             </p>
-            <p className="text-label text-apl-gold">Season One is only the beginning.</p>
+            <p className="text-label text-apl-gold">Season One is the first chapter of a much larger vision.</p>
           </div>
         </motion.div>
       </div>

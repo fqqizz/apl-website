@@ -7,7 +7,6 @@ import { MOTION } from "@/lib/motion";
 import Button from "@/components/ui/Button";
 import SectionLabel from "@/components/ui/SectionLabel";
 import MarqueeStrip from "@/components/features/MarqueeStrip";
-import RulebookLink from "@/components/ui/RulebookLink";
 
 const headline = ["KASHMIR'S", "FOOTBALL", "MOVEMENT", "STARTS HERE."];
 
@@ -66,7 +65,6 @@ export default function Hero() {
             <Button href="/status" variant="ghost">
               Check Application
             </Button>
-            <RulebookLink />
           </motion.div>
         </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -15,6 +16,7 @@ export default function SiteLayout({
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const [introDone, setIntroDone] = useState(false);
 
   if (isAdmin) {
     return <>{children}</>;
@@ -22,11 +24,16 @@ export default function SiteLayout({
 
   return (
     <>
-      <IntroAnimation />
-      <Navbar />
-      <div className="page-shell">{children}</div>
-      {showFooter && <Footer />}
-      <ApexAI />
+      <IntroAnimation onComplete={() => setIntroDone(true)} />
+      <div
+        className={`transition-opacity duration-700 ${introDone ? "opacity-100" : "opacity-0"}`}
+        aria-hidden={!introDone}
+      >
+        <Navbar />
+        <div className="page-shell">{children}</div>
+        {showFooter && <Footer />}
+        {introDone && <ApexAI />}
+      </div>
     </>
   );
 }
