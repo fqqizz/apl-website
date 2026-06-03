@@ -16,15 +16,23 @@ export default function FoundingEraStats() {
   return (
     <div className="grid gap-8 sm:grid-cols-3">
       <div>
-        <AnimatedCounter value={stats.players || 0} />
-        <p className="mt-2 text-label text-apl-text-muted">Registered Players</p>
+        <div className="flex items-baseline gap-2">
+          <AnimatedCounter value={stats.players || 0} />
+          <span className="text-xl md:text-2xl font-light text-apl-text-secondary">/ 288</span>
+        </div>
+        <p className="mt-2 text-label text-apl-text-muted">Players Registered</p>
       </div>
       <div>
-        <AnimatedCounter value={stats.franchises || 0} />
-        <p className="mt-2 text-label text-apl-text-muted">Franchise Applications</p>
+        <div className="flex items-baseline gap-2">
+          <AnimatedCounter value={stats.franchises || 0} />
+          <span className="text-xl md:text-2xl font-light text-apl-text-secondary">/ 16</span>
+        </div>
+        <p className="mt-2 text-label text-apl-text-muted">Franchises Applied</p>
       </div>
       <div>
-        <AnimatedCounter value={1} />
+        <div className="flex items-baseline gap-2">
+          <AnimatedCounter value={1} />
+        </div>
         <p className="mt-2 text-label text-apl-text-muted">Season Starting</p>
       </div>
     </div>

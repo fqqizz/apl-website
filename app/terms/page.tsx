@@ -19,6 +19,10 @@ export default function TermsPage() {
             body: "Player registration requires accurate details and official payment where applicable. Submission does not guarantee selection, franchise placement, or final league approval."
           },
           {
+            title: "Payment Processing",
+            body: "All online payment collection and processing operations for player registrations and league applications are managed by Farhana Begum."
+          },
+          {
             title: "Conduct Rules",
             body: "Participants must maintain respectful behavior. Abuse, violence, fraud, or conduct damaging to APL may lead to suspension or removal."
           },

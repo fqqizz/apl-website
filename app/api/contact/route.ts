@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { resend } from "@/lib/resend";
 import { CONTACT_EMAIL } from "@/lib/apl-constants";
+import { createServiceClient } from "@/lib/supabase/service";
 
 function escapeHtml(value: string) {
   return value
@@ -31,6 +32,22 @@ export async function POST(request: Request) {
     const safePhone = escapeHtml(String(phone || "Not provided"));
     const safeSubject = escapeHtml(String(subject));
     const safeMessage = escapeHtml(String(message)).replace(/\n/g, "<br/>");
+
+    try {
+      const supabaseAdmin = createServiceClient();
+      await supabaseAdmin.from("contact_submissions").insert([
+        {
+          name: String(name),
+          email: String(email),
+          phone: phone ? String(phone) : null,
+          subject: String(subject),
+          message: String(message),
+          is_read: false
+        }
+      ]);
+    } catch (dbErr) {
+      console.error("Supabase contact store failed:", dbErr);
+    }
 
     await resend.emails.send({
       from: "APL Contact <contact@apexpremiereleague.in>",

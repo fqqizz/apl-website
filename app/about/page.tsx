@@ -50,6 +50,14 @@ export default function AboutPage() {
               From Baramulla to every district that believes in the game, Season One is the founding era. The players and
               owners who join now are not filling a form — they are making history.
             </p>
+            
+            {/* Founder Story Block */}
+            <div className="pt-6 border-t border-apl-border">
+              <h3 className="text-sm font-semibold tracking-wider text-apl-gold uppercase">Founded in Baramulla</h3>
+              <p className="mt-2 text-xs leading-relaxed text-apl-text-muted italic">
+                "Apex Premier League was founded in Baramulla with a vision to create a structured football ecosystem that provides opportunity, visibility, and professional competition for footballers across Kashmir."
+              </p>
+            </div>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-apl">
             <Image src="/images/hero-community.png" alt="Young footballers in Kashmir" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />

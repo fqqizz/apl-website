@@ -69,13 +69,15 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             transition={{ delay: introReady ? 0.48 : 0, duration: 0.6, ease }}
-            className="mt-8 flex flex-wrap items-center justify-center gap-2"
+            className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto sm:max-w-none sm:w-auto"
           >
-            <Button href="/register/player">Join as Player</Button>
-            <Button href="/register/franchise" variant="secondary">
+            <Button href="/register/player" className="w-full sm:w-auto justify-center text-sm font-semibold py-3 px-6">
+              Join as Player
+            </Button>
+            <Button href="/register/franchise" variant="secondary" className="w-full sm:w-auto justify-center text-sm font-semibold py-3 px-6">
               Own a Franchise
             </Button>
-            <Button href="/status" variant="ghost">
+            <Button href="/status" variant="ghost" className="w-full sm:w-auto justify-center text-xs opacity-80 hover:opacity-100">
               Check Application
             </Button>
           </motion.div>

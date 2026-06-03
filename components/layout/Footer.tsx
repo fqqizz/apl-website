@@ -5,11 +5,11 @@ const quickLinks = [
   { label: "About", href: "/about" },
   { label: "Vision", href: "/vision" },
   { label: "Founding Players", href: "/founding-players" },
-  { label: "Franchises", href: "/franchises" },
+  { label: "Founding Franchises", href: "/founding-franchises" },
+  { label: "Partners", href: "/partners" },
   { label: "Player Registration", href: "/register/player" },
   { label: "Franchise Ownership", href: "/register/franchise" },
   { label: "Status Checker", href: "/status" },
-  { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" }
 ];
 
@@ -30,6 +30,10 @@ export default function Footer() {
             <p className="mt-4 max-w-xs text-body-md text-apl-text-secondary">
               The home of Kashmiri football. Season One — built for players, franchises, and the valley.
             </p>
+            <div className="mt-4 flex gap-4 text-xs">
+              <a href="https://www.instagram.com/apexpremiereleague/" target="_blank" rel="noopener noreferrer" className="text-apl-text-muted hover:text-white transition">Instagram</a>
+              <a href="https://www.facebook.com/profile.php?id=61590707155897" target="_blank" rel="noopener noreferrer" className="text-apl-text-muted hover:text-white transition">Facebook</a>
+            </div>
           </div>
           <div className="lg:col-span-2">
             <p className="text-label text-apl-text-muted">Quick Links</p>
@@ -54,18 +58,27 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-label text-apl-text-muted">Contact</p>
-            <a href="tel:+918491900407" className="mt-2 block text-body-md text-apl-blue hover:text-apl-blue-bright">
+            <p className="mt-6 text-label text-apl-text-muted">Community</p>
+            <a 
+              href="https://chat.whatsapp.com/HkftiaGm5GS3Kk4eYyrlUF" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mt-2 block text-body-md text-apl-blue hover:text-apl-blue-bright font-semibold"
+            >
+              Join Community (WhatsApp) →
+            </a>
+            <p className="mt-4 text-label text-apl-text-muted">Contact</p>
+            <a href="tel:+918491900407" className="mt-2 block text-body-md text-apl-text-secondary hover:text-white">
               +91 8491900407
             </a>
-            <Link href="/contact" className="mt-2 block text-body-md text-apl-text-secondary hover:text-apl-white">
-              Contact form →
-            </Link>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-apl pt-8 md:flex-row">
-          <p className="text-body-md text-apl-text-muted">© 2025 Apex Premier League · All Rights Reserved</p>
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-apl pt-8 md:flex-row text-xs text-apl-text-muted">
+          <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
+            <p>© 2025 Apex Premier League · All Rights Reserved</p>
+            <p className="text-apl-gold font-medium">Founded by Faaiz Qureshi</p>
+          </div>
           <a
             href="https://www.instagram.com/upsurge.ai/"
             target="_blank"

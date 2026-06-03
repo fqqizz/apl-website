@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Send, X } from "lucide-react";
 import ApexMascot from "@/components/features/ApexMascot";
@@ -18,44 +18,7 @@ export default function ApexAI() {
     }
   ]);
   const [loading, setLoading] = useState(false);
-  const [assistantTyping, setAssistantTyping] = useState(false);
-  const [assistantDraft, setAssistantDraft] = useState("");
-  const [assistantPending, setAssistantPending] = useState("");
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!assistantTyping || !assistantPending) return;
-
-    let index = 0;
-    let timeoutId: number;
-
-    setAssistantDraft("");
-
-    const revealText = () => {
-      if (index < assistantPending.length) {
-        setAssistantDraft((current) => current + assistantPending[index]);
-        index += 1;
-        timeoutId = window.setTimeout(revealText, 18);
-      } else {
-        setMessages((current) => [...current, { role: "assistant", content: assistantPending }]);
-        setAssistantTyping(false);
-        setAssistantPending("");
-      }
-    };
-
-    timeoutId = window.setTimeout(revealText, 280);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [assistantTyping, assistantPending]);
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      if (!listRef.current) return;
-      listRef.current.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-    });
-  }, [messages, assistantDraft, loading, assistantTyping]);
 
   const sendMessage = async (event: FormEvent) => {
     event.preventDefault();
@@ -66,9 +29,6 @@ export default function ApexAI() {
     setMessages(nextMessages);
     setInput("");
     setLoading(true);
-    setAssistantTyping(false);
-    setAssistantDraft("");
-    setAssistantPending("");
 
     try {
       const response = await fetch("/api/apex-ai", {
@@ -80,15 +40,19 @@ export default function ApexAI() {
       const reply =
         data.reply ||
         "I can help with APL registration (₹249), Player IDs, 16 franchises, 288 players, and Season One. Call +91 8491900407 for account-specific help.";
-      setAssistantPending(reply);
-      setAssistantTyping(true);
+      setMessages([...nextMessages, { role: "assistant", content: reply }]);
     } catch {
-      setAssistantPending(
-        "Connection issue. APL is a 16-franchise league with 288 player slots — register at /register/player. For urgent help call +91 8491900407."
-      );
-      setAssistantTyping(true);
+      setMessages([
+        ...nextMessages,
+        {
+          role: "assistant",
+          content:
+            "Connection issue. APL is a 16-franchise league with 288 player slots — register at /register/player. For urgent help call +91 8491900407."
+        }
+      ]);
     } finally {
       setLoading(false);
+      requestAnimationFrame(() => listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" }));
     }
   };
 
@@ -121,14 +85,13 @@ export default function ApexAI() {
             </div>
 
             <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto bg-[#fafbfc] p-4">
-              <AnimatePresence initial={false} mode="popLayout">
+              <AnimatePresence initial={false}>
                 {messages.map((msg, i) => (
                   <motion.div
                     key={`${msg.role}-${i}`}
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 12 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.35, ease: [0.215, 0.61, 0.355, 1] }}
                     className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                       msg.role === "user" ? "apex-ai-bubble-user ml-auto" : "apex-ai-bubble-assistant"
                     }`}
@@ -136,33 +99,22 @@ export default function ApexAI() {
                     {msg.content}
                   </motion.div>
                 ))}
-
-                {(loading || assistantTyping) && (
-                  <motion.div
-                    key={loading ? "assistant-loading" : "assistant-typing"}
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 12 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="apex-ai-bubble-assistant max-w-[70%] rounded-2xl px-3 py-3"
-                  >
-                    {loading ? (
-                      <div className="flex items-center gap-3 text-sm text-slate-500">
-                        <span>Apex AI is thinking</span>
-                        <span className="loading-dots" aria-hidden="true">
-                          <span />
-                          <span />
-                          <span />
-                        </span>
-                      </div>
-                    ) : (
-                      <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-                        {assistantDraft || "Apex AI is generating your answer..."}
-                      </p>
-                    )}
-                  </motion.div>
-                )}
               </AnimatePresence>
+              {loading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="apex-ai-bubble-assistant max-w-[80%] rounded-2xl px-3.5 py-2.5 flex items-center gap-2"
+                >
+                  <span className="text-xs text-apl-text-muted font-medium">Apex is thinking</span>
+                  <span className="flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-apl-navy/40 animate-bounce" style={{ animationDelay: '0ms', animationDuration: '0.8s' }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-apl-navy/40 animate-bounce" style={{ animationDelay: '150ms', animationDuration: '0.8s' }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-apl-navy/40 animate-bounce" style={{ animationDelay: '300ms', animationDuration: '0.8s' }} />
+                  </span>
+                </motion.div>
+              )}
             </div>
 
             <form onSubmit={sendMessage} className="border-t border-black/5 bg-white p-3">
