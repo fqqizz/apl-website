@@ -16,13 +16,22 @@ export default function LeagueVision() {
             <br />
             So does Kashmir.
           </h2>
-          <div className="mt-8 max-w-3xl space-y-6">
-            <p className="text-body-lg text-apl-text-muted" style={{ color: "#5a6a7e" }}>
-              Kashmir has always had football. What it never had was infrastructure — a league that treated players like
-              professionals, franchises like investments, and the sport like the culture it already is.
+          <div className="mt-10 max-w-3xl space-y-6">
+            <p className="text-body-lg" style={{ color: "#3d4f66" }}>
+              Kashmir has never lacked football talent. What it has lacked is a long-term structure capable of connecting
+              players, franchises, competition, visibility, and opportunity under one professional ecosystem.
             </p>
-            <p className="text-body-lg" style={{ color: "#5a6a7e" }}>
-              APL changes that. One season at a time.
+            <p className="text-body-lg" style={{ color: "#3d4f66" }}>
+              Apex Premier League was created with a simple vision: to build a platform where talented footballers can
+              compete, grow, gain recognition, and become part of something larger than a single tournament.
+            </p>
+            <p className="text-body-lg" style={{ color: "#3d4f66" }}>
+              The goal is not merely to organize matches. The goal is to contribute to a stronger football culture,
+              create sustainable opportunities for young players, and establish a competitive league model that can
+              continue evolving season after season.
+            </p>
+            <p className="text-body-lg font-medium" style={{ color: "#1a2b42" }}>
+              Season One is only the beginning.
             </p>
           </div>
           <Divider />

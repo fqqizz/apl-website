@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
-const navLinks = [
+const allLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Vision", href: "/vision" },
@@ -17,6 +17,10 @@ const navLinks = [
   { label: "Status", href: "/status" },
   { label: "Contact", href: "/contact" }
 ];
+
+const desktopLinks = allLinks.filter(
+  (l) => l.href !== "/founding-players" && l.href !== "/founding-franchises"
+);
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -55,7 +59,7 @@ export default function Navbar() {
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">
-            {navLinks.map((item) => {
+            {desktopLinks.map((item) => {
               const active = isActive(pathname, item.href);
               return (
                 <Link
@@ -110,7 +114,7 @@ export default function Navbar() {
               </button>
             </div>
             <nav className="flex flex-col px-5 pt-6">
-              {navLinks.map((item, i) => {
+              {allLinks.map((item, i) => {
                 const active = isActive(pathname, item.href);
                 return (
                   <motion.div

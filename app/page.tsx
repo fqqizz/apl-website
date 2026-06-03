@@ -1,3 +1,4 @@
+// APL V3 Final Refinement Pass - Force Deployment Rebuild
 import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
 import LeagueVision from "@/components/sections/LeagueVision";

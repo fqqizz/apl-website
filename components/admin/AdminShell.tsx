@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { LayoutDashboard, Users, Building2, CreditCard, LogOut, Menu, X, Mail, Megaphone } from "lucide-react";
+import { LayoutDashboard, Users, Building2, CreditCard, LogOut, Menu, X, Mail } from "lucide-react";
 import { useState } from "react";
 
 const links = [
@@ -13,7 +13,7 @@ const links = [
   { href: "/admin/franchises", label: "Franchises", icon: Building2 },
   { href: "/admin/payments", label: "Payments", icon: CreditCard },
   { href: "/admin/contact", label: "Contact Us", icon: Mail },
-  { href: "/admin/announcements", label: "Announcement", icon: Megaphone }
+
 ];
 
 export default function AdminShell({ children, email }: { children: React.ReactNode; email: string }) {

@@ -160,9 +160,6 @@ export default function AdminDashboardPage() {
         <Link href="/admin/franchises" className="admin-btn-ghost">
           Manage franchises
         </Link>
-        <Link href="/admin/announcements" className="admin-btn-ghost">
-          Manage Announcements
-        </Link>
       </div>
     </div>
   );

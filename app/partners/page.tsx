@@ -2,7 +2,7 @@
 
 import PageHeader from "@/components/layout/PageHeader";
 import Link from "next/link";
-import { Handshake, Target, Users, Flame, Share2, Award, ArrowRight, Download } from "lucide-react";
+import { Handshake, Target, Users, Flame, Share2, Award, ArrowRight, TrendingUp, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function PartnersPage() {
@@ -31,6 +31,11 @@ export default function PartnersPage() {
       title: "League Presence",
       desc: "Command physical brand presence through on-field banners, jersey placements, venue branding, and exclusive VIP experience activations.",
       icon: Flame
+    },
+    {
+      title: "Long-Term Vision",
+      desc: "Align with APL's multi-season growth trajectory. Early partners benefit from foundational positioning as the league scales across the region.",
+      icon: TrendingUp
     }
   ];
 
@@ -49,7 +54,7 @@ export default function PartnersPage() {
           <div className="relative z-10 max-w-2xl">
             <h2 className="text-xl font-bold tracking-tight text-white sm:text-2xl">Why Partner With APL?</h2>
             <p className="mt-4 text-sm leading-relaxed text-apl-text-secondary">
-              Apex Premier League (APL) is more than just a football tournament; it's Kashmir's premier sports ecosystem. Built from Baramulla, APL unites a 16-franchise league with 288 players in a professionally structured season, commanding unparalleled engagement both on the pitch and across digital platforms.
+              Apex Premier League (APL) is more than just a football tournament; it&apos;s Kashmir&apos;s premier sports ecosystem. Built from Baramulla, APL unites a 16-franchise league with 288 players in a professionally structured season, commanding unparalleled engagement both on the pitch and across digital platforms.
             </p>
           </div>
         </section>
@@ -77,32 +82,36 @@ export default function PartnersPage() {
                 </motion.div>
               );
             })}
-
-            {/* Sponsorship Deck Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.3 }}
-              className="glass-card p-6 border border-apl-gold-dim bg-gradient-to-br from-apl-gold-dim/10 to-transparent flex flex-col justify-between"
-            >
-              <div>
-                <div className="h-10 w-10 rounded-lg bg-apl-gold-dim border border-apl-gold/20 flex items-center justify-center text-apl-gold mb-4">
-                  <Download size={20} />
-                </div>
-                <h3 className="text-base font-semibold text-apl-gold">Sponsorship Deck</h3>
-                <p className="mt-2 text-xs leading-relaxed text-apl-text-secondary">
-                  Download our official sponsorship deck detailing comprehensive tier packages, audience metrics, and brand deliverables.
-                </p>
-                <p className="mt-3 text-[10px] text-apl-text-muted italic">Note: The pitch deck file will be uploaded shortly.</p>
-              </div>
-              <div className="mt-5">
-                <button disabled className="btn-secondary !border-apl-gold-dim !text-apl-gold !opacity-60 cursor-not-allowed text-xs py-2 w-full justify-center">
-                  Deck Pending Upload
-                </button>
-              </div>
-            </motion.div>
           </div>
+        </section>
+
+        {/* Sponsorship Deck — Available Upon Request */}
+        <section className="mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="glass-card p-8 md:p-10 border border-apl-gold-dim bg-gradient-to-br from-apl-gold-dim/10 to-transparent"
+          >
+            <div className="flex items-start gap-4">
+              <div className="h-12 w-12 shrink-0 rounded-xl bg-apl-gold-dim border border-apl-gold/20 flex items-center justify-center text-apl-gold">
+                <Mail size={22} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-apl-gold tracking-tight">Official Sponsorship Deck</h3>
+                <p className="mt-1 text-sm font-medium text-apl-text-secondary">Available Upon Request</p>
+                <p className="mt-3 text-sm leading-relaxed text-apl-text-secondary max-w-xl">
+                  Businesses, brands, and organizations interested in partnering with Apex Premier League may request the official sponsorship deck directly from the APL team. The deck includes comprehensive tier packages, audience metrics, and brand deliverables.
+                </p>
+                <div className="mt-6">
+                  <Link href="/contact" className="btn-primary text-xs px-6 py-2.5">
+                    Contact Partnership Team <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </section>
 
         {/* Contact CTA Section */}
