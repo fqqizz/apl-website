@@ -56,26 +56,24 @@ export default function IntroAnimation() {
             {step >= 1 && (
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{
-                  opacity: 1
-                }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex flex-col items-center justify-center rounded-2xl overflow-hidden"
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="relative flex flex-col items-center justify-center p-8 overflow-visible"
               >
-                {/* Subtle transparent radial glow blur backplate */}
+                {/* Full screen viewport soft glow to prevent boundaries */}
                 <div 
-                  className="absolute inset-0 pointer-events-none opacity-20 filter blur-xl bg-[radial-gradient(circle_at_center,rgba(26,107,255,0.45)_0%,transparent_70%)]" 
+                  className="fixed inset-0 pointer-events-none opacity-20 filter blur-[140px] bg-[radial-gradient(circle_at_center,rgba(26,107,255,0.45)_0%,transparent_60%)]" 
                 />
 
-                {/* Step 5: Electric Blue shockwave bloom pulse */}
+                {/* Step 5: Full viewport electric blue pulse */}
                 <AnimatePresence>
                   {step >= 4 && (
                     <motion.div
-                      initial={{ scale: 0.6, opacity: 0 }}
-                      animate={{ scale: 1.4, opacity: 0.25 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.25 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
-                      className="absolute w-72 h-72 rounded-full pointer-events-none filter blur-2xl bg-[radial-gradient(circle,rgba(37,99,235,0.5)_0%,transparent_70%)]"
+                      transition={{ duration: 0.7, ease: "easeOut" }}
+                      className="fixed inset-0 pointer-events-none filter blur-[150px] bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.5)_0%,transparent_65%)]"
                     />
                   )}
                 </AnimatePresence>
@@ -85,9 +83,9 @@ export default function IntroAnimation() {
                   <AnimatePresence>
                     {step >= 2 && (
                       <motion.div
-                        initial={{ opacity: 0, scale: 0.75 }}
+                        initial={{ opacity: 0, scale: 0.7 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                         className="mb-8"
                       >
                         <Image
@@ -107,24 +105,24 @@ export default function IntroAnimation() {
                     {step >= 3 && (
                       <>
                         <motion.span
-                          initial={{ opacity: 0, y: 15 }}
+                          initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, ease: "easeOut" }}
+                          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                           className="text-white block font-display tracking-[0.15em] font-extrabold uppercase leading-none"
                           style={{
-                            fontSize: "clamp(50px, 9vw, 72px)",
+                            fontSize: "clamp(50px, 9vw, 80px)",
                             fontFamily: "var(--font-display), Impact, Anton, sans-serif"
                           }}
                         >
                           RISE
                         </motion.span>
                         <motion.span
-                          initial={{ opacity: 0, y: 15 }}
+                          initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
+                          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
                           className="text-white block font-display tracking-[0.15em] font-extrabold uppercase leading-none mt-1"
                           style={{
-                            fontSize: "clamp(50px, 9vw, 72px)",
+                            fontSize: "clamp(50px, 9vw, 80px)",
                             fontFamily: "var(--font-display), Impact, Anton, sans-serif"
                           }}
                         >
@@ -134,7 +132,6 @@ export default function IntroAnimation() {
                     )}
                   </div>
                 </div>
-
               </motion.div>
             )}
           </div>
