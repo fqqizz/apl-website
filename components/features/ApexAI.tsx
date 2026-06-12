@@ -3,7 +3,7 @@
 import { FormEvent, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Send, X, Sparkles } from "lucide-react";
-import ApexMascot from "@/components/features/ApexMascot";
+import Image from "next/image";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -20,7 +20,7 @@ export default function ApexAI() {
     {
       role: "assistant",
       content:
-        "Hi — I'm Apex, your APL assistant. Ask me about registration, Player IDs, franchises, fees, or Season One."
+        "Hey! I'm Apex AI — your guide to everything APL. Whether you want to know about registrations, franchises, the season format, or what it takes to compete — I've got you. What would you like to know?"
     }
   ]);
   const [loading, setLoading] = useState(false);
@@ -76,12 +76,18 @@ export default function ApexAI() {
     <>
       <button
         type="button"
-        className="apex-ai-fab !fixed bottom-6 right-6 z-[9999] flex items-center justify-center rounded-full p-2.5"
+        className="apex-ai-fab !fixed bottom-6 right-6 z-[9999] flex items-center justify-center rounded-full p-2"
         style={{ width: "56px", height: "56px", minHeight: "56px" }}
         onClick={() => setOpen((o) => !o)}
         aria-label="Open Apex AI"
       >
-        <ApexMascot className="h-8 w-8" />
+        <Image
+          src="/live-chat.png"
+          alt="Apex AI"
+          width={36}
+          height={36}
+          className="h-9 w-9 object-contain filter invert"
+        />
       </button>
 
       <AnimatePresence>
@@ -94,17 +100,24 @@ export default function ApexAI() {
             className="apex-ai-panel fixed bottom-24 right-4 z-[9998] flex w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl md:right-6"
             style={{ height: 520 }}
           >
+            {/* Header with Glass Gradient Accent */}
             <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3 bg-gradient-to-r from-apl-navy to-apl-navy-mid">
               <div className="relative">
-                <ApexMascot className="h-9 w-9" />
+                <Image
+                  src="/live-chat.png"
+                  alt="Apex AI"
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 object-contain filter invert"
+                />
                 <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-apl-navy animate-pulse" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-1.5">
-                  <p className="text-sm font-semibold text-white">Apex</p>
+                  <p className="text-sm font-semibold text-white">APEX AI</p>
                   <Sparkles className="h-3 w-3 text-apl-blue" />
                 </div>
-                <p className="text-[11px] text-apl-text-secondary">Official AI assistant</p>
+                <p className="text-[11px] text-apl-text-secondary">Powered by APL Intelligence</p>
               </div>
               <button
                 type="button"
@@ -167,7 +180,7 @@ export default function ApexAI() {
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask about APL..."
+                  placeholder="Ask Apex AI anything about APL..."
                   className="flex-1 min-h-[44px] text-sm bg-white/5 border border-white/10 rounded-lg px-3 text-white placeholder-apl-text-secondary/50 focus:outline-none focus:border-apl-blue transition-colors"
                 />
                 <button

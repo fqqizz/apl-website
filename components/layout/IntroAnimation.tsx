@@ -62,9 +62,9 @@ export default function IntroAnimation() {
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="relative flex flex-col items-center justify-center rounded-2xl overflow-hidden"
               >
-                {/* Subtle internal radial portal glow */}
+                {/* Subtle transparent radial glow blur backplate */}
                 <div 
-                  className="absolute inset-0 pointer-events-none opacity-45 bg-[radial-gradient(circle_at_center,rgba(26,107,255,0.18)_0%,transparent_70%)]" 
+                  className="absolute inset-0 pointer-events-none opacity-20 filter blur-xl bg-[radial-gradient(circle_at_center,rgba(26,107,255,0.45)_0%,transparent_70%)]" 
                 />
 
                 {/* Step 5: Electric Blue shockwave bloom pulse */}
@@ -72,10 +72,10 @@ export default function IntroAnimation() {
                   {step >= 4 && (
                     <motion.div
                       initial={{ scale: 0.6, opacity: 0 }}
-                      animate={{ scale: 1.4, opacity: 0.35 }}
+                      animate={{ scale: 1.4, opacity: 0.25 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.6, ease: "easeOut" }}
-                      className="absolute w-72 h-72 rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(37,99,235,0.7)_0%,transparent_70%)]"
+                      className="absolute w-72 h-72 rounded-full pointer-events-none filter blur-2xl bg-[radial-gradient(circle,rgba(37,99,235,0.5)_0%,transparent_70%)]"
                     />
                   )}
                 </AnimatePresence>

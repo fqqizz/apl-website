@@ -19,11 +19,11 @@ export default function Hero() {
     <section className="relative min-h-[100dvh] overflow-hidden">
       <div className="absolute inset-0 will-change-transform">
         <Image
-          src="/images/hero-action.png"
-          alt="Football action"
+          src="/apl-hero-stadium.png"
+          alt="APL Stadium"
           fill
           priority
-          className="object-cover mix-blend-luminosity"
+          className="object-cover mix-blend-luminosity opacity-85"
           sizes="100vw"
         />
         <div className="hero-gradient absolute inset-0" />
