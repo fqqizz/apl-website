@@ -5,7 +5,27 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ApexAI from "@/components/features/ApexAI";
 import IntroAnimation from "@/components/layout/IntroAnimation";
-import { IntroProvider } from "@/components/layout/IntroProvider";
+import { IntroProvider, useIntroReady } from "@/components/layout/IntroProvider";
+
+function SiteLayoutContent({
+  children,
+  showFooter
+}: {
+  children: React.ReactNode;
+  showFooter: boolean;
+}) {
+  const introReady = useIntroReady();
+  
+  return (
+    <>
+      <IntroAnimation />
+      <Navbar />
+      <div className="page-shell">{children}</div>
+      {showFooter && <Footer />}
+      {introReady && <ApexAI />}
+    </>
+  );
+}
 
 export default function SiteLayout({
   children,
@@ -23,11 +43,7 @@ export default function SiteLayout({
 
   return (
     <IntroProvider>
-      <IntroAnimation />
-      <Navbar />
-      <div className="page-shell">{children}</div>
-      {showFooter && <Footer />}
-      <ApexAI />
+      <SiteLayoutContent showFooter={showFooter}>{children}</SiteLayoutContent>
     </IntroProvider>
   );
 }

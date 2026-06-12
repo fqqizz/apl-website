@@ -414,8 +414,7 @@ a {
 .marquee-track {
   display: flex;
   width: max-content;
-  gap: 2.5rem;
-  animation: marquee-scroll 40s linear infinite;
+  animation: marquee-scroll 25s linear infinite;
 }
 
 @keyframes marquee-scroll {
@@ -423,7 +422,7 @@ a {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-25%, 0, 0);
   }
 }
 
@@ -611,31 +610,31 @@ a {
   }
 }
 
-/* Apex AI — Rebuilt with Premium Glassmorphism & Pulsing Orb Mascot fab */
+/* Apex AI — Rebuilt with Premium Glassmorphism & WhatsApp style glow orb Mascot fab */
 .apex-ai-fab {
-  background: radial-gradient(circle at center, #1a6bff, #0a1628);
+  background: radial-gradient(circle at center, #10b981, #1a6bff, #0a1628);
   color: white;
-  border: 1px solid rgba(26, 107, 255, 0.45);
-  box-shadow: 0 8px 32px rgba(26, 107, 255, 0.25), 0 0 15px rgba(26, 107, 255, 0.4);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25), 0 0 15px rgba(26, 107, 255, 0.4);
   animation: orb-pulse 2.5s infinite ease-in-out;
 }
 
 .apex-ai-fab:hover {
-  background: radial-gradient(circle at center, #2979ff, #0f2040);
-  border-color: rgba(26, 107, 255, 0.85);
+  background: radial-gradient(circle at center, #059669, #2979ff, #0f2040);
+  border-color: rgba(16, 185, 129, 0.85);
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 12px 40px rgba(26, 107, 255, 0.4), 0 0 25px rgba(26, 107, 255, 0.6);
+  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4), 0 0 25px rgba(26, 107, 255, 0.6);
 }
 
 @keyframes orb-pulse {
   0% {
-    box-shadow: 0 8px 32px rgba(26, 107, 255, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
   }
   50% {
-    box-shadow: 0 8px 32px rgba(26, 107, 255, 0.45), 0 0 25px rgba(26, 107, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.45), 0 0 25px rgba(26, 107, 255, 0.6);
   }
   100% {
-    box-shadow: 0 8px 32px rgba(26, 107, 255, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
   }
 }
 
@@ -653,6 +652,8 @@ a {
   color: white;
   border-radius: 18px 18px 2px 18px;
   box-shadow: 0 4px 12px rgba(26, 107, 255, 0.25);
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .apex-ai-bubble-assistant {
@@ -662,6 +663,8 @@ a {
   color: var(--apl-text-secondary);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px 18px 18px 2px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Admin dashboard */

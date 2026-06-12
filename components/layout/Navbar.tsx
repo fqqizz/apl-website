@@ -54,8 +54,10 @@ export default function Navbar() {
             scrolled ? "navbar-glass-scrolled" : ""
           }`}
         >
-          <Link href="/" className="shrink-0 pl-0.5 bg-white/5 border border-white/10 rounded-xl p-1.5 flex items-center justify-center" aria-label="Apex Premier League home">
-            <Image src="/apl-logo.png" alt="APL" width={40} height={40} priority className="h-8 w-auto md:h-9" />
+          <Link href="/" className="shrink-0 pl-0.5 relative group" aria-label="Apex Premier League home">
+            {/* Glass glow backdrop behind the logo instead of a box */}
+            <div className="absolute inset-0 bg-apl-blue/15 filter blur-md rounded-full scale-125 group-hover:scale-150 transition-transform duration-300 pointer-events-none" />
+            <Image src="/apl-logo.png" alt="APL" width={40} height={40} priority className="h-8 w-auto md:h-9 relative z-10" />
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">

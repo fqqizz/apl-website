@@ -55,17 +55,12 @@ export default function IntroAnimation() {
 
             {step >= 1 && (
               <motion.div
-                initial={{ width: 16, height: 16, opacity: 0.2 }}
+                initial={{ opacity: 0 }}
                 animate={{
-                  width: ["16px", "280px", "320px"],
-                  height: ["16px", "400px", "440px"],
-                  opacity: [0.2, 0.9, 0.85]
+                  opacity: 1
                 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex flex-col items-center justify-center rounded-2xl border border-transparent bg-black overflow-hidden"
-                style={{
-                  borderImage: "linear-gradient(to bottom right, #0a1628, #1a6bff, #2979ff) 1"
-                }}
+                className="relative flex flex-col items-center justify-center rounded-2xl overflow-hidden"
               >
                 {/* Subtle internal radial portal glow */}
                 <div 
