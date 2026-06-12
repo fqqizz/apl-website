@@ -102,7 +102,6 @@ export default function Footer() {
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-apl pt-8 md:flex-row text-xs text-apl-text-muted">
           <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
             <p>© 2025 Apex Premier League · All Rights Reserved</p>
-            <p className="text-apl-gold font-medium">Founded by Faaiz Qureshi</p>
           </div>
           <a
             href="https://www.instagram.com/upsurge.ai/"

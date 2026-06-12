@@ -197,18 +197,33 @@ a {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(12px);
-  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(26, 107, 255, 0.4);
-  box-shadow: 0 12px 30px -10px rgba(26, 107, 255, 0.2);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(37, 99, 235, 0.45);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+}
+
+.glass-card-accent {
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-accent:hover {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
 }
 
 .accent-line {
@@ -452,17 +467,19 @@ a {
 
 /* Floating glass navbar */
 .navbar-glass {
-  background: rgba(10, 22, 40, 0.65);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
 .navbar-glass-scrolled {
-  background: rgba(10, 22, 40, 0.92);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  background: rgba(10, 22, 40, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
 }
 
 .nav-link-float {
@@ -594,36 +611,57 @@ a {
   }
 }
 
-/* Apex AI — light panel */
+/* Apex AI — Rebuilt with Premium Glassmorphism & Pulsing Orb Mascot fab */
 .apex-ai-fab {
-  background: white;
-  color: var(--apl-navy);
-  border: 1px solid rgba(26, 107, 255, 0.25);
-  box-shadow: 0 8px 32px rgba(10, 22, 40, 0.12);
+  background: radial-gradient(circle at center, #1a6bff, #0a1628);
+  color: white;
+  border: 1px solid rgba(26, 107, 255, 0.45);
+  box-shadow: 0 8px 32px rgba(26, 107, 255, 0.25), 0 0 15px rgba(26, 107, 255, 0.4);
+  animation: orb-pulse 2.5s infinite ease-in-out;
 }
 
 .apex-ai-fab:hover {
-  background: #f8faff;
-  border-color: rgba(26, 107, 255, 0.45);
-  transform: translateY(-2px);
+  background: radial-gradient(circle at center, #2979ff, #0f2040);
+  border-color: rgba(26, 107, 255, 0.85);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(26, 107, 255, 0.4), 0 0 25px rgba(26, 107, 255, 0.6);
+}
+
+@keyframes orb-pulse {
+  0% {
+    box-shadow: 0 8px 32px rgba(26, 107, 255, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(26, 107, 255, 0.45), 0 0 25px rgba(26, 107, 255, 0.6);
+  }
+  100% {
+    box-shadow: 0 8px 32px rgba(26, 107, 255, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
+  }
 }
 
 .apex-ai-panel {
-  background: #ffffff;
-  border: 1px solid rgba(10, 22, 40, 0.08);
-  box-shadow: 0 24px 80px rgba(10, 22, 40, 0.18);
-  color: var(--apl-navy);
+  background: rgba(10, 22, 40, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  color: var(--apl-text-primary);
 }
 
 .apex-ai-bubble-user {
   background: var(--apl-blue);
   color: white;
+  border-radius: 18px 18px 2px 18px;
+  box-shadow: 0 4px 12px rgba(26, 107, 255, 0.25);
 }
 
 .apex-ai-bubble-assistant {
-  background: #f4f6fa;
-  color: #3d4f66;
-  border: 1px solid rgba(10, 22, 40, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--apl-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px 18px 18px 2px;
 }
 
 /* Admin dashboard */

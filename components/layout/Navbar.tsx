@@ -54,7 +54,7 @@ export default function Navbar() {
             scrolled ? "navbar-glass-scrolled" : ""
           }`}
         >
-          <Link href="/" className="shrink-0 pl-0.5" aria-label="Apex Premier League home">
+          <Link href="/" className="shrink-0 pl-0.5 bg-white/5 border border-white/10 rounded-xl p-1.5 flex items-center justify-center" aria-label="Apex Premier League home">
             <Image src="/apl-logo.png" alt="APL" width={40} height={40} priority className="h-8 w-auto md:h-9" />
           </Link>
 
