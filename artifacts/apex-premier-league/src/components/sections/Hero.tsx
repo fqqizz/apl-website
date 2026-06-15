@@ -16,34 +16,32 @@ export default function Hero() {
     <section className="relative overflow-hidden" style={{ minHeight: "100dvh" }}>
       <div className="absolute inset-0">
         <img
-          src="/editorial-kick.png"
+          src="/images/hero-football.jpg"
           alt="Football action"
           className="h-full w-full object-cover"
-          style={{ objectPosition: "center 25%" }}
+          style={{ objectPosition: "center 30%" }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(7,17,29,0.3) 0%, rgba(7,17,29,0.55) 35%, rgba(7,17,29,0.88) 75%, #07111D 100%)"
+              "linear-gradient(to bottom, rgba(7,17,29,0.25) 0%, rgba(7,17,29,0.5) 30%, rgba(7,17,29,0.82) 65%, #07111D 100%)"
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 90% 50% at 50% 100%, rgba(212,175,55,0.03) 0%, transparent 65%)"
+              "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.04) 0%, transparent 60%)"
           }}
         />
       </div>
 
-      <div
-        className="relative z-10 flex flex-col"
-        style={{ minHeight: "100dvh" }}
-      >
-        <div className="container-apl flex flex-1 flex-col items-center justify-center px-5 text-center"
-          style={{ paddingTop: "5rem", paddingBottom: "5.5rem" }}>
-
+      <div className="relative z-10 flex flex-col" style={{ minHeight: "100dvh" }}>
+        <div
+          className="container-apl flex flex-1 flex-col items-center justify-center px-5 text-center"
+          style={{ paddingTop: "clamp(7rem, 18vw, 9.5rem)", paddingBottom: "5.5rem" }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
@@ -62,7 +60,7 @@ export default function Hero() {
                 animate={introReady ? MOTION.heroReveal.animate : MOTION.heroReveal.initial}
                 transition={{
                   ...MOTION.heroReveal.transition,
-                  delay: introReady ? 0.05 + i * 0.065 : 0
+                  delay: introReady ? 0.06 + i * 0.07 : 0
                 }}
                 className="text-display-xl block text-apl-white"
                 style={{ lineHeight: 0.9 }}
@@ -75,9 +73,15 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 14 }}
             animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            transition={{ delay: introReady ? 0.34 : 0, duration: 0.65, ease }}
-            className="mt-5 max-w-md text-body-lg"
-            style={{ color: "rgba(255,255,255,0.58)", fontWeight: 300, fontSize: "1rem" }}
+            transition={{ delay: introReady ? 0.38 : 0, duration: 0.65, ease }}
+            className="mt-5 max-w-sm"
+            style={{
+              color: "rgba(255,255,255,0.52)",
+              fontFamily: "var(--font-body), sans-serif",
+              fontWeight: 300,
+              fontSize: "1rem",
+              lineHeight: 1.7
+            }}
           >
             A franchise-based football ecosystem bringing together players, communities, and businesses.
           </motion.p>
@@ -85,13 +89,10 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            transition={{ delay: introReady ? 0.46 : 0, duration: 0.6, ease }}
+            transition={{ delay: introReady ? 0.5 : 0, duration: 0.6, ease }}
             className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-xs mx-auto sm:max-w-none sm:w-auto"
           >
-            <Button
-              href="/register/player"
-              className="w-full sm:w-auto justify-center"
-            >
+            <Button href="/register/player" className="w-full sm:w-auto justify-center">
               Register Now
             </Button>
             <Button
@@ -106,15 +107,16 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={introReady ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ delay: introReady ? 0.65 : 0, duration: 0.5, ease }}
+            transition={{ delay: introReady ? 0.7 : 0, duration: 0.5, ease }}
             className="mt-4"
           >
             <a
               href="/status"
               style={{
-                color: "rgba(255,255,255,0.32)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.04em"
+                color: "rgba(255,255,255,0.28)",
+                fontSize: "0.72rem",
+                letterSpacing: "0.04em",
+                fontFamily: "var(--font-body), sans-serif"
               }}
             >
               Already registered? Check your status →
@@ -125,7 +127,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={introReady ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: introReady ? 0.6 : 0, duration: 0.5, ease }}
+          transition={{ delay: introReady ? 0.65 : 0, duration: 0.5, ease }}
         >
           <MarqueeStrip />
         </motion.div>
@@ -133,7 +135,7 @@ export default function Hero() {
         <a
           href="#vision"
           className="absolute left-1/2 -translate-x-1/2 motion-safe:animate-bounce-subtle"
-          style={{ bottom: "5.5rem", color: "rgba(255,255,255,0.28)" }}
+          style={{ bottom: "5.5rem", color: "rgba(255,255,255,0.25)" }}
           aria-label="Scroll down"
         >
           <ChevronDown size={20} />

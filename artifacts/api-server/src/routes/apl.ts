@@ -193,9 +193,128 @@ router.post("/payments/webhook", async (_req, res) => {
   return res.json({ status: "received" });
 });
 
+function buildPlayerIdEmail(playerName: string, playerId: string): string {
+  const name = String(playerName).toUpperCase();
+  const id = String(playerId);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Your APL Player ID — ${id}</title></head>
+<body style="margin:0;padding:0;background:#04090f;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#04090f;min-height:100vh;">
+<tr><td align="center" style="padding:48px 20px 40px;">
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+  <tr><td align="center" style="padding-bottom:36px;">
+    <p style="color:rgba(255,255,255,0.22);font-size:10px;letter-spacing:0.28em;text-transform:uppercase;margin:0;">APEX PREMIER LEAGUE</p>
+  </td></tr>
+
+  <!-- PASSPORT CARD -->
+  <tr><td>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:linear-gradient(150deg,#0c1927 0%,#07111D 55%,#0a1520 100%);border-radius:18px;border:1px solid rgba(212,175,55,0.28);overflow:hidden;">
+      <!-- Gold top bar -->
+      <tr><td style="background:linear-gradient(90deg,#8a6800,#D4AF37,#f0d060,#D4AF37,#8a6800);height:3px;font-size:0;line-height:0;">&nbsp;</td></tr>
+
+      <tr><td style="padding:38px 38px 34px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+          <!-- Credential header -->
+          <tr>
+            <td style="padding-bottom:24px;">
+              <p style="color:rgba(212,175,55,0.55);font-size:8px;letter-spacing:0.28em;text-transform:uppercase;margin:0 0 8px;">OFFICIAL PLAYER CREDENTIAL · SEASON I</p>
+              <p style="color:#ffffff;font-size:20px;font-weight:700;letter-spacing:0.06em;margin:0;text-transform:uppercase;">PLAYER IDENTITY CARD</p>
+            </td>
+            <td width="60" align="right" style="padding-bottom:24px;vertical-align:top;">
+              <p style="color:rgba(255,255,255,0.18);font-size:8px;letter-spacing:0.15em;margin:0 0 3px;text-align:right;">SEASON</p>
+              <p style="color:#D4AF37;font-size:32px;font-weight:700;margin:0;line-height:1;text-align:right;font-family:Georgia,serif;">I</p>
+            </td>
+          </tr>
+
+          <!-- Gold line separator -->
+          <tr><td colspan="2" style="padding-bottom:28px;">
+            <table width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:linear-gradient(90deg,rgba(212,175,55,0.55),rgba(212,175,55,0.08),transparent);height:1px;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+          </td></tr>
+
+          <!-- Player ID (hero element) -->
+          <tr><td colspan="2" style="padding-bottom:22px;">
+            <p style="color:rgba(255,255,255,0.28);font-size:8px;letter-spacing:0.28em;text-transform:uppercase;margin:0 0 10px;">PLAYER IDENTIFICATION NUMBER</p>
+            <p style="color:#D4AF37;font-size:46px;font-weight:700;letter-spacing:0.1em;margin:0;font-family:Georgia,'Times New Roman',serif;line-height:1;">${id}</p>
+          </td></tr>
+
+          <!-- Player name -->
+          <tr><td colspan="2" style="padding-bottom:26px;">
+            <p style="color:rgba(255,255,255,0.28);font-size:8px;letter-spacing:0.28em;text-transform:uppercase;margin:0 0 8px;">REGISTERED NAME</p>
+            <p style="color:#ffffff;font-size:22px;font-weight:600;letter-spacing:0.05em;margin:0;">${name}</p>
+          </td></tr>
+
+          <!-- Badge chips -->
+          <tr><td colspan="2" style="padding-bottom:28px;">
+            <table cellpadding="0" cellspacing="0" border="0"><tr>
+              <td style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.35);border-radius:100px;padding:5px 13px;">
+                <span style="color:#D4AF37;font-size:8px;letter-spacing:0.18em;text-transform:uppercase;">FOUNDING MEMBER</span>
+              </td>
+              <td width="8">&nbsp;</td>
+              <td style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:5px 13px;">
+                <span style="color:rgba(255,255,255,0.42);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;">NORTH KASHMIR</span>
+              </td>
+              <td width="8">&nbsp;</td>
+              <td style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:5px 13px;">
+                <span style="color:rgba(255,255,255,0.42);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;">SEASON ONE · 2026</span>
+              </td>
+            </tr></table>
+          </td></tr>
+
+          <!-- Bottom separator -->
+          <tr><td colspan="2" style="padding-bottom:18px;">
+            <table width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:linear-gradient(90deg,rgba(212,175,55,0.3),rgba(212,175,55,0.06),transparent);height:1px;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+          </td></tr>
+
+          <!-- Footer row inside card -->
+          <tr>
+            <td>
+              <p style="color:rgba(255,255,255,0.15);font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;margin:0;">APEX PREMIER LEAGUE · NORTH KASHMIR · 2026</p>
+              <p style="color:rgba(255,255,255,0.09);font-size:7px;letter-spacing:0.1em;margin:4px 0 0;">apexpremiereleague.in</p>
+            </td>
+            <td align="right">
+              <p style="color:rgba(255,255,255,0.12);font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;margin:0;">VERIFIED ✓</p>
+            </td>
+          </tr>
+
+        </table>
+      </td></tr>
+
+      <!-- Gold bottom accent -->
+      <tr><td style="background:linear-gradient(90deg,transparent,rgba(212,175,55,0.18),transparent);height:1px;font-size:0;line-height:0;">&nbsp;</td></tr>
+    </table>
+  </td></tr>
+
+  <!-- Share prompt -->
+  <tr><td align="center" style="padding:36px 0 28px;">
+    <p style="color:rgba(255,255,255,0.55);font-size:15px;line-height:1.75;margin:0 0 10px;">Welcome to the founding era of Kashmir's football.</p>
+    <p style="color:rgba(255,255,255,0.28);font-size:13px;line-height:1.7;margin:0;">Screenshot this card. Share it. You're one of the first.</p>
+  </td></tr>
+
+  <!-- CTA button -->
+  <tr><td align="center" style="padding-bottom:36px;">
+    <a href="https://apexpremiereleague.in/status" style="display:inline-block;background:#ffffff;color:#07111D;font-weight:700;font-size:12px;letter-spacing:0.12em;padding:15px 36px;border-radius:100px;text-decoration:none;text-transform:uppercase;">Check Your Status →</a>
+  </td></tr>
+
+  <!-- Divider -->
+  <tr><td style="border-top:1px solid rgba(255,255,255,0.06);padding-top:28px;" align="center">
+    <p style="color:rgba(255,255,255,0.16);font-size:10px;letter-spacing:0.08em;margin:0 0 6px;">© 2026 Apex Premier League · All Rights Reserved</p>
+    <a href="https://apexpremiereleague.in" style="color:rgba(255,255,255,0.16);font-size:9px;text-decoration:none;letter-spacing:0.06em;">apexpremiereleague.in</a>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+}
+
 // POST /api/apl/send-confirmation-email
 router.post("/send-confirmation-email", async (req, res) => {
-  const { playerName, playerId, email, paymentStatus } = req.body || {};
+  const { playerName, playerId, email } = req.body || {};
   if (!playerName || !playerId || !email) return res.status(400).json({ error: "Missing required fields" });
   if (!process.env.RESEND_API_KEY) return res.json({ success: true });
   try {
@@ -205,8 +324,8 @@ router.post("/send-confirmation-email", async (req, res) => {
       body: JSON.stringify({
         from: "Apex Premier League <contact@apexpremiereleague.in>",
         to: [String(email)],
-        subject: `APL Registration Confirmed — ${String(playerId)}`,
-        html: `<h2>Welcome to APL, ${String(playerName)}!</h2><p>Your Player ID: <strong>${String(playerId)}</strong></p><p>Payment: ${String(paymentStatus || "completed")}</p>`,
+        subject: `Your APL Player ID — ${String(playerId)}`,
+        html: buildPlayerIdEmail(String(playerName), String(playerId)),
       }),
     });
     return res.json({ success: true });

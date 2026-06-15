@@ -28,7 +28,7 @@ export default function FAQPreview() {
                   <span className="text-body-md text-apl-white">{item.q}</span>
                   <ChevronDown size={18} className={`shrink-0 transition ${open === i ? "rotate-180" : ""}`} />
                 </button>
-                {open === i && <p className="border-t border-apl px-5 pb-5 text-body-md text-apl-text-secondary">{item.a}</p>}
+                {open === i && <p className="px-5 pt-2 pb-5 text-body-md text-apl-text-secondary">{item.a}</p>}
               </div>
             ))}
           </div>

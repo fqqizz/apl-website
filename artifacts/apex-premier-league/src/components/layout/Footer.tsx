@@ -133,7 +133,7 @@ export default function Footer() {
           style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
         >
           <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "0.75rem" }}>
-            © 2025 Apex Premier League · All Rights Reserved
+            © 2026 Apex Premier League · All Rights Reserved
           </p>
           <a
             href="https://www.instagram.com/upsurge.ai/"

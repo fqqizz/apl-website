@@ -36,7 +36,7 @@ export default function FAQAccordion({ showRulebook = false }: { showRulebook?: 
                     <span className="text-body-md text-apl-white">{item.q}</span>
                     <ChevronDown size={18} className={`shrink-0 transition ${open ? "rotate-180" : ""}`} />
                   </button>
-                  {open && <p className="border-t border-apl px-5 pb-5 text-body-md leading-relaxed text-apl-text-secondary">{item.a}</p>}
+                  {open && <p className="px-5 pt-2 pb-5 text-body-md leading-relaxed text-apl-text-secondary">{item.a}</p>}
                 </div>
               );
             })}
