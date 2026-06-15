@@ -16,10 +16,10 @@ export default function IntroAnimation() {
       timers.current.push(id);
     };
     t(() => setLogoIn(true), 60);
-    t(() => setTextIn(true), 680);
-    t(() => setShineIn(true), 1050);
-    t(() => { setPhase("exit"); completeIntro(); }, 2500);
-    t(() => setPhase("done"), 3000);
+    t(() => setShineIn(true), 950);
+    t(() => setTextIn(true), 1050);
+    t(() => { setPhase("exit"); completeIntro(); }, 2600);
+    t(() => setPhase("done"), 3100);
     return () => timers.current.forEach(clearTimeout);
   }, [completeIntro]);
 
@@ -45,19 +45,18 @@ export default function IntroAnimation() {
           {logoIn && (
             <motion.div
               key="logo"
-              initial={{ opacity: 0, scale: 0.84, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
               className="relative overflow-hidden"
               style={{ borderRadius: 6 }}
             >
               <img
                 src="/apl-logo.png"
                 alt="APL"
-                width={100}
-                height={100}
-                className="h-[82px] w-auto block"
-                style={{ imageRendering: "crisp-edges" }}
+                width={120}
+                height={120}
+                className="h-[108px] w-auto block"
               />
               <AnimatePresence>
                 {shineIn && (
@@ -71,7 +70,7 @@ export default function IntroAnimation() {
                       position: "absolute",
                       inset: 0,
                       background:
-                        "linear-gradient(92deg, transparent 18%, rgba(255,255,255,0.15) 38%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.15) 62%, transparent 80%)",
+                        "linear-gradient(92deg, transparent 25%, rgba(255,255,255,0.08) 42%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.08) 58%, transparent 75%)",
                       pointerEvents: "none"
                     }}
                   />
