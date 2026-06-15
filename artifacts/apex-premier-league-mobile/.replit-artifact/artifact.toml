@@ -1,0 +1,27 @@
+kind = "mobile"
+previewPath = "/apex-premier-league-mobile/"
+title = "APL Mobile"
+version = "1.0.0"
+id = "artifacts/apex-premier-league-mobile"
+router = "expo-domain"
+
+[[integratedSkills]]
+name = "expo"
+version = "1.0.0"
+
+[[services]]
+ensurePreviewReachable = "/status"
+name = "expo"
+paths = [ "/apex-premier-league-mobile/" ]
+localPort = 23600
+
+[services.development]
+run = "pnpm --filter @workspace/apex-premier-league-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/apex-premier-league-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/apex-premier-league-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "23600"
+BASE_PATH = "/apex-premier-league-mobile/"
