@@ -1,0 +1,1 @@
+- [APL Migration Quirks](apl-migration-quirks.md) — key gotchas from Next.js→Vite migration for this project
