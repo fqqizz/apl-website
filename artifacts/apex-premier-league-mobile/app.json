@@ -14,7 +14,8 @@
       "backgroundColor": "#07111D"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "in.apexpremiereleague.mobile"
     },
     "android": {
       "backgroundColor": "#07111D"
