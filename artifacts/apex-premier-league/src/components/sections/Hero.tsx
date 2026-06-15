@@ -82,7 +82,7 @@ export default function Hero() {
             className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-sm mx-auto sm:max-w-none sm:w-auto"
           >
             <Button href="/register/player" className="w-full sm:w-auto justify-center">
-              Apply as a Player
+              Register Now
             </Button>
             <Button href="/register/franchise" variant="secondary" className="w-full sm:w-auto justify-center">
               Explore Franchises
