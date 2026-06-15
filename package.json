@@ -1,40 +1,16 @@
 {
-  "name": "apex-premier-league",
-  "version": "1.0.0",
-  "private": true,
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "sitemap": "next-sitemap"
+    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "build": "pnpm run typecheck && pnpm -r --if-present run build",
+    "typecheck:libs": "tsc --build",
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
   },
-  "dependencies": {
-    "@cashfreepayments/cashfree-js": "^1.0.7",
-    "@studio-freight/lenis": "^1.0.42",
-    "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.106.1",
-    "@vercel/analytics": "^2.0.1",
-    "browser-image-compression": "^2.0.2",
-    "cashfree-pg": "^6.0.4",
-    "framer-motion": "^12.23.24",
-    "gsap": "^3.13.0",
-    "lucide-react": "^0.468.0",
-    "next": "^15.5.6",
-    "next-sitemap": "^4.2.3",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "resend": "^6.12.3",
-    "uuid": "^14.0.0"
-  },
+  "private": true,
   "devDependencies": {
-    "@types/node": "^20.17.6",
-    "@types/react": "^19.2.15",
-    "@types/uuid": "^10.0.0",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.38.0",
-    "eslint-config-next": "^15.5.6",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17"
+    "prettier": "^3.8.3",
+    "typescript": "~5.9.3"
   }
 }
