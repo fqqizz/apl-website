@@ -13,41 +13,48 @@ export default function Hero() {
   const introReady = useIntroReady();
 
   return (
-    <section className="relative min-h-[100dvh] overflow-hidden">
+    <section className="relative overflow-hidden" style={{ minHeight: "100dvh" }}>
       <div className="absolute inset-0">
         <img
-          src="/media-goal-graphic.jpeg"
+          src="/editorial-kick.png"
           alt="Football action"
           className="h-full w-full object-cover"
-          style={{ objectPosition: "center 30%" }}
+          style={{ objectPosition: "center 25%" }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(7,17,29,0.45) 0%, rgba(7,17,29,0.65) 40%, rgba(7,17,29,0.92) 80%, #07111D 100%)"
+              "linear-gradient(to bottom, rgba(7,17,29,0.3) 0%, rgba(7,17,29,0.55) 35%, rgba(7,17,29,0.88) 75%, #07111D 100%)"
           }}
         />
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.04) 0%, transparent 70%)"
+              "radial-gradient(ellipse 90% 50% at 50% 100%, rgba(212,175,55,0.03) 0%, transparent 65%)"
           }}
         />
       </div>
 
-      <div className="relative z-10 flex min-h-[100dvh] flex-col">
-        <div className="container-apl flex flex-1 flex-col items-center justify-center px-4 pb-32 pt-28 text-center md:pt-36">
+      <div
+        className="relative z-10 flex flex-col"
+        style={{ minHeight: "100dvh" }}
+      >
+        <div className="container-apl flex flex-1 flex-col items-center justify-center px-5 text-center"
+          style={{ paddingTop: "5rem", paddingBottom: "5.5rem" }}>
+
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ duration: 0.5, ease }}
           >
-            <SectionLabel className="justify-center">APEX PREMIER LEAGUE · SEASON ONE · NORTH KASHMIR</SectionLabel>
+            <SectionLabel className="justify-center">
+              APEX PREMIER LEAGUE · SEASON ONE · NORTH KASHMIR
+            </SectionLabel>
           </motion.div>
 
-          <h1 className="mt-8 max-w-4xl">
+          <h1 className="mt-5 max-w-4xl w-full">
             {headline.map((line, i) => (
               <motion.span
                 key={line}
@@ -55,10 +62,10 @@ export default function Hero() {
                 animate={introReady ? MOTION.heroReveal.animate : MOTION.heroReveal.initial}
                 transition={{
                   ...MOTION.heroReveal.transition,
-                  delay: introReady ? 0.06 + i * 0.07 : 0
+                  delay: introReady ? 0.05 + i * 0.065 : 0
                 }}
                 className="text-display-xl block text-apl-white"
-                style={{ lineHeight: 0.92 }}
+                style={{ lineHeight: 0.9 }}
               >
                 {line}
               </motion.span>
@@ -66,25 +73,32 @@ export default function Hero() {
           </h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            transition={{ delay: introReady ? 0.36 : 0, duration: 0.7, ease }}
-            className="mt-7 max-w-xl text-body-lg"
-            style={{ color: "rgba(255,255,255,0.65)", fontWeight: 300 }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+            transition={{ delay: introReady ? 0.34 : 0, duration: 0.65, ease }}
+            className="mt-5 max-w-md text-body-lg"
+            style={{ color: "rgba(255,255,255,0.58)", fontWeight: 300, fontSize: "1rem" }}
           >
             A franchise-based football ecosystem bringing together players, communities, and businesses.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            transition={{ delay: introReady ? 0.48 : 0, duration: 0.6, ease }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-sm mx-auto sm:max-w-none sm:w-auto"
+            initial={{ opacity: 0, y: 14 }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+            transition={{ delay: introReady ? 0.46 : 0, duration: 0.6, ease }}
+            className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-xs mx-auto sm:max-w-none sm:w-auto"
           >
-            <Button href="/register/player" className="w-full sm:w-auto justify-center">
+            <Button
+              href="/register/player"
+              className="w-full sm:w-auto justify-center"
+            >
               Register Now
             </Button>
-            <Button href="/register/franchise" variant="secondary" className="w-full sm:w-auto justify-center">
+            <Button
+              href="/register/franchise"
+              variant="secondary"
+              className="w-full sm:w-auto justify-center"
+            >
               Explore Franchises
             </Button>
           </motion.div>
@@ -92,13 +106,16 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={introReady ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ delay: introReady ? 0.7 : 0, duration: 0.5, ease }}
-            className="mt-5"
+            transition={{ delay: introReady ? 0.65 : 0, duration: 0.5, ease }}
+            className="mt-4"
           >
             <a
               href="/status"
-              className="text-xs"
-              style={{ color: "rgba(255,255,255,0.4)", letterSpacing: "0.05em" }}
+              style={{
+                color: "rgba(255,255,255,0.32)",
+                fontSize: "0.75rem",
+                letterSpacing: "0.04em"
+              }}
             >
               Already registered? Check your status →
             </a>
@@ -115,8 +132,8 @@ export default function Hero() {
 
         <a
           href="#vision"
-          className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 motion-safe:animate-bounce-subtle"
-          style={{ color: "rgba(255,255,255,0.3)" }}
+          className="absolute left-1/2 -translate-x-1/2 motion-safe:animate-bounce-subtle"
+          style={{ bottom: "5.5rem", color: "rgba(255,255,255,0.28)" }}
           aria-label="Scroll down"
         >
           <ChevronDown size={20} />
