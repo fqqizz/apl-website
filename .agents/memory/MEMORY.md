@@ -1,1 +1,1 @@
-- [APL Migration Quirks](apl-migration-quirks.md) — key gotchas from Next.js→Vite migration for this project
+- [APL design system](apl-design-system.md) — deep navy #07111D + champagne gold #D4AF37; btn-primary=white bg+navy text; admin keeps blue; never use blue in public pages

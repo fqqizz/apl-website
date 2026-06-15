@@ -1,52 +1,72 @@
 import { Link } from 'wouter';
 
-const quickLinks = [
-  { label: "About", href: "/about" },
-  { label: "Vision", href: "/vision" },
-  { label: "Partners", href: "/partners" },
-  { label: "Player Registration", href: "/register/player" },
-  { label: "Franchise Ownership", href: "/register/franchise" },
-  { label: "Status Checker", href: "/status" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Contact", href: "/contact" }
-];
-
-const communityLinks = [
-  { label: "Founding Players", href: "/founding-players" },
-  { label: "Founding Franchises", href: "/founding-franchises" }
-];
-
 const legalLinks = [
-  { label: "Privacy", href: "/privacy" },
+  { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
   { label: "Refund Policy", href: "/refund-policy" }
 ];
 
+const quickLinks = [
+  { label: "About", href: "/about" },
+  { label: "Vision", href: "/vision" },
+  { label: "Register as Player", href: "/register/player" },
+  { label: "Franchise Ownership", href: "/register/franchise" },
+  { label: "Check Status", href: "/status" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact", href: "/contact" }
+];
+
 export default function Footer() {
   return (
-    <footer className="relative border-t border-apl bg-apl-navy">
-      <div className="section-gradient-overlay pointer-events-none absolute inset-0" />
-      <div className="container-apl relative section-pad !pb-8">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand column */}
+    <footer style={{ background: "var(--apl-navy)", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="container-apl py-16 md:py-20">
+        <div className="grid gap-12 md:grid-cols-3">
           <div>
-            <img src="/apl-logo.png" alt="Apex Premier League" width={56} height={56} className="h-10 w-auto" />
-            <p className="mt-4 max-w-xs text-body-md text-apl-text-secondary">
-              The home of Kashmiri football. Season One — built for players, franchises, and the valley.
+            <img src="/apl-logo.png" alt="Apex Premier League" width={52} height={52} className="h-11 w-auto" />
+            <p
+              className="mt-5 text-body-md max-w-xs"
+              style={{ color: "rgba(255,255,255,0.4)", lineHeight: 1.7 }}
+            >
+              Kashmir's first professional franchise football league.
             </p>
-            <div className="mt-5 flex gap-4 text-xs">
-              <a href="https://www.instagram.com/apexpremiereleague/" target="_blank" rel="noopener noreferrer" className="text-apl-text-muted hover:text-white transition">Instagram</a>
-              <a href="https://www.facebook.com/profile.php?id=61590707155897" target="_blank" rel="noopener noreferrer" className="text-apl-text-muted hover:text-white transition">Facebook</a>
+            <div className="mt-5 flex gap-5">
+              <a
+                href="https://www.instagram.com/apexpremiereleague/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-label transition-colors"
+                style={{ color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "white")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61590707155897"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-label transition-colors"
+                style={{ color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "white")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+              >
+                Facebook
+              </a>
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <p className="text-label text-apl-text-muted">Quick Links</p>
-            <ul className="mt-4 space-y-2">
+            <p className="text-label mb-5" style={{ color: "rgba(255,255,255,0.25)", letterSpacing: "0.15em" }}>Navigation</p>
+            <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-body-md text-apl-text-secondary hover:text-apl-white transition">
+                  <Link
+                    href={link.href}
+                    className="text-body-md transition-colors"
+                    style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.88rem" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "white")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -54,54 +74,67 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Community */}
           <div>
-            <p className="text-label text-apl-text-muted">Community</p>
-            <ul className="mt-4 space-y-2">
-              {communityLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-body-md text-apl-text-secondary hover:text-apl-white transition">
+            <p className="text-label mb-5" style={{ color: "rgba(255,255,255,0.25)", letterSpacing: "0.15em" }}>Contact</p>
+            <div className="space-y-3">
+              <a
+                href="tel:+918491900407"
+                className="block text-body-md transition-colors"
+                style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.88rem" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "white")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+              >
+                +91 8491900407
+              </a>
+              <a
+                href="mailto:contact@apexpremiereleague.in"
+                className="block text-body-md transition-colors"
+                style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.88rem" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "white")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+              >
+                contact@apexpremiereleague.in
+              </a>
+              <a
+                href="https://chat.whatsapp.com/HkftiaGm5GS3Kk4eYyrlUF"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-2 text-label transition-colors"
+                style={{ color: "var(--apl-gold)", letterSpacing: "0.08em", fontSize: "0.72rem" }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
+                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+              >
+                WhatsApp Community →
+              </a>
+            </div>
+
+            <div className="mt-8">
+              <p className="text-label mb-4" style={{ color: "rgba(255,255,255,0.25)", letterSpacing: "0.15em" }}>Legal</p>
+              <div className="flex flex-wrap gap-x-5 gap-y-2">
+                {legalLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-label transition-colors"
+                    style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", letterSpacing: "0.08em" }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
+                  >
                     {link.label}
                   </Link>
-                </li>
-              ))}
-              <li>
-                <a
-                  href="https://chat.whatsapp.com/HkftiaGm5GS3Kk4eYyrlUF"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-body-md text-apl-blue hover:text-apl-blue-bright font-semibold transition"
-                >
-                  WhatsApp Community →
-                </a>
-              </li>
-            </ul>
-
-            <p className="mt-6 text-label text-apl-text-muted">Contact</p>
-            <a href="tel:+918491900407" className="mt-2 block text-body-md text-apl-text-secondary hover:text-white transition">
-              +91 8491900407
-            </a>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <p className="text-label text-apl-text-muted">Legal</p>
-            <ul className="mt-4 space-y-2">
-              {legalLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-body-md text-apl-text-secondary hover:text-apl-white transition">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-apl pt-8 md:flex-row text-xs text-apl-text-muted">
-          <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-            <p>© 2025 Apex Premier League · All Rights Reserved</p>
-          </div>
+        <div
+          className="mt-14 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "0.75rem" }}>
+            © 2025 Apex Premier League · All Rights Reserved
+          </p>
           <a
             href="https://www.instagram.com/upsurge.ai/"
             target="_blank"

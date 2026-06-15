@@ -1,30 +1,45 @@
-
-
 import { motion } from "framer-motion";
 import { MOTION } from "@/lib/motion";
-import SectionLabel from "@/components/ui/SectionLabel";
 import FoundingEraStats from "@/components/features/FoundingEraStats";
 import Button from "@/components/ui/Button";
 
 export default function FoundingEra() {
   return (
-    <section className="section-pad bg-apl-navy">
-      <div className="container-apl">
+    <section
+      className="section-pad relative overflow-hidden"
+      style={{ background: "var(--apl-navy-mid)" }}
+    >
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 50% at 80% 50%, rgba(212,175,55,0.04) 0%, transparent 65%)"
+        }}
+      />
+      <div className="container-apl relative z-10">
         <motion.div {...MOTION.sectionEnter}>
-          <SectionLabel>FOUNDING ERA</SectionLabel>
-          <h2 className="text-display-md mt-6 max-w-2xl text-apl-white">
-            The first ones in
-            <br />
-            will be remembered.
+          <p
+            className="text-label"
+            style={{ color: "var(--apl-gold)", letterSpacing: "0.2em" }}
+          >
+            FOUNDING ERA
+          </p>
+          <h2
+            className="text-display-md mt-5 max-w-2xl"
+            style={{ color: "white" }}
+          >
+            The first ones in will be remembered.
           </h2>
 
           <div className="mt-12">
             <FoundingEraStats />
           </div>
 
-          <p className="mt-10 max-w-2xl text-body-lg text-apl-text-secondary">
-            Founding players receive permanent recognition. Founding franchise owners get placement. The first
-            season of APL will not be repeated.
+          <p
+            className="mt-10 max-w-xl text-body-lg"
+            style={{ color: "rgba(255,255,255,0.45)" }}
+          >
+            Founding players receive permanent recognition. Founding franchise owners get priority placement. The first season of APL will not be repeated.
           </p>
 
           <div className="mt-8">

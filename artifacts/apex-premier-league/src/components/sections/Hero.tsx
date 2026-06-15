@@ -1,5 +1,3 @@
-
-
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { MOTION } from "@/lib/motion";
@@ -8,7 +6,7 @@ import Button from "@/components/ui/Button";
 import SectionLabel from "@/components/ui/SectionLabel";
 import MarqueeStrip from "@/components/features/MarqueeStrip";
 
-const headline = ["KASHMIR'S", "FOOTBALL", "MOVEMENT", "STARTS HERE."];
+const headline = ["BUILDING THE", "FUTURE OF", "FOOTBALL IN", "NORTH KASHMIR."];
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Hero() {
@@ -16,41 +14,53 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[100dvh] overflow-hidden">
-      <div className="absolute inset-0 will-change-transform">
+      <div className="absolute inset-0">
         <img
-          src="/media-stadium-lights.jpeg"
-          alt="APL Stadium Lights"
-         
-         
-          className="object-cover mix-blend-luminosity opacity-40"
-          sizes="100vw"
+          src="/media-goal-graphic.jpeg"
+          alt="Football action"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: "center 30%" }}
         />
-        <div className="hero-gradient absolute inset-0" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(7,17,29,0.45) 0%, rgba(7,17,29,0.65) 40%, rgba(7,17,29,0.92) 80%, #07111D 100%)"
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.04) 0%, transparent 70%)"
+          }}
+        />
       </div>
 
       <div className="relative z-10 flex min-h-[100dvh] flex-col">
-        <div className="container-apl flex flex-1 flex-col items-center justify-center px-4 pb-32 pt-28 text-center md:pt-32">
+        <div className="container-apl flex flex-1 flex-col items-center justify-center px-4 pb-32 pt-28 text-center md:pt-36">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             transition={{ duration: 0.5, ease }}
           >
-            <SectionLabel className="justify-center">APEX PREMIER LEAGUE · SEASON ONE</SectionLabel>
+            <SectionLabel className="justify-center">APEX PREMIER LEAGUE · SEASON ONE · NORTH KASHMIR</SectionLabel>
           </motion.div>
 
           <h1 className="mt-8 max-w-4xl">
-            {headline.map((word, i) => (
+            {headline.map((line, i) => (
               <motion.span
-                key={word}
+                key={line}
                 initial={MOTION.heroReveal.initial}
                 animate={introReady ? MOTION.heroReveal.animate : MOTION.heroReveal.initial}
                 transition={{
                   ...MOTION.heroReveal.transition,
-                  delay: introReady ? 0.08 + i * 0.07 : 0
+                  delay: introReady ? 0.06 + i * 0.07 : 0
                 }}
                 className="text-display-xl block text-apl-white"
+                style={{ lineHeight: 0.92 }}
               >
-                {word}
+                {line}
               </motion.span>
             ))}
           </h1>
@@ -58,44 +68,58 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            transition={{ delay: introReady ? 0.38 : 0, duration: 0.6, ease }}
-            className="mt-6 max-w-2xl text-body-lg text-apl-text-secondary"
+            transition={{ delay: introReady ? 0.36 : 0, duration: 0.7, ease }}
+            className="mt-7 max-w-xl text-body-lg"
+            style={{ color: "rgba(255,255,255,0.65)", fontWeight: 300 }}
           >
-            The first structured football league from the valley — 16 franchises, 288 players, one founding season.
+            A franchise-based football ecosystem bringing together players, communities, and businesses.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             transition={{ delay: introReady ? 0.48 : 0, duration: 0.6, ease }}
-            className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md mx-auto sm:max-w-none sm:w-auto"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-sm mx-auto sm:max-w-none sm:w-auto"
           >
-            <Button href="/register/player" className="w-full sm:w-auto justify-center text-sm font-semibold py-3 px-6">
-              Join as Player
+            <Button href="/register/player" className="w-full sm:w-auto justify-center">
+              Apply as a Player
             </Button>
-            <Button href="/register/franchise" variant="secondary" className="w-full sm:w-auto justify-center text-sm font-semibold py-3 px-6">
-              Own a Franchise
-            </Button>
-            <Button href="/status" variant="ghost" className="w-full sm:w-auto justify-center text-xs opacity-80 hover:opacity-100">
-              Check Application
+            <Button href="/register/franchise" variant="secondary" className="w-full sm:w-auto justify-center">
+              Explore Franchises
             </Button>
           </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={introReady ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ delay: introReady ? 0.7 : 0, duration: 0.5, ease }}
+            className="mt-5"
+          >
+            <a
+              href="/status"
+              className="text-xs"
+              style={{ color: "rgba(255,255,255,0.4)", letterSpacing: "0.05em" }}
+            >
+              Already registered? Check your status →
+            </a>
+          </motion.p>
         </div>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={introReady ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: introReady ? 0.55 : 0, duration: 0.5, ease }}
+          transition={{ delay: introReady ? 0.6 : 0, duration: 0.5, ease }}
         >
           <MarqueeStrip />
         </motion.div>
 
         <a
           href="#vision"
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 text-apl-text-muted motion-safe:animate-bounce-subtle"
+          className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 motion-safe:animate-bounce-subtle"
+          style={{ color: "rgba(255,255,255,0.3)" }}
           aria-label="Scroll down"
         >
-          <ChevronDown size={22} />
+          <ChevronDown size={20} />
         </a>
       </div>
     </section>
