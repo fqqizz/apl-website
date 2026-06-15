@@ -40,7 +40,7 @@ function PaymentCallbackContent() {
       try {
         const controller = new AbortController();
         const timeout = window.setTimeout(() => controller.abort(), 15000);
-        const response = await fetch(`/api/payments/verify?order_id=${encodeURIComponent(orderId)}`, {
+        const response = await fetch(`/api/apl/payments/verify?order_id=${encodeURIComponent(orderId)}`, {
           signal: controller.signal
         });
         window.clearTimeout(timeout);

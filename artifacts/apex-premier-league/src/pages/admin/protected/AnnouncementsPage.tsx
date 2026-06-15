@@ -2,6 +2,7 @@
 
 import { useEffect, useState, FormEvent } from "react";
 import { Megaphone, Save, CheckCircle2, AlertCircle } from "lucide-react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function AdminAnnouncementsPage() {
   const [text, setText] = useState("");
@@ -12,7 +13,7 @@ export default function AdminAnnouncementsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/admin/announcement")
+    adminFetch("/api/admin/announcement")
       .then((r) => r.json())
       .then((data) => {
         if (data.announcement) {
@@ -31,7 +32,7 @@ export default function AdminAnnouncementsPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/admin/announcement", {
+      const res = await adminFetch("/api/admin/announcement", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, is_active: isActive })

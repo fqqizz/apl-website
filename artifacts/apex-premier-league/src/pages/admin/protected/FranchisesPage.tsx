@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { FranchiseStatusBadge } from "@/components/admin/StatusBadge";
 import { Search, X } from "lucide-react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 type Franchise = {
   id: string;
@@ -26,7 +27,7 @@ export default function AdminFranchisesPage() {
   const load = useCallback(async () => {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
-    const res = await fetch(`/api/admin/franchises?${params}`);
+    const res = await adminFetch(`/api/admin/franchises?${params}`);
     const data = await res.json();
     setRows(data.franchises || []);
   }, [q]);
@@ -37,7 +38,7 @@ export default function AdminFranchisesPage() {
   }, [load]);
 
   const updateStatus = async (id: string, approval_status: string) => {
-    await fetch(`/api/admin/franchises/${id}`, {
+    await adminFetch(`/api/admin/franchises/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ approval_status })

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from 'wouter';
+import { adminFetch } from "@/lib/admin-fetch";
 
 type Stats = {
   totalPlayers: number;
@@ -22,7 +23,7 @@ export default function AdminDashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
-    fetch("/api/admin/stats")
+    adminFetch("/api/admin/stats")
       .then((r) => r.json())
       .then(setStats)
       .catch(() => undefined);

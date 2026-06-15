@@ -1,6 +1,7 @@
 
 
 import { useEffect, useState } from "react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 type Payment = {
   id: string;
@@ -18,7 +19,7 @@ export default function AdminPaymentsPage() {
   const [revenue, setRevenue] = useState(0);
 
   useEffect(() => {
-    fetch("/api/admin/payments")
+    adminFetch("/api/admin/payments")
       .then((r) => r.json())
       .then((d) => {
         setPayments(d.payments || []);

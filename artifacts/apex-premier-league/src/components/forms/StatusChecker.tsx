@@ -44,7 +44,7 @@ export default function StatusChecker() {
     try {
       const controller = new AbortController();
       const timeout = window.setTimeout(() => controller.abort(), 10000);
-      const response = await fetch(`/api/status?player_id=${encodeURIComponent(normalized)}`, {
+      const response = await fetch(`/api/apl/status?player_id=${encodeURIComponent(normalized)}`, {
         signal: controller.signal
       });
       window.clearTimeout(timeout);

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { PlayerStatusBadge } from "@/components/admin/StatusBadge";
 import { Search, X } from "lucide-react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 type Player = {
   id: string;
@@ -32,7 +33,7 @@ export default function AdminPlayersPage() {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
     if (status) params.set("status", status);
-    const res = await fetch(`/api/admin/players?${params}`);
+    const res = await adminFetch(`/api/admin/players?${params}`);
     const data = await res.json();
     setPlayers(data.players || []);
     setLoading(false);
@@ -44,7 +45,7 @@ export default function AdminPlayersPage() {
   }, [load]);
 
   const updateStatus = async (id: string, application_status: string) => {
-    await fetch(`/api/admin/players/${id}`, {
+    await adminFetch(`/api/admin/players/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ application_status })

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Search, X, Check, Trash2, Mail, MailOpen } from "lucide-react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 type Submission = {
   id: string;
@@ -24,7 +25,7 @@ export default function AdminContactPage() {
     setLoading(true);
     const params = new URLSearchParams();
     if (q) params.set("q", q);
-    const res = await fetch(`/api/admin/contact?${params}`);
+    const res = await adminFetch(`/api/admin/contact?${params}`);
     const data = await res.json();
     setSubmissions(data.submissions || []);
     setLoading(false);
@@ -36,7 +37,7 @@ export default function AdminContactPage() {
   }, [load]);
 
   const toggleRead = async (id: string, is_read: boolean) => {
-    await fetch(`/api/admin/contact/${id}`, {
+    await adminFetch(`/api/admin/contact/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ is_read })
@@ -47,7 +48,7 @@ export default function AdminContactPage() {
 
   const deleteSubmission = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this inquiry?")) return;
-    await fetch(`/api/admin/contact/${id}`, {
+    await adminFetch(`/api/admin/contact/${id}`, {
       method: "DELETE"
     });
     setSelected(null);
