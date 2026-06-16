@@ -25,7 +25,8 @@ export async function readJson(req: any) {
 }
 
 export function env(name: string) {
-  return process.env[name]?.trim() || "";
+  const runtimeProcess = (globalThis as any).process;
+  return runtimeProcess?.env?.[name]?.trim() || "";
 }
 
 export function createTimeout(ms: number) {
