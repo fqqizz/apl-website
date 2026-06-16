@@ -50,48 +50,50 @@ export default function VisionPage() {
   return (
     <>
       <BreadcrumbJsonLd pageName="Vision" path="/vision" />
-      <div className="pb-24 pt-[72px]">
+      <div className="pb-24 pt-[104px]">
         {/* Cinematic hero */}
-        <div ref={heroRef} className="relative overflow-hidden rounded-b-2xl" style={{ height: "clamp(360px, 55vh, 560px)" }}>
-          <motion.div className="absolute inset-0" style={{ y: heroY }}>
-            <img
-              src="/images/vision-hero.jpg"
-              alt="Football vision for Kashmir"
-              className="w-full h-[120%] object-cover"
-              style={{ objectPosition: "center 35%" }}
-              fetchPriority="high"
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#07111D]/25 via-[#07111D]/55 to-[#07111D]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#07111D]/30 to-transparent" />
-          
-          <div className="absolute inset-0 flex items-end">
-            <div className="container-apl pb-12 md:pb-16">
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease }}
-                className="flex items-center gap-2"
-              >
-                <Target size={14} className="text-apl-gold" />
-                <span className="text-label text-apl-gold">VISION & ROADMAP</span>
-              </motion.div>
-              <motion.h1
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.6, ease }}
-                className="mt-4 text-display-lg text-apl-white max-w-3xl"
-              >
-                WHAT KASHMIR FOOTBALL BECOMES
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5, ease }}
-                className="mt-4 max-w-lg text-body-lg text-apl-text-secondary"
-              >
-                APL is not a tournament. It is infrastructure, identity, and a long-term competitive ecosystem.
-              </motion.p>
+        <div className="container-apl">
+          <div ref={heroRef} className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl shadow-black/50" style={{ height: "clamp(360px, 50vh, 520px)" }}>
+            <motion.div className="absolute inset-0" style={{ y: heroY }}>
+              <img
+                src="/images/vision-hero.jpg"
+                alt="Football vision for Kashmir"
+                className="w-full h-[120%] object-cover"
+                style={{ objectPosition: "center 35%" }}
+                fetchPriority="high"
+              />
+            </motion.div>
+            <div className="absolute inset-0 bg-gradient-to-b from-[#07111D]/25 via-[#07111D]/55 to-[#07111D]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#07111D]/30 to-transparent" />
+            
+            <div className="absolute inset-0 flex items-end">
+              <div className="w-full px-6 md:px-10 pb-10 md:pb-14">
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease }}
+                  className="flex items-center gap-2"
+                >
+                  <Target size={14} className="text-apl-gold" />
+                  <span className="text-label text-apl-gold">VISION & ROADMAP</span>
+                </motion.div>
+                <motion.h1
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.6, ease }}
+                  className="mt-4 text-display-lg text-apl-white max-w-3xl"
+                >
+                  WHAT KASHMIR FOOTBALL BECOMES
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.5, ease }}
+                  className="mt-4 max-w-lg text-body-lg text-apl-text-secondary"
+                >
+                  APL is not a tournament. It is infrastructure, identity, and a long-term competitive ecosystem.
+                </motion.p>
+              </div>
             </div>
           </div>
         </div>
@@ -127,7 +129,7 @@ export default function VisionPage() {
             THE ROADMAP
           </motion.h2>
 
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
+          <div className="mt-12 grid gap-10 md:grid-cols-3">
             {roadmap.map((item, idx) => {
               const Icon = item.icon;
               return (
@@ -192,9 +194,9 @@ export default function VisionPage() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="container-apl mt-24 md:mt-32"
+          className="container-apl mt-28 md:mt-36"
         >
-          <div className="grid gap-px md:grid-cols-3 rounded-2xl overflow-hidden border border-apl-border">
+          <div className="grid gap-8 md:grid-cols-3">
             {[
               { title: "Structure", desc: "Real leagues need real systems — registrations, IDs, fixtures, and accountability." },
               { title: "Visibility", desc: "Every player deserves to be seen. APL builds the stage, the media, and the audience." },
@@ -206,10 +208,13 @@ export default function VisionPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.5, ease }}
-                className="p-8 bg-apl-glass text-center"
+                className="glass-card p-8 md:p-10 flex flex-col items-center text-center group cursor-default"
               >
-                <p className="text-sm font-semibold tracking-wider text-apl-gold uppercase">{value.title}</p>
-                <p className="mt-3 text-sm leading-relaxed text-apl-text-secondary">{value.desc}</p>
+                <div className="w-12 h-12 rounded-full bg-apl-gold/10 flex items-center justify-center mb-6 border border-apl-gold/20 group-hover:scale-110 group-hover:bg-apl-gold/20 transition-all duration-300">
+                  <span className="text-apl-gold font-bold">{idx + 1}</span>
+                </div>
+                <h3 className="text-label text-apl-gold mb-3">{value.title}</h3>
+                <p className="text-body-md text-apl-text-secondary group-hover:text-apl-white transition-colors duration-300">{value.desc}</p>
               </motion.div>
             ))}
           </div>

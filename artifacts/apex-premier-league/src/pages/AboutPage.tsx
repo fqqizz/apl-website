@@ -37,10 +37,11 @@ export default function AboutPage() {
   return (
     <>
       <BreadcrumbJsonLd pageName="About" path="/about" />
-      <div className="pb-20 pt-[72px]">
-        {/* Cinematic hero banner */}
-        <div ref={heroRef} className="relative overflow-hidden rounded-b-2xl" style={{ height: "clamp(320px, 50vh, 520px)" }}>
-          <motion.div className="absolute inset-0" style={{ y: heroY }}>
+      <div className="pb-24 pt-[104px]">
+        {/* Cinematic hero banner — Below navbar */}
+        <div className="container-apl">
+          <div ref={heroRef} className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl shadow-black/50" style={{ height: "clamp(360px, 50vh, 520px)" }}>
+            <motion.div className="absolute inset-0" style={{ y: heroY }}>
             <img
               src="/images/about-football-2.jpg"
               alt="Football culture in Kashmir"
@@ -51,7 +52,7 @@ export default function AboutPage() {
           </motion.div>
           <div className="absolute inset-0 bg-gradient-to-b from-[#07111D]/30 via-[#07111D]/60 to-[#07111D]" />
           <div className="absolute inset-0 flex items-end">
-            <div className="container-apl pb-10 md:pb-14">
+            <div className="w-full px-6 md:px-10 pb-10 md:pb-14">
               <motion.p
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -70,6 +71,7 @@ export default function AboutPage() {
               </motion.h1>
             </div>
           </div>
+        </div>
         </div>
 
         {/* Story section — magazine split */}
@@ -131,7 +133,7 @@ export default function AboutPage() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8 }}
-          className="mt-24 md:mt-32 py-16 relative overflow-hidden"
+          className="mt-28 md:mt-36 py-20 md:py-24 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-apl-navy-light via-apl-navy-mid to-apl-navy-light" />
           <div className="absolute inset-0 opacity-5">
@@ -147,7 +149,7 @@ export default function AboutPage() {
         </motion.div>
 
         {/* Timeline */}
-        <div className="container-apl mt-24 md:mt-32">
+        <div className="container-apl mt-28 md:mt-36">
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -160,7 +162,7 @@ export default function AboutPage() {
             {/* Vertical line */}
             <div className="absolute left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-apl-gold/40 via-apl-border to-transparent" />
             
-            <ul className="space-y-10 pl-10">
+            <ul className="space-y-16 pl-10">
               {timeline.map((item, idx) => (
                 <motion.li
                   key={item.year}
