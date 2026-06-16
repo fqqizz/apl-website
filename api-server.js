@@ -156,6 +156,56 @@ async function handleContact(req, res, query, body) {
   }
 }
 
+// Stats handler
+async function handleStats(req, res, query) {
+  if (req.method !== "GET") return methodNotAllowed(res, ["GET"]);
+
+  try {
+    const [players, franchises] = await Promise.all([
+      supabaseGet("players?select=id"),
+      supabaseGet("franchises?select=id"),
+    ]);
+    return sendJson(res, 200, {
+      players: players.configured && players.response.ok && Array.isArray(players.data) ? players.data.length : 0,
+      franchises: franchises.configured && franchises.response.ok && Array.isArray(franchises.data) ? franchises.data.length : 0,
+      season: 1,
+    });
+  } catch {
+    return sendJson(res, 200, { players: 0, franchises: 0, season: 1 });
+  }
+}
+
+// Announcement handler
+async function handleAnnouncement(req, res, query) {
+  if (req.method !== "GET") return methodNotAllowed(res, ["GET"]);
+
+  try {
+    const result = await supabaseGet("announcements?is_active=eq.true&select=text,is_active&order=created_at.desc&limit=1");
+    const announcement = result.configured && result.response.ok && Array.isArray(result.data) ? result.data[0] || null : null;
+    return sendJson(res, 200, { announcement });
+  } catch {
+    return sendJson(res, 200, { announcement: null });
+  }
+}
+
+// Founding wall handler
+async function handleFoundingWall(req, res, query) {
+  if (req.method !== "GET") return methodNotAllowed(res, ["GET"]);
+
+  try {
+    const [players, franchises] = await Promise.all([
+      supabaseGet("players?payment_status=eq.completed&application_status=eq.APPROVED&select=full_name,position,area&order=created_at.asc"),
+      supabaseGet("franchises?approval_status=eq.approved&select=team_name,owner_name,team_area&order=created_at.asc"),
+    ]);
+    return sendJson(res, 200, {
+      players: players.configured && players.response.ok && Array.isArray(players.data) ? players.data : [],
+      franchises: franchises.configured && franchises.response.ok && Array.isArray(franchises.data) ? franchises.data : [],
+    });
+  } catch {
+    return sendJson(res, 200, { players: [], franchises: [] });
+  }
+}
+
 // Create server
 const server = http.createServer(async (req, res) => {
   // Enable CORS
@@ -193,6 +243,12 @@ const server = http.createServer(async (req, res) => {
         await handleStatus(req, res, query);
       } else if (pathname === '/api/apl/contact') {
         await handleContact(req, res, query, body);
+      } else if (pathname === '/api/apl/stats') {
+        await handleStats(req, res, query);
+      } else if (pathname === '/api/apl/announcement') {
+        await handleAnnouncement(req, res, query);
+      } else if (pathname === '/api/apl/founding-wall') {
+        await handleFoundingWall(req, res, query);
       } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Not found' }));
@@ -204,6 +260,12 @@ const server = http.createServer(async (req, res) => {
       await handleStatus(req, res, query);
     } else if (pathname === '/api/apl/contact') {
       await handleContact(req, res, query, body);
+    } else if (pathname === '/api/apl/stats') {
+      await handleStats(req, res, query);
+    } else if (pathname === '/api/apl/announcement') {
+      await handleAnnouncement(req, res, query);
+    } else if (pathname === '/api/apl/founding-wall') {
+      await handleFoundingWall(req, res, query);
     } else if (pathname === '/health') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: 'ok' }));
