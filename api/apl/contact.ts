@@ -25,6 +25,7 @@ export default async function handler(req: any, res: any) {
       return sendJson(res, 400, { error: "Enter a valid email address." });
     }
 
+    // 1. Save to database (primary action)
     const dbTimeout = createTimeout(9000);
     const dbResult = await supabaseInsert(
       "contact_submissions",
@@ -33,33 +34,35 @@ export default async function handler(req: any, res: any) {
     ).catch(() => null);
     dbTimeout.clear();
 
-    const resendKey = env("RESEND_API_KEY");
-    if (!resendKey) {
-      return sendJson(res, 503, { error: "Email delivery is not configured. Set RESEND_API_KEY in production." });
-    }
-
     const dbSaved = Boolean(dbResult?.configured && dbResult.response.ok);
-    const mailTimeout = createTimeout(9000);
-    const mail = await serverFetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "APL Contact <contact@apexpremiereleague.in>",
-        to: ["contact@apexpremiereleague.in"],
-        reply_to: email,
-        subject: `[APL Contact] ${subject}`,
-        html: `<p><strong>${name}</strong> (${email}${phone ? `, ${phone}` : ""})</p><p>${message.replace(/\n/g, "<br/>")}</p>`,
-      }),
-      signal: mailTimeout.signal,
-    });
-    mailTimeout.clear();
-
-    if (!mail.ok) {
-      return sendJson(res, 502, { error: dbSaved ? "Message saved, but email delivery failed. Please check Resend." : "Email delivery failed. Please try again." });
-    }
 
     if (!dbSaved) {
-      return sendJson(res, 503, { error: "We could not save your message right now. Please call or email APL directly." });
+      return sendJson(res, 503, {
+        error: "We could not save your message right now. Please call or email APL directly.",
+      });
+    }
+
+    // 2. Send email notification (optional — graceful if not configured)
+    const resendKey = env("RESEND_API_KEY");
+    if (resendKey) {
+      try {
+        const mailTimeout = createTimeout(9000);
+        await serverFetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "APL Contact <contact@apexpremiereleague.in>",
+            to: ["contact@apexpremiereleague.in"],
+            reply_to: email,
+            subject: `[APL Contact] ${subject}`,
+            html: `<p><strong>${name}</strong> (${email}${phone ? `, ${phone}` : ""})</p><p>${message.replace(/\n/g, "<br/>")}</p>`,
+          }),
+          signal: mailTimeout.signal,
+        });
+        mailTimeout.clear();
+      } catch {
+        // Email failed but DB saved — don't fail the request
+      }
     }
 
     return sendJson(res, 200, { success: true });
