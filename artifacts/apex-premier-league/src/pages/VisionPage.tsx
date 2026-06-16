@@ -22,8 +22,14 @@ export default function VisionPage() {
           gold
         />
         <div className="container-apl space-y-16">
-          <div className="relative min-h-[320px] overflow-hidden rounded-xl border border-apl md:min-h-[420px]">
-            <img src="/images/editorial-kick.png" alt="Football action" className="object-cover" sizes="100vw" />
+          <div className="relative w-full overflow-hidden rounded-xl border border-apl" style={{ minHeight: "320px" }}>
+            <img 
+              src="/images/editorial-kick.png" 
+              alt="Football action" 
+              className="w-full h-full object-cover" 
+              style={{ display: "block" }}
+              sizes="100vw" 
+            />
             <div className="hero-gradient absolute inset-0" />
             <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
               <p className="max-w-2xl text-display-md text-apl-white">Professional standards. Local soul. Global ambition.</p>

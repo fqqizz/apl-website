@@ -57,8 +57,14 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-apl">
-            <img src="/images/hero-community.png" alt="Young footballers in Kashmir" className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+          <div className="relative w-full overflow-hidden rounded-xl border border-apl">
+            <img 
+              src="/images/hero-community.png" 
+              alt="Young footballers in Kashmir" 
+              className="w-full h-full object-cover" 
+              style={{ display: "block", aspectRatio: "4/3" }}
+              sizes="(max-width: 1024px) 100vw, 50vw" 
+            />
           </div>
         </div>
         <div className="container-apl mt-16">
