@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { createTimeout, env, methodNotAllowed, readJson, sendJson, serverFetch } from "../../_utils/http";
 
 const PLAYER_REGISTRATION_FEE = 249;
@@ -6,6 +5,11 @@ const PLAYER_REGISTRATION_FEE = 249;
 function cashfreeHost() {
   const mode = (env("CASHFREE_ENVIRONMENT") || "PRODUCTION").toUpperCase();
   return mode === "TEST" || mode === "SANDBOX" ? "sandbox" : "api";
+}
+
+function createRuntimeId() {
+  const randomPart = Math.random().toString(36).slice(2, 10).toUpperCase();
+  return `${Date.now()}_${randomPart}`;
 }
 
 export default async function handler(req: any, res: any) {
@@ -19,7 +23,7 @@ export default async function handler(req: any, res: any) {
     const secret = env("CASHFREE_SECRET_KEY");
     if (!appId || !secret) return sendJson(res, 500, { error: "Payment gateway not configured." });
 
-    const orderId = `APL_${Date.now()}_${randomUUID().split("-")[0]}`;
+    const orderId = `APL_${createRuntimeId()}`;
     const baseUrl = (env("APP_URL") || env("NEXT_PUBLIC_BASE_URL") || "https://apexpremiereleague.in").replace(/\/$/, "");
     const timeout = createTimeout(15000);
     const response = await serverFetch(`https://${cashfreeHost()}.cashfree.com/pg/orders`, {
@@ -36,7 +40,7 @@ export default async function handler(req: any, res: any) {
         order_amount: PLAYER_REGISTRATION_FEE,
         order_currency: "INR",
         customer_details: {
-          customer_id: randomUUID(),
+          customer_id: `APL_CUSTOMER_${createRuntimeId()}`,
           customer_email: String(email),
           customer_phone: String(phone),
           customer_name: String(name),

@@ -1,6 +1,3 @@
-import { Buffer } from "node:buffer";
-import { clearTimeout, setTimeout } from "node:timers";
-
 export function sendJson(res: any, status: number, body: unknown) {
   res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
@@ -16,9 +13,14 @@ export async function readJson(req: any) {
   if (req.body && typeof req.body === "object") return req.body;
   if (typeof req.body === "string" && req.body.trim()) return JSON.parse(req.body);
 
-  const chunks: Buffer[] = [];
-  for await (const chunk of req) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-  const raw = Buffer.concat(chunks).toString("utf8").trim();
+  const RuntimeBuffer = (globalThis as any).Buffer;
+  if (!RuntimeBuffer) return {};
+
+  const chunks: any[] = [];
+  for await (const chunk of req) {
+    chunks.push(RuntimeBuffer.isBuffer(chunk) ? chunk : RuntimeBuffer.from(chunk));
+  }
+  const raw = RuntimeBuffer.concat(chunks).toString("utf8").trim();
   return raw ? JSON.parse(raw) : {};
 }
 
@@ -31,10 +33,10 @@ export function createTimeout(ms: number) {
   if (!AbortControllerCtor) return { signal: undefined, clear: () => {} };
 
   const controller = new AbortControllerCtor();
-  const timeout = setTimeout(() => controller.abort(), ms);
+  const timeout = (globalThis as any).setTimeout(() => controller.abort(), ms);
   return {
     signal: controller.signal,
-    clear: () => clearTimeout(timeout),
+    clear: () => (globalThis as any).clearTimeout(timeout),
   };
 }
 
