@@ -1,3 +1,6 @@
+import { Buffer } from "node:buffer";
+import { clearTimeout, setTimeout } from "node:timers";
+
 export function sendJson(res: any, status: number, body: unknown) {
   res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
@@ -23,3 +26,22 @@ export function env(name: string) {
   return process.env[name]?.trim() || "";
 }
 
+export function createTimeout(ms: number) {
+  const AbortControllerCtor = (globalThis as any).AbortController;
+  if (!AbortControllerCtor) return { signal: undefined, clear: () => {} };
+
+  const controller = new AbortControllerCtor();
+  const timeout = setTimeout(() => controller.abort(), ms);
+  return {
+    signal: controller.signal,
+    clear: () => clearTimeout(timeout),
+  };
+}
+
+export async function serverFetch(input: string, init?: any) {
+  const runtimeFetch = (globalThis as any).fetch;
+  if (typeof runtimeFetch !== "function") {
+    throw new Error("Server fetch is not available in this runtime.");
+  }
+  return runtimeFetch(input, init);
+}

@@ -1,4 +1,4 @@
-import { env, methodNotAllowed, readJson, sendJson } from "../_utils/http";
+import { createTimeout, env, methodNotAllowed, readJson, sendJson, serverFetch } from "../_utils/http";
 import { supabaseInsert } from "../_utils/supabase-rest";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,19 +25,19 @@ export default async function handler(req: any, res: any) {
       return sendJson(res, 400, { error: "Enter a valid email address." });
     }
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 9000);
+    const dbTimeout = createTimeout(9000);
     const dbResult = await supabaseInsert(
       "contact_submissions",
       [{ name, email, phone: phone || null, subject, message, is_read: false }],
-      controller.signal,
+      dbTimeout.signal,
     ).catch(() => null);
-    clearTimeout(timeout);
+    dbTimeout.clear();
 
     const resendKey = env("RESEND_API_KEY");
     let emailDelivered = false;
     if (resendKey) {
-      const mail = await fetch("https://api.resend.com/emails", {
+      const mailTimeout = createTimeout(9000);
+      const mail = await serverFetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -47,8 +47,9 @@ export default async function handler(req: any, res: any) {
           subject: `[APL Contact] ${subject}`,
           html: `<p><strong>${name}</strong> (${email}${phone ? `, ${phone}` : ""})</p><p>${message.replace(/\n/g, "<br/>")}</p>`,
         }),
-        signal: AbortSignal.timeout(9000),
+        signal: mailTimeout.signal,
       });
+      mailTimeout.clear();
       emailDelivered = mail.ok;
     }
 
@@ -62,4 +63,3 @@ export default async function handler(req: any, res: any) {
     return sendJson(res, 500, { error: "We could not send your message. Please try again or call us directly." });
   }
 }
-

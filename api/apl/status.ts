@@ -1,4 +1,4 @@
-import { methodNotAllowed, sendJson } from "../_utils/http";
+import { createTimeout, methodNotAllowed, sendJson } from "../_utils/http";
 import { supabaseGet } from "../_utils/supabase-rest";
 
 const VALID_PLAYER_ID = /^APL-\d{4,5}$/i;
@@ -12,13 +12,12 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = createTimeout(8000);
     const result = await supabaseGet(
       `players?player_id=eq.${encodeURIComponent(playerId)}&select=player_id,application_status,created_at&limit=1`,
-      controller.signal,
+      timeout.signal,
     );
-    clearTimeout(timeout);
+    timeout.clear();
 
     if (!result.configured) {
       return sendJson(res, 503, { error: "Status lookup is temporarily unavailable. Database is not configured." });
@@ -39,4 +38,3 @@ export default async function handler(req: any, res: any) {
     return sendJson(res, 504, { error: "Status lookup is taking too long. Please try again." });
   }
 }
-

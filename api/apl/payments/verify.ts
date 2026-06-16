@@ -1,4 +1,4 @@
-import { env, methodNotAllowed, sendJson } from "../../_utils/http";
+import { createTimeout, env, methodNotAllowed, sendJson, serverFetch } from "../../_utils/http";
 
 function cashfreeHost() {
   const mode = (env("CASHFREE_ENVIRONMENT") || "PRODUCTION").toUpperCase();
@@ -16,19 +16,20 @@ export default async function handler(req: any, res: any) {
   if (!appId || !secret) return sendJson(res, 500, { error: "Payment gateway not configured." });
 
   try {
-    const response = await fetch(`https://${cashfreeHost()}.cashfree.com/pg/orders/${encodeURIComponent(orderId)}`, {
+    const timeout = createTimeout(15000);
+    const response = await serverFetch(`https://${cashfreeHost()}.cashfree.com/pg/orders/${encodeURIComponent(orderId)}`, {
       headers: {
         accept: "application/json",
         "x-api-version": "2022-09-01",
         "x-client-id": appId,
         "x-client-secret": secret,
       },
-      signal: AbortSignal.timeout(15000),
+      signal: timeout.signal,
     });
+    timeout.clear();
     const data = await response.json();
     return sendJson(res, response.status, data);
   } catch {
     return sendJson(res, 500, { error: "Unable to verify payment. Please try again." });
   }
 }
-

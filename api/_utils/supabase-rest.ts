@@ -1,4 +1,4 @@
-import { env } from "./http";
+import { env, serverFetch } from "./http";
 
 type SupabaseConfig = {
   url: string;
@@ -14,11 +14,11 @@ export function getSupabaseConfig(): SupabaseConfig | null {
   return { url: url.replace(/\/$/, ""), anonKey, serviceKey };
 }
 
-export async function supabaseGet(path: string, signal?: AbortSignal) {
+export async function supabaseGet(path: string, signal?: any) {
   const config = getSupabaseConfig();
   if (!config) return { configured: false as const };
 
-  const response = await fetch(`${config.url}/rest/v1/${path}`, {
+  const response = await serverFetch(`${config.url}/rest/v1/${path}`, {
     headers: {
       apikey: config.anonKey,
       Authorization: `Bearer ${config.anonKey}`,
@@ -31,11 +31,11 @@ export async function supabaseGet(path: string, signal?: AbortSignal) {
   return { configured: true as const, response, data };
 }
 
-export async function supabaseInsert(table: string, payload: unknown, signal?: AbortSignal) {
+export async function supabaseInsert(table: string, payload: unknown, signal?: any) {
   const config = getSupabaseConfig();
   if (!config) return { configured: false as const };
 
-  const response = await fetch(`${config.url}/rest/v1/${table}`, {
+  const response = await serverFetch(`${config.url}/rest/v1/${table}`, {
     method: "POST",
     headers: {
       apikey: config.serviceKey,
@@ -49,4 +49,3 @@ export async function supabaseInsert(table: string, payload: unknown, signal?: A
   const text = await response.text();
   return { configured: true as const, response, data: text ? JSON.parse(text) : null };
 }
-
