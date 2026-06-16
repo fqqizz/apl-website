@@ -29,10 +29,7 @@ export default function LeagueVision() {
               So does Kashmir.
             </h2>
 
-            <div
-              className="mt-4"
-              style={{ width: "40px", height: "2px", background: "var(--apl-gold)", borderRadius: "2px" }}
-            />
+
 
             <p
               className="mt-8 text-body-lg"

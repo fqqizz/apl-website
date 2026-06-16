@@ -80,7 +80,7 @@ export default function IntroAnimation() {
             damping: 20,
             mass: 0.9
           }}
-          className="mt-7 flex flex-col items-center gap-1"
+          className="mt-7 flex flex-col items-center gap-3"
           style={{ willChange: "transform, opacity, filter" }}
         >
           <p
@@ -96,17 +96,25 @@ export default function IntroAnimation() {
           >
             APEX PREMIER LEAGUE
           </p>
+          <div
+            style={{
+              width: "32px",
+              height: "1px",
+              background: "rgba(7,17,29,0.12)",
+              borderRadius: "0.5px"
+            }}
+          />
           <p
             style={{
               fontFamily: "var(--font-body), sans-serif",
-              fontSize: "0.6rem",
+              fontSize: "0.7rem",
               fontWeight: 500,
-              letterSpacing: "0.22em",
-              color: "rgba(7,17,29,0.32)",
+              letterSpacing: "0.12em",
+              color: "rgba(7,17,29,0.38)",
               textTransform: "uppercase"
             }}
           >
-            SEASON ONE · NORTH KASHMIR
+            RISE ABOVE.
           </p>
         </motion.div>
       </div>
