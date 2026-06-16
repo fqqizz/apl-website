@@ -6,6 +6,16 @@ import { CONTACT_PHONE } from "@/lib/apl-constants";
 
 type Phase = "idle" | "loading" | "success" | "error";
 
+async function readJsonResponse(response: Response) {
+  const text = await response.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
+
 export default function ContactForm() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [message, setMessage] = useState("");
@@ -24,12 +34,16 @@ export default function ContactForm() {
     };
 
     try {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
       const res = await fetch("/api/apl/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal
       });
-      const data = await res.json();
+      window.clearTimeout(timeout);
+      const data = await readJsonResponse(res);
       if (!res.ok) {
         setPhase("error");
         setMessage(data.error || "We could not send your message. Please try again or call us directly.");
@@ -38,9 +52,13 @@ export default function ContactForm() {
       setPhase("success");
       setMessage("Your message has been sent to the APL team. We will respond as soon as possible.");
       (e.target as HTMLFormElement).reset();
-    } catch {
+    } catch (err) {
       setPhase("error");
-      setMessage(`Network error. Please call ${CONTACT_PHONE} or email contact@apexpremiereleague.in.`);
+      setMessage(
+        err instanceof DOMException && err.name === "AbortError"
+          ? `The contact request is taking too long. Please call ${CONTACT_PHONE} or email contact@apexpremiereleague.in.`
+          : `Network error. Please call ${CONTACT_PHONE} or email contact@apexpremiereleague.in.`
+      );
     }
   };
 

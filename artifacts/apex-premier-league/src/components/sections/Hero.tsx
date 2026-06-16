@@ -19,7 +19,7 @@ export default function Hero() {
           src="/images/hero-football.jpg"
           alt="Football action"
           className="h-full w-full object-cover"
-          style={{ objectPosition: "center 28%" }}
+          style={{ objectPosition: "center 34%" }}
           fetchPriority="high"
           decoding="async"
         />
@@ -27,7 +27,7 @@ export default function Hero() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(7,17,29,0.18) 0%, rgba(7,17,29,0.48) 28%, rgba(7,17,29,0.78) 60%, #07111D 100%)"
+              "linear-gradient(to bottom, rgba(7,17,29,0.26) 0%, rgba(7,17,29,0.56) 34%, rgba(7,17,29,0.82) 68%, #07111D 100%)"
           }}
         />
         <div
@@ -43,8 +43,8 @@ export default function Hero() {
         <div
           className="container-apl flex flex-1 flex-col items-center justify-center px-5 text-center"
           style={{
-            paddingTop: "clamp(5.5rem, 14vw, 9rem)",
-            paddingBottom: "clamp(3.5rem, 8vw, 5.5rem)"
+            paddingTop: "clamp(5rem, 12vw, 8rem)",
+            paddingBottom: "clamp(3rem, 7vw, 4.75rem)"
           }}
         >
           <motion.div
@@ -90,7 +90,7 @@ export default function Hero() {
               lineHeight: 1.75
             }}
           >
-            A franchise-based football ecosystem bringing together players, communities, and businesses.
+            The valley's football movement, built for players who are ready to be seen.
           </motion.p>
 
           <motion.div

@@ -11,6 +11,16 @@ type StatusResult = {
   created_at: string;
 };
 
+async function readJsonResponse(response: Response) {
+  const text = await response.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
+
 const statusStyles: Record<string, string> = {
   APPROVED: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
   REJECTED: "bg-red-500/10 text-red-300 border-red-500/30",
@@ -43,20 +53,24 @@ export default function StatusChecker() {
 
     try {
       const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 10000);
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
       const response = await fetch(`/api/apl/status?player_id=${encodeURIComponent(normalized)}`, {
         signal: controller.signal
       });
       window.clearTimeout(timeout);
-      const data = await response.json();
+      const data = await readJsonResponse(response);
 
       if (!response.ok) {
-        setError(data.error || "Application not found.");
+        setError(data.error || "We could not verify that Player ID right now. Please try again.");
         return;
       }
       setResult(data);
-    } catch {
-      setError("Status lookup is taking too long. Please try again.");
+    } catch (err) {
+      setError(
+        err instanceof DOMException && err.name === "AbortError"
+          ? "Status lookup is taking too long. Please try again."
+          : "Network error. Please check your connection and try again."
+      );
     } finally {
       window.clearTimeout(verifyTimer);
       setPhase("idle");

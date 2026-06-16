@@ -7,7 +7,6 @@ export default function IntroAnimation() {
   const [phase, setPhase] = useState<"show" | "exit" | "done">("show");
   const [logoIn, setLogoIn] = useState(false);
   const [textIn, setTextIn] = useState(false);
-  const [shineIn, setShineIn] = useState(false);
   const timers = useRef<number[]>([]);
 
   useEffect(() => {
@@ -16,10 +15,9 @@ export default function IntroAnimation() {
       timers.current.push(id);
     };
     t(() => setLogoIn(true), 80);
-    t(() => setShineIn(true), 900);
-    t(() => setTextIn(true), 1020);
-    t(() => { setPhase("exit"); completeIntro(); }, 2800);
-    t(() => setPhase("done"), 3350);
+    t(() => setTextIn(true), 980);
+    t(() => { setPhase("exit"); completeIntro(); }, 2600);
+    t(() => setPhase("done"), 3150);
     return () => timers.current.forEach(clearTimeout);
   }, [completeIntro]);
 
@@ -46,10 +44,10 @@ export default function IntroAnimation() {
             <motion.div
               key="logo"
               initial={{ opacity: 0, scale: 0.88 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-              className="relative overflow-hidden"
-              style={{ borderRadius: 8 }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ type: "spring", stiffness: 120, damping: 24, mass: 0.9 }}
+              className="relative"
+              style={{ borderRadius: 8, willChange: "transform, opacity, filter", transform: "translateZ(0)" }}
             >
               <img
                 src="/apl-logo.png"
@@ -60,24 +58,6 @@ export default function IntroAnimation() {
                 draggable={false}
               />
 
-              <AnimatePresence>
-                {shineIn && (
-                  <motion.div
-                    key="shine"
-                    initial={{ x: "-130%" }}
-                    animate={{ x: "240%" }}
-                    transition={{ duration: 1.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background:
-                        "linear-gradient(105deg, transparent 22%, rgba(255,255,255,0.18) 38%, rgba(255,255,255,0.62) 50%, rgba(255,255,255,0.18) 62%, transparent 78%)",
-                      mixBlendMode: "overlay",
-                      pointerEvents: "none"
-                    }}
-                  />
-                )}
-              </AnimatePresence>
             </motion.div>
           )}
         </AnimatePresence>
@@ -88,17 +68,18 @@ export default function IntroAnimation() {
               key="text"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-8 flex flex-col items-center gap-3"
+              transition={{ type: "spring", stiffness: 90, damping: 22, mass: 0.8 }}
+              className="mt-8 flex flex-col items-center"
             >
               <motion.p
-                initial={{ letterSpacing: "0.04em", opacity: 0 }}
-                animate={{ letterSpacing: "0.34em", opacity: 1 }}
-                transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 6, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ type: "spring", stiffness: 90, damping: 20 }}
                 style={{
                   fontFamily: "var(--font-body), sans-serif",
                   fontSize: "0.58rem",
                   fontWeight: 500,
+                  letterSpacing: "0.34em",
                   color: "rgba(7,17,29,0.55)",
                   textTransform: "uppercase"
                 }}
@@ -106,17 +87,6 @@ export default function IntroAnimation() {
                 APEX PREMIER LEAGUE
               </motion.p>
 
-              <motion.div
-                initial={{ scaleX: 0, opacity: 0 }}
-                animate={{ scaleX: 1, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  width: "28px",
-                  height: "1px",
-                  background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.7), transparent)",
-                  transformOrigin: "center"
-                }}
-              />
             </motion.div>
           )}
         </AnimatePresence>
