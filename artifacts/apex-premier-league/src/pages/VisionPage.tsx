@@ -50,9 +50,9 @@ export default function VisionPage() {
   return (
     <>
       <BreadcrumbJsonLd pageName="Vision" path="/vision" />
-      <div className="pb-24">
+      <div className="pb-24 pt-[72px]">
         {/* Cinematic hero */}
-        <div ref={heroRef} className="relative overflow-hidden" style={{ height: "clamp(360px, 55vh, 560px)" }}>
+        <div ref={heroRef} className="relative overflow-hidden rounded-b-2xl" style={{ height: "clamp(360px, 55vh, 560px)" }}>
           <motion.div className="absolute inset-0" style={{ y: heroY }}>
             <img
               src="/images/vision-hero.jpg"
@@ -102,7 +102,7 @@ export default function VisionPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, ease }}
-          className="container-apl mt-16 md:mt-20"
+          className="container-apl mt-20 md:mt-28"
         >
           <div className="max-w-3xl mx-auto text-center">
             <div className="accent-line mx-auto" />
@@ -116,7 +116,7 @@ export default function VisionPage() {
         </motion.div>
 
         {/* Roadmap cards */}
-        <div className="container-apl mt-16 md:mt-20">
+        <div className="container-apl mt-20 md:mt-28">
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -127,7 +127,7 @@ export default function VisionPage() {
             THE ROADMAP
           </motion.h2>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
             {roadmap.map((item, idx) => {
               const Icon = item.icon;
               return (
@@ -173,7 +173,7 @@ export default function VisionPage() {
                   </div>
 
                   {/* Card content */}
-                  <div className="p-5 pt-4">
+                  <div className="p-6 pt-5">
                     <h3 className="text-xl font-semibold text-white">{item.title}</h3>
                     <p className="mt-2.5 text-sm leading-relaxed text-apl-text-secondary">{item.detail}</p>
                   </div>
@@ -192,7 +192,7 @@ export default function VisionPage() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="container-apl mt-20"
+          className="container-apl mt-24 md:mt-32"
         >
           <div className="grid gap-px md:grid-cols-3 rounded-2xl overflow-hidden border border-apl-border">
             {[

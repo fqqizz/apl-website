@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
     }
     const supabase = createClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/admin/login`
+      redirectTo: `https://apexpremiereleague.in/admin/login`
     });
     if (resetError) setError(resetError.message);
     else setResetSent(true);

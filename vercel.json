@@ -6,7 +6,11 @@
   "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
   "env": {
     "BASE_PATH": "/",
+    "VITE_SUPABASE_URL": "https://bsdszdyetdrwwkjpeglj.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZHN6ZHlldGRyd3dranBlZ2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0NDU4NzgsImV4cCI6MjA5NTAyMTg3OH0.HDfsmfwaKFY1qSsStK8GMD1h1bKanqfcxGEYqLeGtGw",
     "SUPABASE_URL": "https://bsdszdyetdrwwkjpeglj.supabase.co",
-    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZHN6ZHlldGRyd3dranBlZ2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0NDU4NzgsImV4cCI6MjA5NTAyMTg3OH0.HDfsmfwaKFY1qSsStK8GMD1h1bKanqfcxGEYqLeGtGw"
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZHN6ZHlldGRyd3dranBlZ2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0NDU4NzgsImV4cCI6MjA5NTAyMTg3OH0.HDfsmfwaKFY1qSsStK8GMD1h1bKanqfcxGEYqLeGtGw",
+    "CASHFREE_ENVIRONMENT": "PRODUCTION",
+    "APP_URL": "https://apexpremiereleague.in"
   }
 }

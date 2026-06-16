@@ -1,15 +1,67 @@
-import { ReactNode } from "react";
-import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { ReactNode, useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import { createClient } from "@/lib/supabase/client";
 import AdminShell from "./AdminShell";
+
+type AuthState = "loading" | "authenticated" | "unauthenticated";
 
 /**
  * Wraps admin pages with auth verification.
  * Shows loading state while checking, redirects to login if unauthorized.
  */
 export default function AdminAuthGuard({ children }: { children: ReactNode }) {
-  const { loading, isAdmin, email } = useAdminAuth();
+  const [state, setState] = useState<AuthState>("loading");
+  const [email, setEmail] = useState("");
+  const [, navigate] = useLocation();
 
-  if (loading) {
+  useEffect(() => {
+    let cancelled = false;
+
+    async function check() {
+      try {
+        const supabase = createClient();
+        if (!supabase) {
+          if (!cancelled) navigate("/admin/login");
+          return;
+        }
+
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!session?.access_token) {
+          if (!cancelled) {
+            setState("unauthenticated");
+            navigate("/admin/login");
+          }
+          return;
+        }
+
+        // Verify admin access by hitting the admin stats endpoint
+        const res = await fetch("/api/admin/stats", {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+
+        if (!cancelled) {
+          if (res.ok) {
+            setEmail(session.user?.email || "admin");
+            setState("authenticated");
+          } else {
+            setState("unauthenticated");
+            navigate("/admin/login");
+          }
+        }
+      } catch {
+        if (!cancelled) {
+          setState("unauthenticated");
+          navigate("/admin/login");
+        }
+      }
+    }
+
+    check();
+    return () => { cancelled = true; };
+  }, [navigate]);
+
+  if (state === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f4f6fa]">
         <div className="text-center">
@@ -20,9 +72,16 @@ export default function AdminAuthGuard({ children }: { children: ReactNode }) {
     );
   }
 
-  if (!isAdmin) {
-    return null; // useAdminAuth redirects automatically
+  if (state !== "authenticated") {
+    // Show brief redirect message while wouter navigates
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f4f6fa]">
+        <div className="text-center">
+          <p className="text-sm text-[#5a6a7e]">Redirecting to login...</p>
+        </div>
+      </div>
+    );
   }
 
-  return <AdminShell email={email || "admin"}>{children}</AdminShell>;
+  return <AdminShell email={email}>{children}</AdminShell>;
 }

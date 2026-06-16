@@ -37,9 +37,9 @@ export default function AboutPage() {
   return (
     <>
       <BreadcrumbJsonLd pageName="About" path="/about" />
-      <div className="pb-20">
+      <div className="pb-20 pt-[72px]">
         {/* Cinematic hero banner */}
-        <div ref={heroRef} className="relative overflow-hidden" style={{ height: "clamp(320px, 50vh, 520px)" }}>
+        <div ref={heroRef} className="relative overflow-hidden rounded-b-2xl" style={{ height: "clamp(320px, 50vh, 520px)" }}>
           <motion.div className="absolute inset-0" style={{ y: heroY }}>
             <img
               src="/images/about-football-2.jpg"
@@ -73,8 +73,8 @@ export default function AboutPage() {
         </div>
 
         {/* Story section — magazine split */}
-        <div className="container-apl mt-16">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+        <div className="container-apl mt-20 md:mt-28">
+          <div className="grid gap-14 lg:grid-cols-2 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -131,7 +131,7 @@ export default function AboutPage() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8 }}
-          className="mt-20 py-16 relative overflow-hidden"
+          className="mt-24 md:mt-32 py-16 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-apl-navy-light via-apl-navy-mid to-apl-navy-light" />
           <div className="absolute inset-0 opacity-5">
@@ -147,7 +147,7 @@ export default function AboutPage() {
         </motion.div>
 
         {/* Timeline */}
-        <div className="container-apl mt-20">
+        <div className="container-apl mt-24 md:mt-32">
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

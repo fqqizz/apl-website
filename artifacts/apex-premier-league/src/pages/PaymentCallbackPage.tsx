@@ -364,7 +364,9 @@ function PaymentCallbackContent() {
             playerName: pending.fullName,
             playerId: insertResult.data?.playerId || "",
             email: pending.email,
-            paymentStatus: "completed"
+            position: pending.position,
+            area: pending.area,
+            orderId,
           };
 
           void fetch("/api/apl/send-confirmation-email", {
