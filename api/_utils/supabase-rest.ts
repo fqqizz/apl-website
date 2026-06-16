@@ -18,10 +18,11 @@ export async function supabaseGet(path: string, signal?: any) {
   const config = getSupabaseConfig();
   if (!config) return { configured: false as const };
 
+  const key = config.serviceKey || config.anonKey;
   const response = await serverFetch(`${config.url}/rest/v1/${path}`, {
     headers: {
-      apikey: config.anonKey,
-      Authorization: `Bearer ${config.anonKey}`,
+      apikey: key,
+      Authorization: `Bearer ${key}`,
       Accept: "application/json",
     },
     signal,
@@ -45,6 +46,25 @@ export async function supabaseInsert(table: string, payload: unknown, signal?: a
     },
     body: JSON.stringify(payload),
     signal,
+  });
+  const text = await response.text();
+  return { configured: true as const, response, data: text ? JSON.parse(text) : null };
+}
+
+export async function supabaseRequest(path: string, init: any = {}, useService = true) {
+  const config = getSupabaseConfig();
+  if (!config) return { configured: false as const };
+
+  const key = useService ? config.serviceKey : config.anonKey;
+  const response = await serverFetch(`${config.url}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+      ...(init.body ? { "Content-Type": "application/json" } : {}),
+      ...(init.headers || {}),
+    },
   });
   const text = await response.text();
   return { configured: true as const, response, data: text ? JSON.parse(text) : null };

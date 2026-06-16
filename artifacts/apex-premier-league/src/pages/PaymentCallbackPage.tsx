@@ -16,6 +16,16 @@ type PaymentResult = {
   error?: string;
 };
 
+async function readJsonResponse(response: Response): Promise<PaymentResult> {
+  const text = await response.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
+
 function PaymentCallbackContent() {
   const [status, setStatus] = useState<"loading" | "success" | "cancelled" | "error">("loading");
   const [message, setMessage] = useState<string | null>(null);
@@ -44,11 +54,11 @@ function PaymentCallbackContent() {
           signal: controller.signal
         });
         window.clearTimeout(timeout);
-        const data: PaymentResult = await response.json();
+        const data = await readJsonResponse(response);
 
         if (!response.ok) {
           setStatus("error");
-          setMessage("Unable to verify payment. Please return to the registration form and try again.");
+          setMessage(data.error || data.message || "Unable to verify payment. Please return to the registration form and try again.");
           return;
         }
 

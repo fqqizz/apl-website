@@ -12,6 +12,16 @@ import Button from "@/components/ui/Button";
 const transition: Transition = { duration: 0.76, ease: [0.22, 1, 0.36, 1] };
 type PaymentState = "idle" | "checkout" | "success" | "failed";
 
+async function readJsonResponse(response: Response) {
+  const text = await response.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
+
 function PaymentModal({
   state,
   setState,
@@ -32,7 +42,7 @@ function PaymentModal({
     setIsLoading(true);
     setUploadProgress("Connecting to payment gateway...");
     setError(null);
-    let paymentData: { paymentSessionId?: string; paymentLink?: string; orderId?: string } | null = null;
+    let paymentData: { paymentSessionId?: string; paymentLink?: string; orderId?: string; cashfreeMode?: "sandbox" | "production"; error?: string; message?: string } | null = null;
 
     try {
       const photoFile = formData.photo as File;
@@ -56,10 +66,10 @@ function PaymentModal({
         })
       });
 
-      paymentData = await response.json();
+      paymentData = await readJsonResponse(response);
 
       if (!response.ok || (!paymentData?.paymentSessionId && !paymentData?.paymentLink)) {
-        setError("Failed to load payment gateway. Please try again.");
+        setError(paymentData?.error || paymentData?.message || "Failed to load payment gateway. Please try again.");
         setIsLoading(false);
         paymentLock.current = false;
         return;
@@ -92,11 +102,20 @@ function PaymentModal({
         idType: idFile.type
       });
 
-      const cashfreeMode = ["TEST", "SANDBOX"].includes((import.meta.env.VITE_CASHFREE_ENVIRONMENT || "").toUpperCase())
+      const cashfreeMode = paymentData.cashfreeMode || (["TEST", "SANDBOX"].includes((import.meta.env.VITE_CASHFREE_ENVIRONMENT || "").toUpperCase())
         ? "sandbox"
-        : "production";
+        : "production");
 
-      const cashfree = await load({ mode: cashfreeMode });
+      let cashfree: any = null;
+      try {
+        cashfree = await load({ mode: cashfreeMode });
+      } catch {
+        if (paymentData.paymentLink) {
+          window.location.assign(paymentData.paymentLink);
+          return;
+        }
+        throw new Error("Cashfree SDK failed to load");
+      }
       setUploadProgress("Opening secure payment...");
 
       if (paymentData.paymentSessionId && cashfree && typeof cashfree.checkout === "function") {

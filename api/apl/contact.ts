@@ -34,27 +34,31 @@ export default async function handler(req: any, res: any) {
     dbTimeout.clear();
 
     const resendKey = env("RESEND_API_KEY");
-    let emailDelivered = false;
-    if (resendKey) {
-      const mailTimeout = createTimeout(9000);
-      const mail = await serverFetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from: "APL Contact <contact@apexpremiereleague.in>",
-          to: ["contact@apexpremiereleague.in"],
-          reply_to: email,
-          subject: `[APL Contact] ${subject}`,
-          html: `<p><strong>${name}</strong> (${email}${phone ? `, ${phone}` : ""})</p><p>${message.replace(/\n/g, "<br/>")}</p>`,
-        }),
-        signal: mailTimeout.signal,
-      });
-      mailTimeout.clear();
-      emailDelivered = mail.ok;
+    if (!resendKey) {
+      return sendJson(res, 503, { error: "Email delivery is not configured. Set RESEND_API_KEY in production." });
     }
 
     const dbSaved = Boolean(dbResult?.configured && dbResult.response.ok);
-    if (!dbSaved && !emailDelivered) {
+    const mailTimeout = createTimeout(9000);
+    const mail = await serverFetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: "APL Contact <contact@apexpremiereleague.in>",
+        to: ["contact@apexpremiereleague.in"],
+        reply_to: email,
+        subject: `[APL Contact] ${subject}`,
+        html: `<p><strong>${name}</strong> (${email}${phone ? `, ${phone}` : ""})</p><p>${message.replace(/\n/g, "<br/>")}</p>`,
+      }),
+      signal: mailTimeout.signal,
+    });
+    mailTimeout.clear();
+
+    if (!mail.ok) {
+      return sendJson(res, 502, { error: dbSaved ? "Message saved, but email delivery failed. Please check Resend." : "Email delivery failed. Please try again." });
+    }
+
+    if (!dbSaved) {
       return sendJson(res, 503, { error: "We could not save your message right now. Please call or email APL directly." });
     }
 
