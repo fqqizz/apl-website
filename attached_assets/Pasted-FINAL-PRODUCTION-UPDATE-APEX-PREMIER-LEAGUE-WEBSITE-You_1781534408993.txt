@@ -1,0 +1,481 @@
+FINAL PRODUCTION UPDATE – APEX PREMIER LEAGUE WEBSITE
+
+You are no longer just a web developer. You are the combined design team of Apple, Nike, Adidas, Formula 1, UEFA Champions League, Red Bull, and Awwwards. Your job is to transform Apex Premier League into a world-class digital sports brand. The website must not look AI-generated, template-based, cheap, amateurish, or overly futuristic. It should feel timeless, premium, cinematic, stable, emotional, and highly trustworthy.
+
+This update is purely visual and experiential. Do NOT change any business logic, APIs, databases, forms, integrations, animations that affect functionality, or existing workflows. Everything should continue to work exactly as before.
+
+MISSION
+
+The website should create an immediate feeling of trust, prestige, professionalism, and authenticity. Visitors should feel like they are looking at a football property that belongs alongside Nike, Adidas, Formula 1, UEFA Champions League, and the IPL.
+
+The entire experience should be elegant, minimal, smooth, and emotionally powerful.
+
+---
+
+FIRST IMPRESSION (MOST IMPORTANT)
+
+Create a 2–3 second loading experience.
+
+Background:
+Pure white (#FFFFFF).
+
+Very subtle grey radial glow behind the logo.
+
+No blue backgrounds.
+
+No particles.
+
+No flashy effects.
+
+Center the APL logo.
+
+Animate it slowly and elegantly.
+
+Use subtle scale, fade, and opacity transitions.
+
+Think Apple product launch.
+
+Think Nike.
+
+Think Formula 1.
+
+The intro should feel luxurious and unforgettable.
+
+The visitor should immediately feel:
+
+"This is something serious."
+
+---
+
+REMOVE THE CURRENT AI LOOK
+
+The current deep bright blue backgrounds make the website look AI-generated.
+
+Reduce excessive blue.
+
+Avoid gradients that look artificial.
+
+Avoid glowing neon effects.
+
+Avoid excessive motion.
+
+Avoid oversaturated colors.
+
+Avoid generic stock imagery.
+
+Avoid fake stadium renders.
+
+Avoid anything that feels "template-generated."
+
+The website should feel handcrafted.
+
+---
+
+COLOR SYSTEM
+
+Primary:
+Deep Navy (#07111D)
+
+Secondary:
+White (#FFFFFF)
+
+Accent:
+Champagne Gold (#D4AF37)
+
+Grey:
+#F5F5F5
+
+Charcoal:
+#111111
+
+Use blue very sparingly.
+
+Prefer contrast and whitespace over colors.
+
+---
+
+DESIGN PHILOSOPHY
+
+Apple.
+
+Nike.
+
+Adidas.
+
+Formula 1.
+
+UEFA Champions League.
+
+Minimal luxury.
+
+Timeless design.
+
+Awwwards quality.
+
+No clutter.
+
+No visual noise.
+
+High trust.
+
+Large spacing.
+
+Perfect typography.
+
+Stable layouts.
+
+Elegant transitions.
+
+---
+
+TYPOGRAPHY
+
+Premium modern typography.
+
+Large headlines.
+
+Short copy.
+
+No giant paragraphs.
+
+Excellent spacing.
+
+Every section should breathe.
+
+---
+
+HERO SECTION
+
+Remove the current stadium background.
+
+Replace it with a real action football image from the available folder.
+
+The image should show actual players in motion.
+
+Football emotion.
+
+Intensity.
+
+Competition.
+
+Authenticity.
+
+Dark overlay for readability.
+
+Headline:
+
+BUILDING THE FUTURE OF FOOTBALL IN NORTH KASHMIR
+
+Subheadline:
+
+A franchise-based football ecosystem bringing together players, communities, and businesses.
+
+Buttons:
+
+Apply as a Player
+
+Explore Franchises
+
+Animations should be subtle and cinematic.
+
+No flashy effects.
+
+---
+
+IMAGERY
+
+Use only authentic football images.
+
+Real players.
+
+Real movement.
+
+Real emotions.
+
+No AI-generated players.
+
+No generic stadium images.
+
+No unrealistic renders.
+
+Use the provided assets whenever possible.
+
+Images should feel like Nike campaigns.
+
+---
+
+VIDEO
+
+If background video is used:
+
+Slow motion.
+
+Professional.
+
+Cinematic.
+
+Football moments.
+
+Boots.
+
+Ball.
+
+Goal net.
+
+Celebrations.
+
+Crowd reactions.
+
+Training.
+
+Never use flashy transitions.
+
+Never autoplay loud audio.
+
+---
+
+SECTION DESIGN
+
+Every section should have a unique visual rhythm.
+
+Use alternating layouts.
+
+Large images.
+
+Cards with subtle shadows.
+
+Rounded corners.
+
+Elegant hover effects.
+
+No excessive borders.
+
+No excessive gradients.
+
+No excessive animations.
+
+---
+
+TRUST SECTION
+
+Create a highly professional trust section.
+
+Show:
+
+16 Franchise Teams
+
+288 Players
+
+83 Matches
+
+12 Week Season
+
+₹5 Lakh Prize Pool
+
+83 Man of the Match Awards
+
+Use beautiful cards.
+
+Think Apple statistics sections.
+
+---
+
+COMPETITION STRUCTURE
+
+Present visually.
+
+Timeline.
+
+Group Stage.
+
+Elite League Phase.
+
+Playoffs.
+
+Grand Final.
+
+Use premium diagrams.
+
+No clutter.
+
+---
+
+AWARDS SECTION
+
+Champions Trophy
+
+Runner-Up Trophy
+
+Golden Boot
+
+Golden Glove
+
+Player of the Tournament
+
+Young Player Award
+
+Best Defender
+
+Best Midfielder
+
+Best Forward
+
+Best Coach
+
+Goal of the Season
+
+Fans' Player of the Season
+
+Fair Play Award
+
+Most Improved Player
+
+Present beautifully.
+
+Think Ballon d'Or aesthetics.
+
+---
+
+ANIMATIONS
+
+Keep everything smooth.
+
+Slow.
+
+Elegant.
+
+Refined.
+
+No excessive bouncing.
+
+No flashy effects.
+
+No futuristic neon.
+
+No random motion.
+
+Motion should enhance trust.
+
+---
+
+SCROLL EXPERIENCE
+
+The site should feel cinematic.
+
+Sections should transition naturally.
+
+Spacing should feel luxurious.
+
+Nothing should feel cramped.
+
+Nothing should feel rushed.
+
+Think reading an Apple website.
+
+---
+
+CARDS
+
+Rounded.
+
+Elegant shadows.
+
+Subtle hover effects.
+
+Glassmorphism only if extremely subtle.
+
+Never overdo blur.
+
+---
+
+BUTTONS
+
+Premium.
+
+Minimal.
+
+Elegant.
+
+Smooth hover transitions.
+
+No glowing effects.
+
+No excessive shadows.
+
+---
+
+MOBILE EXPERIENCE
+
+Must be world-class.
+
+No broken layouts.
+
+No cramped text.
+
+No excessive spacing.
+
+Perfect responsiveness.
+
+Smooth performance.
+
+---
+
+FOOTER
+
+Minimal.
+
+Elegant.
+
+Dark navy background.
+
+Logo.
+
+Website.
+
+Instagram.
+
+Email.
+
+Phone.
+
+Nothing unnecessary.
+
+---
+
+OVERALL FEELING
+
+When someone visits apexpremiereleague.in they should never think:
+
+"This looks AI-made."
+
+Instead, they should think:
+
+"This looks like a serious sports brand."
+
+"This feels premium."
+
+"This feels trustworthy."
+
+"This looks expensive."
+
+"This looks professionally built."
+
+"This feels like Nike, Formula 1, UEFA Champions League, and Apple had a child."
+
+The first impression should attract.
+
+The experience should build trust.
+
+The last impression should leave admiration.
+
+Do not change any logic, APIs, integrations, forms, or business functionality.
+
+This is the FINAL PRODUCTION UPDATE.
+
+Obsess over aesthetics.
+
+Obsess over trust.
+
+Obsess over emotional impact.
+
+Obsess over perfection.

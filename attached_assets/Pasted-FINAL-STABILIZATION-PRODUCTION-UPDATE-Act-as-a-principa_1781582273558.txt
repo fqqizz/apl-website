@@ -1,0 +1,269 @@
+FINAL STABILIZATION & PRODUCTION UPDATE
+
+Act as a principal software engineer, senior product designer, and Awwwards-winning creative director. Your first priority is reliability and production stability. Your second priority is aesthetics and experience.
+
+CRITICAL REQUIREMENTS
+
+DO NOT BREAK ANY EXISTING LOGIC.
+
+DO NOT BREAK APIs.
+
+DO NOT BREAK DATABASES.
+
+DO NOT BREAK REGISTRATION FLOWS.
+
+DO NOT BREAK INTEGRATIONS.
+
+DO NOT BREAK FORMS.
+
+DO NOT BREAK ROUTING.
+
+DO NOT BREAK THE APEX AI SYSTEM.
+
+DO NOT INTRODUCE NEW ERRORS.
+
+DO NOT PERFORM LARGE REWRITES UNLESS ABSOLUTELY NECESSARY.
+
+DO NOT MIGRATE TO NEXT.JS UNLESS THERE IS A CLEAR TECHNICAL BENEFIT AND THE MIGRATION CAN BE DONE WITHOUT RISK. Vite is perfectly acceptable if the current architecture is stable.
+
+FIRST PRIORITY: FIX BUILD & DEPLOYMENT
+
+The website must deploy successfully to Vercel.
+
+Fix all pnpm workspace issues.
+
+Ensure only the APL website project is built.
+
+Prevent unrelated projects such as:
+
+* mockup-sandbox
+* mobile app
+* api-server
+
+from blocking website deployments.
+
+Remove unnecessary typecheck failures from unrelated workspaces.
+
+Make build commands production-safe.
+
+Ensure environment variables have safe defaults.
+
+Ensure Vercel compatibility.
+
+Ensure zero build failures.
+
+The build must be reliable and repeatable.
+
+SECOND PRIORITY: WORLD-CLASS EXPERIENCE
+
+The website still feels generic.
+
+It does not yet have the Apple, Nike, Adidas, Formula 1, UEFA Champions League feeling.
+
+Pursue award-winning craftsmanship.
+
+TARGET QUALITY
+
+Apple.
+
+Nike Football.
+
+Adidas.
+
+Formula 1.
+
+Champions League.
+
+Stripe.
+
+Linear.
+
+Awwwards Site of the Day.
+
+CSS Design Awards.
+
+THE INTRO IS STILL TOO BASIC
+
+Current intro feels clicky and cheap.
+
+Create an iconic loading experience.
+
+White background.
+
+Subtle grey glow.
+
+APL logo PNG centered.
+
+A beautiful light sweep passes through the logo.
+
+Very smooth opacity and scale transitions.
+
+No particles.
+
+No neon.
+
+No flashy effects.
+
+Think Apple product launch.
+
+Think Nike commercial.
+
+Think Formula 1 opening sequence.
+
+The animation should feel luxurious.
+
+The first impression should be unforgettable.
+
+HERO SECTION
+
+The hero still feels bulky, especially on mobile.
+
+Completely optimize for phones.
+
+95% of visitors are mobile users.
+
+Reduce excessive spacing.
+
+Improve typography hierarchy.
+
+Use a REAL football action image.
+
+NO stadium renders.
+
+NO AI images.
+
+NO fake backgrounds.
+
+Real players.
+
+Real intensity.
+
+Dark cinematic overlay.
+
+The section should emotionally tell players:
+
+"This movement is for us."
+
+MOTION
+
+Use Framer Motion quality interactions.
+
+Smooth.
+
+Elegant.
+
+Physics-based.
+
+Premium.
+
+No excessive bouncing.
+
+No cheap animations.
+
+No artificial glow.
+
+No flashy effects.
+
+Everything should feel expensive.
+
+BUTTONS
+
+Premium.
+
+Rounded.
+
+Elegant.
+
+No blue glow.
+
+No dead links.
+
+Every CTA should feel intentional.
+
+404 PAGE
+
+Create a premium experience.
+
+Primary CTA should lead to Register Now.
+
+Never leave users stranded.
+
+APEX AI
+
+Train locally using embedded APL knowledge.
+
+No dependency on Anthropic.
+
+No dependency on Gemini.
+
+No dependency on OpenAI APIs.
+
+Feed all league information directly.
+
+Apex AI must know:
+
+Registration.
+
+Franchises.
+
+Teams.
+
+Players.
+
+Awards.
+
+Prize pool.
+
+Rules.
+
+Refund policy.
+
+Contacts.
+
+Season structure.
+
+Vision.
+
+Sponsors.
+
+FAQs.
+
+Suggested questions should automatically enter the chat and dynamically rotate.
+
+FINAL OBJECTIVE
+
+Nobody should ever think:
+
+"This looks AI generated."
+
+Instead they should think:
+
+"This feels like Nike."
+
+"This feels like Apple."
+
+"This feels expensive."
+
+"This feels handcrafted."
+
+"This feels trustworthy."
+
+Pursue perfection.
+
+Pursue elegance.
+
+Pursue reliability.
+
+Reliability comes before features.
+
+No regressions.
+
+No breaking changes.
+
+No build failures.
+
+No integration failures.
+
+No API failures.
+
+Production-ready quality only.

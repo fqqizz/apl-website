@@ -1,0 +1,18 @@
+{
+  "name": "Apex Premier League",
+  "short_name": "APL",
+  "description": "North Kashmir's franchise football league.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07111D",
+  "theme_color": "#07111D",
+  "icons": [
+    {
+      "src": "/apl-logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
