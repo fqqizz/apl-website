@@ -6,16 +6,16 @@
   --apl-white: #ffffff;
   --apl-off-white: #f7f7f5;
 
-  --apl-navy: #0a1628;
-  --apl-navy-mid: #0f2040;
-  --apl-navy-light: #162845;
+  --apl-navy: #07111d;
+  --apl-navy-mid: #0b1827;
+  --apl-navy-light: #102235;
 
-  --apl-blue: #1a6bff;
-  --apl-blue-bright: #2979ff;
-  --apl-blue-dim: #1a6bff22;
+  --apl-blue: #345d9d;
+  --apl-blue-bright: #4f74ad;
+  --apl-blue-dim: #345d9d22;
 
-  --apl-gold: #c9a84c;
-  --apl-gold-dim: #c9a84c18;
+  --apl-gold: #d4af37;
+  --apl-gold-dim: #d4af3718;
 
   --apl-text-primary: #ffffff;
   --apl-text-secondary: #a8b4c8;
@@ -137,15 +137,18 @@ a {
   letter-spacing: 0.03em;
   white-space: nowrap;
   border-radius: 6px;
-  background: var(--apl-blue);
+  background: var(--apl-gold);
   color: white;
   border: none;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: var(--apl-blue-bright);
+  background: #ffffff;
+  color: var(--apl-navy);
+  box-shadow: 0 18px 44px rgba(255, 255, 255, 0.12);
 }
 
 .btn-primary:active {
@@ -172,6 +175,7 @@ a {
 
 .btn-secondary:hover {
   border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .btn-ghost {
@@ -272,12 +276,17 @@ a {
 }
 
 .hero-gradient {
-  background: linear-gradient(
-    to bottom,
-    rgba(10, 22, 40, 0.5) 0%,
-    rgba(10, 22, 40, 0.95) 75%,
-    #0a1628 100%
-  );
+  background:
+    linear-gradient(90deg, rgba(7, 17, 29, 0.88) 0%, rgba(7, 17, 29, 0.62) 45%, rgba(7, 17, 29, 0.34) 100%),
+    linear-gradient(to bottom, rgba(7, 17, 29, 0.26) 0%, rgba(7, 17, 29, 0.72) 76%, #07111d 100%);
+}
+
+.hero-headline {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.82rem, 12vw, 8.5rem);
+  letter-spacing: 0;
+  line-height: 0.94;
+  text-wrap: balance;
 }
 
 .upsurge-credit {
@@ -610,32 +619,19 @@ a {
   }
 }
 
-/* Apex AI — Rebuilt with Premium Glassmorphism & WhatsApp style glow orb Mascot fab */
+/* Apex AI: sober official assistant styling */
 .apex-ai-fab {
-  background: radial-gradient(circle at center, #10b981, #1a6bff, #0a1628);
+  background: #07111d;
   color: white;
-  border: 1px solid rgba(16, 185, 129, 0.45);
-  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25), 0 0 15px rgba(26, 107, 255, 0.4);
-  animation: orb-pulse 2.5s infinite ease-in-out;
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
 }
 
 .apex-ai-fab:hover {
-  background: radial-gradient(circle at center, #059669, #2979ff, #0f2040);
-  border-color: rgba(16, 185, 129, 0.85);
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4), 0 0 25px rgba(26, 107, 255, 0.6);
-}
-
-@keyframes orb-pulse {
-  0% {
-    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
-  }
-  50% {
-    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.45), 0 0 25px rgba(26, 107, 255, 0.6);
-  }
-  100% {
-    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25), 0 0 15px rgba(26, 107, 255, 0.3);
-  }
+  background: #0b1827;
+  border-color: rgba(212, 175, 55, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.5);
 }
 
 .apex-ai-panel {
@@ -648,10 +644,10 @@ a {
 }
 
 .apex-ai-bubble-user {
-  background: var(--apl-blue);
-  color: white;
+  background: var(--apl-gold);
+  color: var(--apl-navy);
   border-radius: 18px 18px 2px 18px;
-  box-shadow: 0 4px 12px rgba(26, 107, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.18);
   word-break: break-word;
   overflow-wrap: break-word;
 }

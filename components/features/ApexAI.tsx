@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, X, Sparkles } from "lucide-react";
+import { Send, Sparkles, X } from "lucide-react";
 import Image from "next/image";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -10,7 +10,14 @@ type Message = { role: "user" | "assistant"; content: string };
 const CHIPS = [
   "How do I register?",
   "Tell me about franchises",
-  "When does Season 1 start?"
+  "How many matches are there?",
+  "What awards are available?",
+  "What is the prize pool?",
+  "What is the season format?",
+  "How many players participate?",
+  "How do franchises work?",
+  "Who can join?",
+  "What is APL's vision?"
 ];
 
 export default function ApexAI() {
@@ -20,19 +27,25 @@ export default function ApexAI() {
     {
       role: "assistant",
       content:
-        "Hey! I'm Apex AI — your guide to everything APL. Whether you want to know about registrations, franchises, the season format, or what it takes to compete — I've got you. What would you like to know?"
+        "Welcome to Apex AI. Ask me about registration, franchises, awards, the season format, player IDs, or APL's long-term vision."
     }
   ]);
   const [loading, setLoading] = useState(false);
+  const [chipOffset, setChipOffset] = useState(0);
+  const [usedChips, setUsedChips] = useState<string[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
+  const orderedChips = CHIPS.filter((chip) => !usedChips.includes(chip)).concat(
+    CHIPS.filter((chip) => usedChips.includes(chip))
+  );
+  const visibleChips = [...orderedChips, ...orderedChips].slice(chipOffset, chipOffset + 3);
 
   const handleChipClick = (chipText: string) => {
     setInput(chipText);
+    setUsedChips((chips) => [...chips.filter((chip) => chip !== chipText), chipText]);
+    setChipOffset((offset) => (offset + 1) % Math.max(CHIPS.length - 2, 1));
     setTimeout(() => {
-      const form = document.getElementById("apex-ai-form") as HTMLFormElement;
-      if (form) {
-        form.requestSubmit();
-      }
+      const form = document.getElementById("apex-ai-form") as HTMLFormElement | null;
+      form?.requestSubmit();
     }, 50);
   };
 
@@ -55,7 +68,7 @@ export default function ApexAI() {
       const data = await response.json();
       const reply =
         data.reply ||
-        "I can help with APL registration (₹249), Player IDs, 16 franchises, 288 players, and Season One. Call +91 8491900407 for account-specific help.";
+        "I can help with APL registration (INR 249), Player IDs, 16 franchises, 288 players, and Season One. Call +91 8491900407 for account-specific help.";
       setMessages([...nextMessages, { role: "assistant", content: reply }]);
     } catch {
       setMessages([
@@ -63,7 +76,7 @@ export default function ApexAI() {
         {
           role: "assistant",
           content:
-            "Connection issue. APL is a 16-franchise league with 288 player slots — register at /register/player. For urgent help call +91 8491900407."
+            "Connection issue. APL is a 16-franchise league with 288 player slots. Register at /register/player, or call +91 8491900407 for urgent help."
         }
       ]);
     } finally {
@@ -81,13 +94,7 @@ export default function ApexAI() {
         onClick={() => setOpen((o) => !o)}
         aria-label="Open Apex AI"
       >
-        <Image
-          src="/live-chat.png"
-          alt="Apex AI"
-          width={36}
-          height={36}
-          className="h-9 w-9 object-contain filter invert"
-        />
+        <Image src="/live-chat.png" alt="Apex AI" width={36} height={36} className="h-9 w-9 object-contain invert" />
       </button>
 
       <AnimatePresence>
@@ -100,30 +107,23 @@ export default function ApexAI() {
             className="apex-ai-panel fixed bottom-24 right-4 z-[9998] flex w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl md:right-6"
             style={{ height: 520 }}
           >
-            {/* Header with Glass Gradient Accent */}
-            <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3 bg-gradient-to-r from-apl-navy to-apl-navy-mid">
+            <div className="flex items-center gap-3 border-b border-white/10 bg-apl-navy px-4 py-3">
               <div className="relative">
-                <Image
-                  src="/live-chat.png"
-                  alt="Apex AI"
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 object-contain filter invert"
-                />
-                <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-apl-navy animate-pulse" />
+                <Image src="/live-chat.png" alt="Apex AI" width={36} height={36} className="h-9 w-9 object-contain invert" />
+                <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border border-apl-navy bg-apl-gold" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-1.5">
                   <p className="text-sm font-semibold text-white">APEX AI</p>
-                  <Sparkles className="h-3 w-3 text-apl-blue" />
+                  <Sparkles className="h-3 w-3 text-apl-gold" />
                 </div>
-                <p className="text-[11px] text-apl-text-secondary">Powered by APL Intelligence</p>
+                <p className="text-[11px] text-apl-text-secondary">Official league assistant</p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="text-apl-text-secondary hover:text-white transition-colors"
+                className="text-apl-text-secondary transition-colors hover:text-white"
               >
                 <X size={18} />
               </button>
@@ -150,25 +150,25 @@ export default function ApexAI() {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="apex-ai-bubble-assistant max-w-[80%] rounded-2xl px-3.5 py-2.5 flex items-center gap-2"
+                  className="apex-ai-bubble-assistant flex max-w-[80%] items-center gap-2 rounded-2xl px-3.5 py-2.5"
                 >
-                  <span className="text-xs text-apl-text-secondary font-medium">Apex is thinking</span>
+                  <span className="text-xs font-medium text-apl-text-secondary">Apex is checking the league book</span>
                   <span className="flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-apl-blue/40 animate-bounce" style={{ animationDelay: '0ms', animationDuration: '0.8s' }} />
-                    <span className="h-1.5 w-1.5 rounded-full bg-apl-blue/40 animate-bounce" style={{ animationDelay: '150ms', animationDuration: '0.8s' }} />
-                    <span className="h-1.5 w-1.5 rounded-full bg-apl-blue/40 animate-bounce" style={{ animationDelay: '300ms', animationDuration: '0.8s' }} />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-apl-gold/60 [animation-duration:0.8s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-apl-gold/60 [animation-delay:150ms] [animation-duration:0.8s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-apl-gold/60 [animation-delay:300ms] [animation-duration:0.8s]" />
                   </span>
                 </motion.div>
               )}
             </div>
 
-            <div className="bg-apl-navy/95 px-4 pb-2 pt-1 flex flex-wrap gap-1.5">
-              {CHIPS.map((chip) => (
+            <div className="flex flex-wrap gap-1.5 bg-apl-navy/95 px-4 pb-2 pt-1">
+              {visibleChips.map((chip) => (
                 <button
                   key={chip}
                   type="button"
                   onClick={() => handleChipClick(chip)}
-                  className="text-[11px] font-medium text-apl-text-secondary hover:text-white bg-white/5 hover:bg-apl-blue/20 border border-white/10 rounded-full px-2.5 py-1 transition-all duration-200"
+                  className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-apl-text-secondary transition-all duration-200 hover:bg-white/10 hover:text-white"
                 >
                   {chip}
                 </button>
@@ -181,12 +181,12 @@ export default function ApexAI() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask Apex AI anything about APL..."
-                  className="flex-1 min-h-[44px] text-sm bg-white/5 border border-white/10 rounded-lg px-3 text-white placeholder-apl-text-secondary/50 focus:outline-none focus:border-apl-blue transition-colors"
+                  className="min-h-[44px] flex-1 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white placeholder-apl-text-secondary/50 transition-colors focus:border-apl-gold focus:outline-none"
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="min-h-[44px] px-3 bg-apl-blue hover:bg-apl-blue-bright text-white rounded-lg flex items-center justify-center transition-colors disabled:opacity-50"
+                  className="flex min-h-[44px] items-center justify-center rounded-lg bg-apl-gold px-3 text-apl-navy transition-colors hover:bg-white disabled:opacity-50"
                   aria-label="Send"
                 >
                   <Send size={16} />
