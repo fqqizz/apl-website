@@ -15,11 +15,11 @@ export default function IntroAnimation() {
       const id = window.setTimeout(fn, ms);
       timers.current.push(id);
     };
-    t(() => setLogoIn(true), 60);
-    t(() => setShineIn(true), 950);
-    t(() => setTextIn(true), 1050);
-    t(() => { setPhase("exit"); completeIntro(); }, 2600);
-    t(() => setPhase("done"), 3100);
+    t(() => setLogoIn(true), 80);
+    t(() => setShineIn(true), 900);
+    t(() => setTextIn(true), 1020);
+    t(() => { setPhase("exit"); completeIntro(); }, 2800);
+    t(() => setPhase("done"), 3350);
     return () => timers.current.forEach(clearTimeout);
   }, [completeIntro]);
 
@@ -30,13 +30,13 @@ export default function IntroAnimation() {
       className="fixed inset-0 z-[200] flex flex-col items-center justify-center select-none pointer-events-none"
       style={{ background: "#ffffff" }}
       animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
-      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+      transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
     >
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 40% at 50% 52%, rgba(7,17,29,0.038) 0%, transparent 68%)"
+            "radial-gradient(ellipse 55% 38% at 50% 52%, rgba(7,17,29,0.055) 0%, transparent 70%)"
         }}
       />
 
@@ -45,32 +45,34 @@ export default function IntroAnimation() {
           {logoIn && (
             <motion.div
               key="logo"
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.88 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
               className="relative overflow-hidden"
-              style={{ borderRadius: 6 }}
+              style={{ borderRadius: 8 }}
             >
               <img
                 src="/apl-logo.png"
                 alt="APL"
                 width={120}
                 height={120}
-                className="h-[108px] w-auto block"
+                className="h-[112px] w-auto block"
+                draggable={false}
               />
+
               <AnimatePresence>
                 {shineIn && (
                   <motion.div
                     key="shine"
-                    initial={{ x: "-110%" }}
-                    animate={{ x: "220%" }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.9, ease: [0.37, 0, 0.63, 1] }}
+                    initial={{ x: "-130%" }}
+                    animate={{ x: "240%" }}
+                    transition={{ duration: 1.05, ease: [0.25, 0.46, 0.45, 0.94] }}
                     style={{
                       position: "absolute",
                       inset: 0,
                       background:
-                        "linear-gradient(92deg, transparent 25%, rgba(255,255,255,0.08) 42%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.08) 58%, transparent 75%)",
+                        "linear-gradient(105deg, transparent 22%, rgba(255,255,255,0.18) 38%, rgba(255,255,255,0.62) 50%, rgba(255,255,255,0.18) 62%, transparent 78%)",
+                      mixBlendMode: "overlay",
                       pointerEvents: "none"
                     }}
                   />
@@ -84,33 +86,34 @@ export default function IntroAnimation() {
           {textIn && (
             <motion.div
               key="text"
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-7 flex flex-col items-center gap-2.5"
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 flex flex-col items-center gap-3"
             >
               <motion.p
-                initial={{ letterSpacing: "0.06em", opacity: 0 }}
-                animate={{ letterSpacing: "0.32em", opacity: 1 }}
-                transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ letterSpacing: "0.04em", opacity: 0 }}
+                animate={{ letterSpacing: "0.34em", opacity: 1 }}
+                transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                   fontFamily: "var(--font-body), sans-serif",
-                  fontSize: "0.6rem",
+                  fontSize: "0.58rem",
                   fontWeight: 500,
-                  color: "#07111D",
+                  color: "rgba(7,17,29,0.55)",
                   textTransform: "uppercase"
                 }}
               >
                 APEX PREMIER LEAGUE
               </motion.p>
+
               <motion.div
                 initial={{ scaleX: 0, opacity: 0 }}
                 animate={{ scaleX: 1, opacity: 1 }}
-                transition={{ duration: 0.55, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                 style={{
-                  width: "24px",
+                  width: "28px",
                   height: "1px",
-                  background: "linear-gradient(90deg, transparent, #D4AF37, transparent)",
+                  background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.7), transparent)",
                   transformOrigin: "center"
                 }}
               />

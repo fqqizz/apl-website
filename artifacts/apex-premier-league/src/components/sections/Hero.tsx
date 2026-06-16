@@ -19,20 +19,22 @@ export default function Hero() {
           src="/images/hero-football.jpg"
           alt="Football action"
           className="h-full w-full object-cover"
-          style={{ objectPosition: "center 30%" }}
+          style={{ objectPosition: "center 28%" }}
+          fetchPriority="high"
+          decoding="async"
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(7,17,29,0.25) 0%, rgba(7,17,29,0.5) 30%, rgba(7,17,29,0.82) 65%, #07111D 100%)"
+              "linear-gradient(to bottom, rgba(7,17,29,0.18) 0%, rgba(7,17,29,0.48) 28%, rgba(7,17,29,0.78) 60%, #07111D 100%)"
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.04) 0%, transparent 60%)"
+              "radial-gradient(ellipse 70% 50% at 50% 100%, rgba(212,175,55,0.05) 0%, transparent 65%)"
           }}
         />
       </div>
@@ -40,11 +42,14 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col" style={{ minHeight: "100dvh" }}>
         <div
           className="container-apl flex flex-1 flex-col items-center justify-center px-5 text-center"
-          style={{ paddingTop: "clamp(7rem, 18vw, 9.5rem)", paddingBottom: "5.5rem" }}
+          style={{
+            paddingTop: "clamp(5.5rem, 14vw, 9rem)",
+            paddingBottom: "clamp(3.5rem, 8vw, 5.5rem)"
+          }}
         >
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             transition={{ duration: 0.5, ease }}
           >
             <SectionLabel className="justify-center">
@@ -52,7 +57,10 @@ export default function Hero() {
             </SectionLabel>
           </motion.div>
 
-          <h1 className="mt-5 max-w-4xl w-full">
+          <h1
+            className="mt-4 max-w-4xl w-full"
+            style={{ lineHeight: 0.88 }}
+          >
             {headline.map((line, i) => (
               <motion.span
                 key={line}
@@ -60,10 +68,9 @@ export default function Hero() {
                 animate={introReady ? MOTION.heroReveal.animate : MOTION.heroReveal.initial}
                 transition={{
                   ...MOTION.heroReveal.transition,
-                  delay: introReady ? 0.06 + i * 0.07 : 0
+                  delay: introReady ? 0.06 + i * 0.065 : 0
                 }}
                 className="text-display-xl block text-apl-white"
-                style={{ lineHeight: 0.9 }}
               >
                 {line}
               </motion.span>
@@ -71,26 +78,26 @@ export default function Hero() {
           </h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            transition={{ delay: introReady ? 0.38 : 0, duration: 0.65, ease }}
-            className="mt-5 max-w-sm"
+            initial={{ opacity: 0, y: 12 }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            transition={{ delay: introReady ? 0.36 : 0, duration: 0.65, ease }}
+            className="mt-4 max-w-sm"
             style={{
-              color: "rgba(255,255,255,0.52)",
+              color: "rgba(255,255,255,0.48)",
               fontFamily: "var(--font-body), sans-serif",
               fontWeight: 300,
-              fontSize: "1rem",
-              lineHeight: 1.7
+              fontSize: "clamp(0.875rem, 2.2vw, 1rem)",
+              lineHeight: 1.75
             }}
           >
             A franchise-based football ecosystem bringing together players, communities, and businesses.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            transition={{ delay: introReady ? 0.5 : 0, duration: 0.6, ease }}
-            className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-xs mx-auto sm:max-w-none sm:w-auto"
+            initial={{ opacity: 0, y: 12 }}
+            animate={introReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            transition={{ delay: introReady ? 0.48 : 0, duration: 0.6, ease }}
+            className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-[280px] mx-auto sm:max-w-none sm:w-auto"
           >
             <Button href="/register/player" className="w-full sm:w-auto justify-center">
               Register Now
@@ -107,14 +114,14 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={introReady ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ delay: introReady ? 0.7 : 0, duration: 0.5, ease }}
+            transition={{ delay: introReady ? 0.68 : 0, duration: 0.5, ease }}
             className="mt-4"
           >
             <a
               href="/status"
               style={{
-                color: "rgba(255,255,255,0.28)",
-                fontSize: "0.72rem",
+                color: "rgba(255,255,255,0.26)",
+                fontSize: "0.7rem",
                 letterSpacing: "0.04em",
                 fontFamily: "var(--font-body), sans-serif"
               }}
@@ -127,7 +134,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={introReady ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: introReady ? 0.65 : 0, duration: 0.5, ease }}
+          transition={{ delay: introReady ? 0.62 : 0, duration: 0.5, ease }}
         >
           <MarqueeStrip />
         </motion.div>
@@ -135,10 +142,10 @@ export default function Hero() {
         <a
           href="#vision"
           className="absolute left-1/2 -translate-x-1/2 motion-safe:animate-bounce-subtle"
-          style={{ bottom: "5.5rem", color: "rgba(255,255,255,0.25)" }}
+          style={{ bottom: "5.5rem", color: "rgba(255,255,255,0.22)" }}
           aria-label="Scroll down"
         >
-          <ChevronDown size={20} />
+          <ChevronDown size={18} />
         </a>
       </div>
     </section>

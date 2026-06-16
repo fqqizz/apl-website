@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm --filter @workspace/apex-premier-league run build",
+  "outputDirectory": "artifacts/apex-premier-league/dist/public",
+  "installCommand": "pnpm install",
+  "framework": null,
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
+  "env": {
+    "BASE_PATH": "/"
+  }
+}
