@@ -149,7 +149,7 @@ export default function AboutPage() {
         </motion.div>
 
         {/* Timeline */}
-        <div className="container-apl mt-28 md:mt-36">
+        <div className="container-apl mt-32 md:mt-48 pt-16 md:pt-24 pb-12">
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

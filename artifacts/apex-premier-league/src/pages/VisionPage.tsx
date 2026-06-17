@@ -194,7 +194,7 @@ export default function VisionPage() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="container-apl mt-28 md:mt-36"
+          className="container-apl mt-32 md:mt-48 pt-12 md:pt-20 pb-10"
         >
           <div className="grid gap-8 md:grid-cols-3">
             {[

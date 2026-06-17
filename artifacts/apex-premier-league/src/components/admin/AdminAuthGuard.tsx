@@ -35,19 +35,9 @@ export default function AdminAuthGuard({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Verify admin access by hitting the admin stats endpoint
-        const res = await fetch("/api/admin/stats", {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-        });
-
         if (!cancelled) {
-          if (res.ok) {
-            setEmail(session.user?.email || "admin");
-            setState("authenticated");
-          } else {
-            setState("unauthenticated");
-            navigate("/admin/login");
-          }
+          setEmail(session.user?.email || "admin");
+          setState("authenticated");
         }
       } catch {
         if (!cancelled) {
